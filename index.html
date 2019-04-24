@@ -453,7 +453,7 @@
           
             <p>
               8. Annotation-based Container Configuration
-Are annotations better than XML for configuring Spring?The introduction of annotation-based configuration 
+Are annotations better than XML for configuring Spring?The introduction of annotation-based configuration raised the question of whether this approach is “better” than XML. The short answer is “it depends.” The long answer is that each approach has its pro
               ...
             </p>
           <!--noindex-->
@@ -638,7 +638,8 @@ Are annotations better than XML for configuring Spring?The introduction of annot
             <p>
               Spring Framework GithubSpring Framework Documentation : Core - Version 5.1.6.RELEASESpring In Action  
 Spring Framework是整个Spring项目的基石。  
- IoC容器(The Io
+ IoC容器(The IoC Container)
+控制反转(Inversion of Control, IoC)也称为依赖注入(dependency injection, DI),是对象定义它们之间依赖关系的过程。对象只能通过构造方法参数、工厂方法参数、从工厂方法或构造方法返回的实例的属性中定义依赖。容器在创建bean的时
               ...
             </p>
           <!--noindex-->
@@ -810,7 +811,8 @@ Spring Framework是整个Spring项目的基石。
           
             <p>
               我们创建一个简单的Hello服务，客户端可以远程调用服务器端的方法，服务器端对客户端传入的参数进行处理并返回处理后的结果。
-Thrift文件首先编写Thrift文件hello.thrift：namespace java wang.javior.hellothriftservice Hello&#12
+Thrift文件首先编写Thrift文件hello.thrift：namespace java wang.javior.hellothriftservice Hello&#123; string helloString(1:string para) , i32 helloInt(1:i32 para), bool helloBoolean(1:bool para),  &#125;
+这个thrift文件定义了Hello服务的3个方法，分别对传入的string/i32/bo
               ...
             </p>
           <!--noindex-->
@@ -994,7 +996,7 @@ Thrift文件首先编写Thrift文件hello.thrift：namespace java wang.javior.he
           
             <p>
               
-Thrift is a lightweight, language-independent software stack with an associated code generation mechanism for point-to-point RPC. Thrift provides cle
+Thrift is a lightweight, language-independent software stack with an associated code generation mechanism for point-to-point RPC. Thrift provides clean abstractions for data transport, data serialization, and application level processing. The code generation system takes a simple definition languag
               ...
             </p>
           <!--noindex-->
@@ -1177,7 +1179,11 @@ Thrift is a lightweight, language-independent software stack with an associated 
         
           
             <p>
-              开源RPC框架简介RPC(Remote Procedure Call,远程过程调用)，是一种通过网络从远程计算机程序上请求服务而不需要了解底层网络技术的协议。目前RPC框架大致分为两类，一种偏重服务治理(如Dubbo)，另一种侧重跨语言调用。服务治理型框架特点是功能丰富，提供高性能远程调用、服务发现
+              开源RPC框架简介RPC(Remote Procedure Call,远程过程调用)，是一种通过网络从远程计算机程序上请求服务而不需要了解底层网络技术的协议。目前RPC框架大致分为两类，一种偏重服务治理(如Dubbo)，另一种侧重跨语言调用。服务治理型框架特点是功能丰富，提供高性能远程调用、服务发现及服务治理能力，适用于大型服务的解耦及治理，对于特定语言(如Java)项目可以实现透明化接入。缺点是语言耦合度加高，跨语言支持难度较大。常用的RPC开源框架有:
+
+Dubbo  国内最早开源的RPC框架，由阿里开发并于2011年开源，仅支持Java。  
+
+Motan  微博内部使用的RPC框架，于
               ...
             </p>
           <!--noindex-->
@@ -1362,7 +1368,10 @@ Thrift is a lightweight, language-independent software stack with an associated 
             <p>
               Connenct OAI eNB(USRP B210) with COTS UE
 依据官方文档： https://gitlab.eurecom.fr/oai/openairinterface5g/wikis/HowToConnectCOTSUEwithOAIeNBNew  
-OAI eNB 搭建一、
+OAI eNB 搭建一、准备eNB对硬件要求较高，最好准备Intel三代以上i5/i7 CPU。系统需要ubuntu-14.04.3。
+二、可选安装
+安装ss
+sudo add-apt-repository ppa:hzwhuang/ss-qt5sudo apt-get updatesudo apt-get install
               ...
             </p>
           <!--noindex-->

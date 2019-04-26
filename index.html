@@ -335,7 +335,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="javior.wang/2019/04/25/backends/zookeeper/ZooKeeper Overview/">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/04/26/backends/zookeeper/ZooKeeper(二) CAP和BASE定理/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Javior Wang">
@@ -355,7 +355,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/04/25/backends/zookeeper/ZooKeeper Overview/" class="post-title-link" itemprop="url">ZooKeeper Overview</a>
+                <a href="/2019/04/26/backends/zookeeper/ZooKeeper(二) CAP和BASE定理/" class="post-title-link" itemprop="url">ZooKeeper(二) CAP和BASE定理</a>
               
             
           </h1>
@@ -380,7 +380,7 @@
                 
               
 
-              <time title="创建时间：2019-04-25 20:46:23 / 修改时间：20:56:38" itemprop="dateCreated datePublished" datetime="2019-04-25T20:46:23+08:00">2019-04-25</time>
+              <time title="创建时间：2019-04-26 10:23:42 / 修改时间：13:40:42" itemprop="dateCreated datePublished" datetime="2019-04-26T10:23:42+08:00">2019-04-26</time>
             
 
             
@@ -440,15 +440,198 @@
         
           
             <p>
-              Zookeeper Homepage    
-
-ZooKeeper Wiki (on 2016.10.26)ZooKeeper is a centralized service for maintaining configuration information, naming, providing distributed synchronization, and providing group services. All of these kinds of services are used in some form or another by distributed applications
+              1. 分布式系统分布式系统（distributed system） 由多台计算机和通信的软件组件通过计算机网络连接（本地网络或广域网）组成，是建立在网络之上的软件系统。正是因为软件的特性，分布式系统具有高度的内聚性和透明性，因此，网络和分布式系统之间的区别更多的在于高层软件（特别是操作系统）而不是硬件。分布式系统可以应用在不同的平台如：PC、工作站、局域网、广域网等。分布式系统变得越来越重要，基本大型网站都是分布式的，它带来了诸如可靠性(容错)、可扩展性、高性能、灵活性等优点，但同时带来了更高的复杂度。分布式系统的一个重要问题就是数据的复制，也即各个节点中状态的同步。分布式对于数据的复制需求一
               ...
             </p>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2019/04/25/backends/zookeeper/ZooKeeper Overview/#more" rel="contents">
+              <a class="btn" href="/2019/04/26/backends/zookeeper/ZooKeeper(二) CAP和BASE定理/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/04/25/backends/zookeeper/ZooKeeper(一) ZooKeeper Overview/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Javior Wang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Javior's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/04/25/backends/zookeeper/ZooKeeper(一) ZooKeeper Overview/" class="post-title-link" itemprop="url">ZooKeeper(一) ZooKeeper Overview</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-04-25 20:46:23" itemprop="dateCreated datePublished" datetime="2019-04-25T20:46:23+08:00">2019-04-25</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-04-26 13:24:36" itemprop="dateModified" datetime="2019-04-26T13:24:36+08:00">2019-04-26</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/zookeeper/" itemprop="url" rel="index"><span itemprop="name">zookeeper</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>
+              Zookeeper Homepage    
+
+Miscellaneous ZooKeeper Documentation (on 2016.10.26)ZooKeeper is a centralized service for maintaining configuration information, naming, providing distributed synchronization, and providing group services. All of these kinds of services are used in some form or another by d
+              ...
+            </p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/04/25/backends/zookeeper/ZooKeeper(一) ZooKeeper Overview/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1639,7 +1822,7 @@ sudo add-apt-repository ppa:hzwhuang/ss-qt5sudo apt-get updatesudo apt-get insta
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-count">8</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1695,7 +1878,9 @@ sudo add-apt-repository ppa:hzwhuang/ss-qt5sudo apt-get updatesudo apt-get insta
                     
                       
                     
-                    <span class="site-state-item-count">7</span>
+                      
+                    
+                    <span class="site-state-item-count">8</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

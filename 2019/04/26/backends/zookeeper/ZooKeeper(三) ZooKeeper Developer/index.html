@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next mist" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/favicon-128x128-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-01.ico?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/uploads/favicon-128x128-01.ico?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="ZooKeeper HomepageZooKeeper Programmer’s Guide ZooKeeper Programmer’s GuideDeveloping Distributed Applications that use ZooKeeper   1. The ZooKeeper Data ModelZK有与文件系统类似的层次结构的命名空间，唯一的区别就是命名空间的每个节点也可以存">
+<meta name="keywords" content="zookeeper">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ZooKeeper(三) ZooKeeper Developer">
+<meta property="og:url" content="javior.wang/2019/04/26/backends/zookeeper/ZooKeeper(三) ZooKeeper Developer/index.html">
+<meta property="og:site_name" content="Javior&#39;s Blog">
+<meta property="og:description" content="ZooKeeper HomepageZooKeeper Programmer’s Guide ZooKeeper Programmer’s GuideDeveloping Distributed Applications that use ZooKeeper   1. The ZooKeeper Data ModelZK有与文件系统类似的层次结构的命名空间，唯一的区别就是命名空间的每个节点也可以存">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="/images/backend/zookeeper/03state_dia.jpg">
+<meta property="og:updated_time" content="2019-04-26T12:07:08.930Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ZooKeeper(三) ZooKeeper Developer">
+<meta name="twitter:description" content="ZooKeeper HomepageZooKeeper Programmer’s Guide ZooKeeper Programmer’s GuideDeveloping Distributed Applications that use ZooKeeper   1. The ZooKeeper Data ModelZK有与文件系统类似的层次结构的命名空间，唯一的区别就是命名空间的每个节点也可以存">
+<meta name="twitter:image" content="/images/backend/zookeeper/03state_dia.jpg">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="javior.wang/2019/04/26/backends/zookeeper/ZooKeeper(三) ZooKeeper Developer/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>ZooKeeper(三) ZooKeeper Developer | Javior's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Javior's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/04/26/backends/zookeeper/ZooKeeper(三) ZooKeeper Developer/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Javior Wang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Javior's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ZooKeeper(三) ZooKeeper Developer
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-04-26 13:47:43 / 修改时间：20:07:08" itemprop="dateCreated datePublished" datetime="2019-04-26T13:47:43+08:00">2019-04-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/zookeeper/" itemprop="url" rel="index"><span itemprop="name">zookeeper</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="http://zookeeper.apache.org/" target="_blank" rel="noopener">ZooKeeper Homepage</a><br><a href="http://zookeeper.apache.org/doc/current/zookeeperProgrammers.html" target="_blank" rel="noopener">ZooKeeper Programmer’s Guide</a></p>
+<p>ZooKeeper Programmer’s Guide<br>Developing Distributed Applications that use ZooKeeper  </p>
+<h2 id="1-The-ZooKeeper-Data-Model"><a href="#1-The-ZooKeeper-Data-Model" class="headerlink" title="1. The ZooKeeper Data Model"></a>1. The ZooKeeper Data Model</h2><p>ZK有与文件系统类似的层次结构的命名空间，唯一的区别就是命名空间的每个节点也可以存储数据。每个节点的路径永远是标准的以’/‘分隔的路径，并且不能是相对路径。任何unicode编码只要遵守一下限制都可以用在路径上：</p>
+<ul>
+<li>路径名不能包含null字符(C绑定时会出问题)</li>
+<li>不能使用下列字符(显示问题)： <code>\u0001</code>-<code>\u001F</code> <code>\u007F</code> <code>\u009F</code>。</li>
+<li>下列字符不允许：<code>\ud800</code>-<code>uF8FF</code>, <code>\uFFF0</code> - <code>uFFFF</code>。</li>
+<li><code>.</code>可以用作名字的一部分，但<code>.</code>和<code>..</code>不能单独作为节点名，因为ZK不使用相对路径。</li>
+<li><code>zookeeper</code>是保留字。</li>
+</ul>
+<h3 id="1-1-ZNodes"><a href="#1-1-ZNodes" class="headerlink" title="1.1 ZNodes"></a>1.1 ZNodes</h3><p>ZooKeeper树的每个节点都被称为znode。Znodes维护一个stat结构，其中包含数据更改、acl更改的版本号以及时间戳。这些数据是用来验证缓存和协助更新的。每次znode的数据改变，版本号就会增加。每当一个客户端接收数据，它同样也会接收版本号；每当客户端执行更新或删除操作，它也必须提供要操作数的版本号。如果它提供的版本号不匹配实际数据的版本号，更新操作会失败。(也可以重写这种行为)  </p>
+<blockquote>
+<p>In distributed application engineering, the word node can refer to a generic host machine, a server, a member of an ensemble, a client process, etc. In the ZooKeeper documentation, znodes refer to the data nodes. Servers refer to machines that make up the ZooKeeper service; quorum peers refer to the servers that make up an ensemble; client refers to any host or process which uses a ZooKeeper service.</p>
+</blockquote>
+<p>znode是程序员访问的主要实体，它包含以下几个特征。</p>
+<ul>
+<li>Watches<br>client可以对znode设置watch。znode的改变会触发和清楚watch。当一个watch触发，ZK向客户端发送一个通知。更详细内容会在后续章节介绍。  </li>
+<li>Data Access<br>存储在znode的数据的读和写是原子性的。Reads会获得一个znode的所有data bytes，write会替换所有数据。每个节点有一个ACL(Access Control List)来控制访问者。<br>ZK并不是设计用来做数据库函数或大对象存储的。它是负责管理协作数据的，比如配置信息、状态信息等等。这些信息通常都比较小，可以以KB来衡量。ZK的客户端和服务端都有明确的检查包装znode的信息不超过1M，但实际上数据远远小于1M。如果数据较大，会导致时延和性能指标的下降。如果有存储大数据的需要，通常的做法是将它们存在存储系统中，ZK中存储相应的指针。</li>
+<li>Ephemeral Nodes<br>ZK也有临时节点的概念。会话创建节点是节点是active的，当会话结束节点也被删除。临时节点不允许有子节点。  </li>
+<li>Sequence Nodes – Unique Naming<br>当创建znode时也可以要求ZK在路径尾追加一个单调增的计数器。这个计数器对父节点来说是唯一的，形式是<code>%010d</code>。注意这个计数器是一个4字节的有符号整数，有可能会发生溢出。  </li>
+</ul>
+<h3 id="1-2-Time-in-ZooKeeper"><a href="#1-2-Time-in-ZooKeeper" class="headerlink" title="1.2 Time in ZooKeeper"></a>1.2 Time in ZooKeeper</h3><p>ZK有多种方式跟踪时间：</p>
+<ul>
+<li>Zxid<br>ZK状态的每次改变都会接收一个zxid(ZooKeeper Transcation Id)形式的时间戳。这用来表示ZK所有改变的顺序。每次更新都会有一个独特的zxid，并且较小的zxid一定会先执行。</li>
+<li>Version numbers<br>对节点的每次改变都会导致节点的某一个版本号自增。三个版本号分别是version(znode的改变)、cversion(子节点的改变)<br>、aversion(znode的ACL的改变)。  </li>
+<li>Ticks<br>当时用多服务器的ZK，servers使用ticks来定义事件的时间，这些事件包括状态上传、会话过期、peers间连接超时等。如果客户端请求的会话超时小于最小的会话超时，服务器会告诉客户端会话超时实际上是最小的会话超时。</li>
+<li>Real time<br>ZK不使用真实时间，除非是在znode创建和修改的时候讲时间戳放到stat结构中时。  </li>
+</ul>
+<h3 id="1-3-ZooKeeper-Stat-Structure"><a href="#1-3-ZooKeeper-Stat-Structure" class="headerlink" title="1.3 ZooKeeper Stat Structure"></a>1.3 ZooKeeper Stat Structure</h3><p>znode的stat结构是由下列域组成的：</p>
+<ul>
+<li>czxid:    The zxid of the change that caused this znode to be created.</li>
+<li>mzxid:    The zxid of the change that last modified this znode.</li>
+<li>pzxid:    The zxid of the change that last modified children of this znode.</li>
+<li>ctime:    The time in milliseconds from epoch when this znode was created.</li>
+<li>mtime:    The time in milliseconds from epoch when this znode was last modified.</li>
+<li>version:  The number of changes to the data of this znode.</li>
+<li>cversion: The number of changes to the children of this znode.</li>
+<li>aversion: The number of changes to the ACL of this znode.</li>
+<li>ephemeralOwner:   The session id of the owner of this znode if the znode is an ephemeral node. If it is not an ephemeral node, it will be zero.</li>
+<li>dataLength:   The length of the data field of this znode.</li>
+<li>numChildren:  The number of children of this znode.</li>
+</ul>
+<h2 id="2-ZooKeeper-Sessions"><a href="#2-ZooKeeper-Sessions" class="headerlink" title="2. ZooKeeper Sessions"></a>2. ZooKeeper Sessions</h2><p>ZK的客户端通过使用语言绑定创建服务句柄来与ZooKeeper服务建立会话。一旦创建成功，句柄从<code>CONNECTING</code>状态开始，并且客户端的库函数试图与组成ZK服务的服务器之一取得连接，同时状态变为<code>CONNECTED</code>。在正常运行是将处于这两种状态之一。如果发生了不可恢复的错误，如会话过期或认证失败，或程序显示的关闭句柄，句柄就会转为<code>CLOSED</code>状态。下图展示了ZK客户端的状态转移图：</p>
+<p><center><img src="/images/backend/zookeeper/03state_dia.jpg" alt="avatar"></center></p>
+<p>To create a client session，程序代码需要提供一个包括逗号分隔的<code>host:port</code>的列表的连接字符串(如 “127.0.0.1:4545”或”127.0.0.1:3000,127.0.0.1:3001,127.0.0.1:3002”)，每个<code>host:port</code>对应一个ZK server.ZK的客户端库函数会选择任意一个server来尝试连接。如果此次连接失败或client和这个server失去了连接，client会自动选择列表中的下一个server，直到连接建立成功。<br><strong>Added in 3.2.0:</strong>  连接字符串有可选后缀<code>chroot</code>。类似于unix <code>chroot</code>命令，这会让所有的客户端命令在此目录下执行。比如<code>127.0.0.1:4545/app/a</code>或<code>127.0.0.1:3000,127.0.0.1:3001,127.0.0.1:3002/app/a</code>，会让客户端以<code>app/a</code>作为根这可以提高客户端代码的重用性。  </p>
+<p>当客户端获取到ZK服务的句柄时，ZK会创建一个ZK session(以一个64-bit数表示)，并分配给客户端。如果客户端连接了另一台ZK服务器，它会发送session id作为连接握手的一部分。作为安全用途，server会为session id创建密码来供所有的ZK服务器验证。每当客户端与一个新服务器重新创建这个会话时，客户端都会同session id一起发送这个密码。<br>ZK客户端的库函数创建ZK session的调用的参数之一就是以毫秒为单位的session timeout。客户端发送请求超时时间，服务端回应它能提供给客户端的差事时间。现有的实现要求超时时间最小是2次tickTime，最大是20次tickTime。ZK客户端API允许访问协商过的超时时间。<br>当客户端(会话)从ZK集群分区时它会开始搜索会话创建时指定的服务器列表。最终当客户端和至少一台服务器重连后，session要么会转为<code>CONNECTED</code>或<code>SESSION_EXPIRED</code>。不推荐连接失败时新建一个session对象(a new ZooKeeper.class or zookeeper handle in the c binding)，ZK客户端的库函数会自动处理重连。只有在被通知会话过期是才创建新的会话。<br>会话的过期是ZK集群管理的，而不是客户端。当ZK客户端和集群建立连接时它会提供<code>timeout</code>值。当集群在会话过期时间内无法感知到客户端会话就会过期，此时集群会立刻删除掉会话专属的所有临时节点。此时客户端和集群是失联的，它除非重连成功，否则不会得到会话过期的通知。客户端会一直保持<code>DISCONNECTED</code>态直到和集群的TCP连接重新建立，然后会话的watcher会得到会话过期的通知。<br>下面是一个过期的会话状态转移的例子：</p>
+<ol>
+<li>‘connected’ : session is established and client is communicating with cluster (client/server communication is operating properly)</li>
+<li>…. client is partitioned from the cluster</li>
+<li>‘disconnected’ : client has lost connectivity with the cluster</li>
+<li>…. time elapses, after ‘timeout’ period the cluster expires the session, nothing is seen by client as it is disconnected from cluster</li>
+<li>…. time elapses, the client regains network level connectivity with the cluster</li>
+<li>‘expired’ : eventually the client reconnects to the cluster, it is then notified of the expiration</li>
+</ol>
+<p>另一个建立ZK会话的调用的参数是默认的watcher。当状态发生改变时watcher会得到通知。watcher应当将初试状态默认为DISCONNECTED，当一个新连接建立时，发送给watcher的第一个事件就是会话连接事件。<br>客户端发送的请求保持session活跃。如果会话在一段时间内空置，客户端会发送PING请求以保持会话存活。这个PING请求不仅能让ZK服务器知道客户端的存活，也允许客户端确认它和ZK服务器的连接是通常的。PING的时间足够保守，可以确保有合理的时间检测死亡的连接并重新连接到新服务器。<br>Once a connection to the server is successfully established (connected) there are basically two cases where the client lib generates connectionloss (the result code in c binding, exception in Java – see the API documentation for binding specific details) when either a synchronous or asynchronous operation is performed and one of the following holds:  </p>
+<ol>
+<li>The application calls an operation on a session that is no longer alive/valid</li>
+<li>The ZooKeeper client disconnects from a server when there are pending operations to that server, i.e., there is a pending asynchronous call.  </li>
+</ol>
+<p><strong>Added in 3.2.0 – SessionMovedException.</strong> 有一个通常户端不可见的内部异常<code>SessionMovedException</code>。当接收的会话的请求在另一台服务器上重建后会发生这个异常。一般情况下是客户端发送请求，但是数据报延误了，于是客户端超时并和另一台服务器重连了。当超时的数据报到达第一台服务器时，服务器探测到会话已经移动了，并管理看客户端连接。客户端通常看不到这个错误因为它们只从新服务器上毒数据。One situation in which this condition can be seen is when two clients try to reestablish the same connection using a saved session id and password. One of the clients will reestablish the connection and the second client will be disconnected (causing the pair to attempt to re-establish its connection/session indefinitely).  </p>
+<h2 id="3-Zookeeper-Watches"><a href="#3-Zookeeper-Watches" class="headerlink" title="3. Zookeeper Watches"></a>3. Zookeeper Watches</h2><p>所有ZK的读读操作(<code>getData()</code>、<code>getChildren()</code>、<code>exists()</code>)都可以设置一个watch。ZK对watch的定义是：<strong>a watch event is one-time trigger, sent to the client that set the watch, which occurs when the data for which the watch was set changes.</strong>   这个定义中有三个关键点：</p>
+<ul>
+<li>One-time trigger<br>当数据改变时一个watch event会发送给客户端，但只发送一次。</li>
+<li>Sent to the client<br>这意味着当数据改变时一个event会发送给客户端，但有可能在修改操作的返回码返回客户端之后到达客户端。watch是异步发送给watcher的。ZK提供了一个顺序保证：在第一次看到watch事件之前，客户端永远不会看到更改。网络延迟和其他因素可能导致不同的客户端看到watch和更新操作的返回值顺序有所不同。这个点的关键在于不同客户端看到的所有东西都是有一致性顺序的。</li>
+<li>The data for which the watch was set<br>一个节点可能有不同的改变方式。可以想象成ZK维护两个watch列表：data watches和child watches，<code>getData()</code>、<code>exists()</code>设置data watches，<code>getChildren()</code>设置child watches；也可以想象watch会根据返回的数据设置，<code>getData()</code>、<code>exists()</code>返回节点数据的信息，<code>getChildren()</code>返回子节点列表。于是，<code>setData()</code>会触发本节点的data watches(假设set成功)。一个成功的<code>create()</code>会触发本节点的data watches和父节点的child watches。一个成功的<code>delete()</code>会触发本节点的data watches和child watches，也会触发父节点的child watches。  </li>
+</ul>
+<p>watches在与客户端相连的ZK服务器本地维护。当客户端与新服务器连接时，watch会被任何的会话events触发。当失去连接时watch不会被接受到。客户端重连时，之前的任何注册过的watches会背重新注册。只有一种情况watch会丢失：a watch for the existence of a znode not yet created will be missed if the znode is created and deleted while disconnected。</p>
+<h3 id="3-1-Semantics-of-Watches"><a href="#3-1-Semantics-of-Watches" class="headerlink" title="3.1 Semantics of Watches"></a>3.1 Semantics of Watches</h3><p>可以使用读ZK状态的三个调用来设置watches：<code>exists</code>、<code>getData</code>、<code>getChildren</code>。The following list details the events that a watch can trigger and the calls that enable them:</p>
+<ul>
+<li>Created event: Enabled with a call to exists.</li>
+<li>Deleted event: Enabled with a call to exists, getData, and getChildren.</li>
+<li>Changed event: Enabled with a call to exists and getData.</li>
+<li>Child event: Enabled with a call to getChildren.</li>
+</ul>
+<h3 id="3-2-What-ZooKeeper-Guarantees-about-Watches"><a href="#3-2-What-ZooKeeper-Guarantees-about-Watches" class="headerlink" title="3.2 What ZooKeeper Guarantees about Watches"></a>3.2 What ZooKeeper Guarantees about Watches</h3><p>ZK提供了对于watches的以下保证：</p>
+<ul>
+<li>Watches are ordered with respect to other events, other watches, and asynchronous replies. The ZooKeeper client libraries ensures that everything is dispatched in order.</li>
+<li>A client will see a watch event for a znode it is watching before seeing the new data that corresponds to that znode.</li>
+<li>The order of watch events from ZooKeeper corresponds to the order of the updates as seen by the ZooKeeper service.</li>
+</ul>
+<h3 id="3-3-Things-to-Remember-about-Watches"><a href="#3-3-Things-to-Remember-about-Watches" class="headerlink" title="3.3 Things to Remember about Watches"></a>3.3 Things to Remember about Watches</h3><ul>
+<li>Watches are one time triggers; if you get a watch event and you want to get notified of future changes, you must set another watch.</li>
+<li>Because watches are one time triggers and there is latency between getting the event and sending a new request to get a watch you cannot reliably see every change that happens to a node in ZooKeeper. Be prepared to handle the case where the znode changes multiple times between getting the event and setting the watch again. (You may not care, but at least realize it may happen.)</li>
+<li>A watch object, or function/context pair, will only be triggered once for a given notification. For example, if the same watch object is registered for an exists and a getData call for the same file and that file is then deleted, the watch object would only be invoked once with the deletion notification for the file.</li>
+<li>When you disconnect from a server (for example, when the server fails), you will not get any watches until the connection is reestablished. For this reason session events are sent to all outstanding watch handlers. Use session events to go into a safe mode: you will not be receiving events while disconnected, so your process should act conservatively in that mode.  </li>
+</ul>
+<h2 id="4-ZooKeeper-access-control-using-ACLs"><a href="#4-ZooKeeper-access-control-using-ACLs" class="headerlink" title="4. ZooKeeper access control using ACLs"></a>4. ZooKeeper access control using ACLs</h2><p>ZK使用ACLs来控制对znode的访问。ACL实现和UNIX文件访问许可的实现很像：it employs permission bits to allow/disallow various operations against a node and the scope to which the bits apply.和标准UNIX许可不同的是，a ZooKeeper node is not limited by the three standard scopes for user (owner of the file), group, and world (other).  ZooKeeper does not have a notion of an owner of a znode. Instead, an ACL specifies sets of ids and permissions that are associated with those ids.<br>注意一个ACL只适用于某一个节点，它并不会递归适用于子节点。<br>ZK支持可插入的认证方案，id使用表单<code>scheme:expression</code>指定，其中<code>scheme</code>是id对应的身份验证方案。该方案定义了一组有效表达式。比如，ip:172.16.16.1 is an id for a host with the address 172.16.16.1 using the ip scheme, whereas <code>digest:bob:password</code> is an id for the user with the name of bob using the digest scheme.<br>当客户端和ZK连接并认证通过后，ZK将与客户端关联所有的id与这个连接对应起来。当客户端视图访问一个节点时，这些id就会通过ACL来检查。ACL是由<code>(scheme:expression, perms)</code>组成的。For example, the pair (ip:19.22.0.0/16, READ) gives the READ permission to any clients with an IP address that starts with 19.22.  </p>
+<h3 id="4-1-ACL-Permissions"><a href="#4-1-ACL-Permissions" class="headerlink" title="4.1 ACL Permissions"></a>4.1 ACL Permissions</h3><p>ZK支持以下权限：</p>
+<ul>
+<li>CREATE: you can create a child node</li>
+<li>READ: you can get data from a node and list its children.</li>
+<li>WRITE: you can set data for a node</li>
+<li>DELETE: you can delete a child node</li>
+<li>ADMIN: you can set permissions</li>
+</ul>
+<p>ZooKeeper doesn’t support the LOOKUP permission (execute permission bit on directories to allow you to LOOKUP even though you can’t list the directory). Everyone implicitly has LOOKUP permission. This allows you to stat a node, but nothing more. (The problem is, if you want to call zoo_exists() on a node that doesn’t exist, there is no permission to check.)<br>ADMIN permission also has a special role in terms of ACLs: in order to retrieve ACLs of a znode user has to have READ or ADMIN permission, but without ADMIN permission, digest hash values will be masked out.  </p>
+<h4 id="4-1-1-Builtin-ACL-Schemes"><a href="#4-1-1-Builtin-ACL-Schemes" class="headerlink" title="4.1.1 Builtin ACL Schemes"></a>4.1.1 Builtin ACL Schemes</h4><p>ZK有以下方案：</p>
+<ul>
+<li><strong>world</strong> has a single id, <code>anyone</code>, that represents anyone.</li>
+<li><strong>auth</strong> is a special scheme which ignores any provided expression and instead uses the current user, credentials, and scheme. Any expression (whether user like with SASL authentication or user:password like with DIGEST authentication) provided is ignored by the ZooKeeper server when persisting the ACL. However, the expression must still be provided in the ACL because the ACL must match the form scheme:expression:perms. This scheme is provided as a convenience as it is a common use-case for a user to create a znode and then restrict access to that znode to only that user. If there is no authenticated user, setting an ACL with the auth scheme will fail.</li>
+<li><strong>digest</strong> uses a <code>username:password</code> string to generate MD5 hash which is then used as an ACL ID identity. Authentication is done by sending the <code>username:password</code> in clear text. When used in the ACL the expression will be the <code>username:base64</code> encoded <code>SHA1</code> password digest.</li>
+<li><strong>ip</strong> uses the client host IP as an ACL ID identity. The ACL expression is of the form <code>addr/bits</code> where the most significant <code>bits</code> of <code>addr</code> are matched against the most significant <code>bits</code> of the client host IP.</li>
+<li><strong>x509</strong> uses the client X500 Principal as an ACL ID identity. The ACL expression is the exact X500 Principal name of a client. When using the secure port, clients are automatically authenticated and their auth info for the x509 scheme is set.</li>
+</ul>
+<h4 id="4-1-2-ZooKeeper-C-client-API"><a href="#4-1-2-ZooKeeper-C-client-API" class="headerlink" title="4.1.2 ZooKeeper C client API"></a>4.1.2 ZooKeeper C client API</h4><p>The following constants are provided by the ZooKeeper C library:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> ZOO_PERM_READ; <span class="comment">//can read node’s value and list its children</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> ZOO_PERM_WRITE;<span class="comment">// can set the node’s value</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> ZOO_PERM_CREATE; <span class="comment">//can create children</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> ZOO_PERM_DELETE;<span class="comment">// can delete children</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> ZOO_PERM_ADMIN; <span class="comment">//can execute set_acl()</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> ZOO_PERM_ALL;<span class="comment">// all of the above flags OR’d together</span></span><br></pre></td></tr></table></figure></p>
+<p>The following are the standard ACL IDs:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Id</span> <span class="title">ZOO_ANYONE_ID_UNSAFE</span>;</span> <span class="comment">//(‘world’,’anyone’)</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Id</span> <span class="title">ZOO_AUTH_IDS</span>;</span><span class="comment">// (‘auth’,’’)</span></span><br></pre></td></tr></table></figure></p>
+<p>ZOO_AUTH_IDS empty identity string should be interpreted as “the identity of the creator”.<br>ZooKeeper client comes with three standard ACLs:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ACL_vector</span> <span class="title">ZOO_OPEN_ACL_UNSAFE</span>;</span> <span class="comment">//(ZOO_PERM_ALL,ZOO_ANYONE_ID_UNSAFE)</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ACL_vector</span> <span class="title">ZOO_READ_ACL_UNSAFE</span>;</span><span class="comment">// (ZOO_PERM_READ, ZOO_ANYONE_ID_UNSAFE)</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ACL_vector</span> <span class="title">ZOO_CREATOR_ALL_ACL</span>;</span> <span class="comment">//(ZOO_PERM_ALL,ZOO_AUTH_IDS)</span></span><br></pre></td></tr></table></figure></p>
+<p>The ZOO_OPEN_ACL_UNSAFE is completely open free for all ACL: any application can execute any operation on the node and can create, list and delete its children. The ZOO_READ_ACL_UNSAFE is read-only access for any application. CREATE_ALL_ACL grants all permissions to the creator of the node. The creator must have been authenticated by the server (for example, using “<em>digest</em>” scheme) before it can create nodes with this ACL.  </p>
+<p>The following ZooKeeper operations deal with ACLs:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">zoo_add_auth</span> <span class="params">(<span class="keyword">zhandle_t</span> *zh,_const_ <span class="keyword">char</span>* scheme,_const_ <span class="keyword">char</span>* cert, <span class="keyword">int</span> certLen, <span class="keyword">void_completion_t</span> completion, <span class="keyword">const</span> <span class="keyword">void</span> *data)</span></span>;</span><br></pre></td></tr></table></figure></p>
+<p>The application uses the zoo_add_auth function to authenticate itself to the server. The function can be called multiple times if the application wants to authenticate using different schemes and/or identities.<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">zoo_create</span> <span class="params">(<span class="keyword">zhandle_t</span> *zh, <span class="keyword">const</span> <span class="keyword">char</span> *path, <span class="keyword">const</span> <span class="keyword">char</span> *value,_int_ valuelen, <span class="keyword">const</span> struct ACL_vector *acl, <span class="keyword">int</span> flags,_char_ *realpath, <span class="keyword">int</span> max_realpath_len)</span></span>;</span><br></pre></td></tr></table></figure></p>
+<p>zoo_create(…) operation creates a new node. The acl parameter is a list of ACLs associated with the node. The parent node must have the CREATE permission bit set.<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">zoo_get_acl</span> <span class="params">(<span class="keyword">zhandle_t</span> *zh, <span class="keyword">const</span> <span class="keyword">char</span> *path,_struct_ ACL_vector *acl, struct Stat *stat)</span></span>;</span><br></pre></td></tr></table></figure></p>
+<p>This operation returns a node’s ACL info. The node must have READ or ADMIN permission set. Without ADMIN permission, the digest hash values will be masked out.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">zoo_set_acl</span> <span class="params">(<span class="keyword">zhandle_t</span> *zh, <span class="keyword">const</span> <span class="keyword">char</span> *path, <span class="keyword">int</span> version,_const_ struct ACL_vector *acl)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>This function replaces node’s ACL list with a new one. The node must have the ADMIN permission set.</p>
+<h2 id="5-Pluggable-ZooKeeper-authentication"><a href="#5-Pluggable-ZooKeeper-authentication" class="headerlink" title="5. Pluggable ZooKeeper authentication"></a>5. Pluggable ZooKeeper authentication</h2><p>ZooKeeper运行在具有不同的身份验证方案的不同环境中，因此它有一个完全可插入的身份验证框架。甚至内置身份验证方案也使用可插入身份验证框架。要了解身份验证框架的工作原理，首先必须了解两个主要的身份验证操作。框架首先必须对客户机进行身份验证。这通常是在客户机连接到服务器时完成的，包括验证从客户机发送的或收集到的关于客户机的信息，并将其与连接关联起来。框架处理的第二个操作是查找ACL中与客户机对应的条目。ACL条目是<code>&lt;_idspec, permissions_&gt;</code>对。<code>idspec</code>可以是针对与连接关联的身份验证信息的简单字符串匹配，也可以是针对该信息求值的表达式。这取决于身份验证插件的实现来完成匹配。下面是认证插件必须实现的接口:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">AuthenticationProvider</span> </span>&#123;</span><br><span class="line">    <span class="function">String <span class="title">getScheme</span><span class="params">()</span></span>;</span><br><span class="line">    KeeperException.<span class="function">Code <span class="title">handleAuthentication</span><span class="params">(ServerCnxn cnxn, <span class="keyword">byte</span> authData[])</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">isValid</span><span class="params">(String id)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">matches</span><span class="params">(String id, String aclExpr)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">isAuthenticated</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>第一个方法<code>getScheme</code>返回标识插件的字符串。由于支持多种身份验证方法，所以身份验证凭据或<code>idspec</code>总是以<code>scheme:</code>作为前缀。ZooKeeper服务器使用身份验证插件返回的模式来确定该模式应用于哪个id。<br>当客户机发送与连接关联的身份验证信息时，调用<code>handleAuthentication</code>。客户端指定信息对应的方案。ZooKeeper服务器将信息传递给身份验证插件，该插件的<code>getScheme</code>与客户机传递的<code>scheme</code>匹配。<code>handleAuthentication</code>的实现通常在确认信息时坏的情况下返回一个错误，或者使用<code>cnxn.getAuthInfo()</code>将信息与连接关联起来。(<code>new Id (getScheme(),data)</code>)。<br>身份验证插件涉及到设置和使用acl。当为znode设置ACL时，ZooKeeper服务器将把条目的id部分传递给<code>isValid(String id)</code>方法。由插件来验证id是否具有正确的表单。例如，<code>ip:172.16.0.0/16</code>是一个有效的id，但是<code>ip:host.com</code>不是。如果新的ACL包含”auth”条目，则使用<code>isAuthenticated</code>查看是否应该将与连接连接的此方案的身份验证信息添加到ACL。有些方案不应该包括在auth中。例如，如果指定了auth，则不会将客户机的IP地址视为应该添加到ACL的id。<br>ZooKeeper在检查ACL时调用<code>matches(String id, String aclExpr)</code>。它需要将客户机的身份验证信息与相关ACL条目相匹配。To find the entries which apply to the client, the ZooKeeper server will find the scheme of each entry and if there is authentication information from that client for that scheme, <code>matches(String id, String aclExpr)</code> will be called with id set to the authentication information that was previously added to the connection by <code>handleAuthentication</code> and <code>aclExpr</code> set to the id of the ACL entry. The authentication plugin uses its own logic and matching scheme to determine if id is included in <code>aclExpr</code>.<br>有两个内置的身份验证插件:<code>ip</code>和<code>digest</code>。添加插件可以使用添加系统属性的方式添加。启动时，ZooKeeper服务器将查找以<code>ZooKeeper.authprovider</code>开头的系统属性，并将这些属性的值解释为身份验证插件的类名。可以使用<code>-Dzookeeeper.authProvider.X=com.f.MyAuth</code>设置这些属性,或在服务器配置文件中添加以下条目:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">authProvider.1=com.f.MyAuth</span><br><span class="line">authProvider.2=com.f.MyAuth2</span><br></pre></td></tr></table></figure></p>
+<p>应该注意确保属性上的后缀是惟一的。如果有<code>-Dzookeeeper.authProvider.X=com.f.MyAuth</code>这样的副本如 <code>-Dzookeeper.authProvider.X=com.f.MyAuth2</code>，只有一个会被使用。此外，所有服务器必须有相同定义的插件，否则使用插件提供的身份验证方案的客户端连接到某些服务器时会出现问题。  </p>
+<h2 id="6-Consistency-Guarantees"><a href="#6-Consistency-Guarantees" class="headerlink" title="6. Consistency Guarantees"></a>6. Consistency Guarantees</h2><p>ZK的一致性保证：</p>
+<ul>
+<li>Sequential Consistency 顺序一致性<br>来自客户端的更新会以发送的顺序执行</li>
+<li>原子性 Atomicity<br>更新要么成功要么失败，没有局部性结果。</li>
+<li>Single System Image 单一系统镜像<br>无论练到那台服务器客户端都会看到相同的镜像。</li>
+<li>Reliability 可靠性<br>一旦一个更新被应用，从此刻起它会在下次更新之前一直存在。由此可以推出：<ol>
+<li>如果一个客户端获得了成功的返回值，这个更新会被应用。一些情况下(如通信故障、超时等)客户端会不知道更新是否被应用。只在获得成功的返回值时有所保证(This is called the <code>monotonicity condition</code> in Paxos)。</li>
+<li>当从server failures恢复时，客户端通过读请求或一次成功的更新看到的所有更新永远不会回滚。</li>
+</ol>
+</li>
+<li>TimeLiness 实时性<br>在特定的一段时间内(on the order of tens of seconds)，客户端看到的系统保证是实时的。在此时间范围内，客户端要么看到系统的更改，要么发现服务中断。  </li>
+</ul>
+<p>Using these consistency guarantees it is easy to build higher level functions such as leader election, barriers, queues, and read/write revocable locks solely at the ZooKeeper client (no additions needed to ZooKeeper).   </p>
+<blockquote>
+<p>Sometimes developers mistakenly assume one other guarantee that ZooKeeper does not in fact make. This is: <em> Simultaneously Consistent Cross-Client Views</em> : ZooKeeper does not guarantee that at every instance in time, two different clients will have identical views of ZooKeeper data. Due to factors like network delays, one client may perform an update before another client gets notified of the change. Consider the scenario of two clients, A and B. If client A sets the value of a znode /a from 0 to 1, then tells client B to read /a, client B may read the old value of 0, depending on which server it is connected to. If it is important that Client A and Client B read the same value, Client B should should call the <code>sync()</code> method from the ZooKeeper API method before it performs its read. So, ZooKeeper by itself doesn’t guarantee that changes occur synchronously across all servers, but ZooKeeper primitives can be used to construct higher level functions that provide useful client synchronization. (For more information, see the ZooKeeper Recipes. [tbd:..]).  </p>
+</blockquote>
+<h2 id="7-Bindings"><a href="#7-Bindings" class="headerlink" title="7. Bindings"></a>7. Bindings</h2><p>ZK client libraties有两种语言的版本：Java和C。</p>
+<h3 id="7-1-Java-Binding"><a href="#7-1-Java-Binding" class="headerlink" title="7.1 Java Binding"></a>7.1 Java Binding</h3><p>组成ZK Java绑定的包有两个:<code>org.apache.zookeeper</code>和<code>org.apache.zookeeper.data</code>。构成ZooKeeper的其余的包在内部使用，或者是服务器实现的一部分。<code>org.apache.zookeeper.data</code>包是由生成的class文件组成，它们仅被用来做容器。<br>ZooKeeper Java客户端使用的主要类是<code>ZooKeeper</code>类。它有两个构造函数，区别只是可选的session id和password。ZooKeeper支持跨进程实例的会话恢复。Java程序可以将其会话id和密码保存为稳定的存储，重新启动和恢复程序的前一个实例使用的会话。<br>当创建ZooKeeper对象时，也会创建两个线程:一个IO线程和一个事件线程。所有IO都发生在IO线程上(使用Java NIO)。所有事件回调都发生在事件线程上。会话维护(如重新连接到ZooKeeper服务器和维护心跳)是在IO线程上完成的。同步方法的响应也在IO线程中处理。对异步方法和监视事件的所有响应都在事件线程上处理。从这个设计中我们可以注意到以下几点:  </p>
+<ul>
+<li>异步调用和监视程序回调都将按顺序完成，一次一个。调用者可以执行他们希望执行的任何处理，但是在此期间不会处理任何其他回调。</li>
+<li>回调不会阻塞IO线程的处理或同步调用的处理。</li>
+<li>同步调用可能不会以正确的顺序返回。例如，假设客户机执行以下处理:发出节点<code>/a</code>的异步读取，并将<code>watch</code>设置为true，然后在读取的回调中执行<code>/a</code>的同步读取。(也许这不是很好的做法，但也不是非法的，它只是一个简单的例子。)注意,如果异步读和同步读之间有对<code>/a</code>的更改,客户端库将收到在收到同步读的响应前收到watch通知<code>/a</code>已经更改了,但因为完成回调阻塞了事件队列,同步读的会在watch事件被处理前返回<code>/a</code>的最新值。  </li>
+</ul>
+<p>最后，与shutdown相关的规则很简单:一旦ZooKeeper对象关闭或接收到致死的事件(<code>SESSION_EXPIRED</code>和<code>AUTH_FAILED</code>)， ZooKeeper对象就会失效。在关闭时，两个线程关闭，zookeeper句柄上任何的进一步访问都是未定义的行为，应该避免。</p>
+<h3 id="7-2-C-Binding"><a href="#7-2-C-Binding" class="headerlink" title="7.2 C Binding"></a>7.2 C Binding</h3><p>The C binding has a single-threaded and multi-threaded library. The multi-threaded library is easiest to use and is most similar to the Java API. This library will create an IO thread and an event dispatch thread for handling connection maintenance and callbacks. The single-threaded library allows ZooKeeper to be used in event driven applications by exposing the event loop used in the multi-threaded library.<br>The package includes two shared libraries: zookeeper_st and zookeeper_mt. The former only provides the asynchronous APIs and callbacks for integrating into the application’s event loop. The only reason this library exists is to support the platforms were a pthread library is not available or is unstable (i.e. FreeBSD 4.x). In all other cases, application developers should link with zookeeper_mt, as it includes support for both Sync and Async API.</p>
+<h2 id="8-Building-Blocks-A-Guide-to-ZooKeeper-Operations"><a href="#8-Building-Blocks-A-Guide-to-ZooKeeper-Operations" class="headerlink" title="8. Building Blocks: A Guide to ZooKeeper Operations"></a>8. Building Blocks: A Guide to ZooKeeper Operations</h2><h3 id="8-1-Handling-Errors"><a href="#8-1-Handling-Errors" class="headerlink" title="8.1 Handling Errors"></a>8.1 Handling Errors</h3><p>Java和C客户机绑定都可能报告错误。Java客户机绑定通过抛出<code>KeeperException</code>来实现这一点，对异常调用<code>code()</code>将返回特定的错误代码。C客户机绑定返回enum <code>ZOO_ERRORS</code>中定义的错误码。两种语言绑定都可以使用API回调表明的结果码。有关可能的错误及其含义的详细信息，请参阅API文档(javadoc dorJava, doxygen dor C)。</p>
+<h3 id="Connecting-to-ZooKeeper"><a href="#Connecting-to-ZooKeeper" class="headerlink" title="Connecting to ZooKeeper"></a>Connecting to ZooKeeper</h3><h3 id="Read-Operations"><a href="#Read-Operations" class="headerlink" title="Read Operations"></a>Read Operations</h3><h3 id="Write-Operations"><a href="#Write-Operations" class="headerlink" title="Write Operations"></a>Write Operations</h3><h3 id="Handling-Watches"><a href="#Handling-Watches" class="headerlink" title="Handling Watches"></a>Handling Watches</h3><h3 id="Miscelleaneous-ZooKeeper-Operations"><a href="#Miscelleaneous-ZooKeeper-Operations" class="headerlink" title="Miscelleaneous ZooKeeper Operations"></a>Miscelleaneous ZooKeeper Operations</h3><h3 id="Program-Structure-with-Simple-Example"><a href="#Program-Structure-with-Simple-Example" class="headerlink" title="Program Structure, with Simple Example"></a>Program Structure, with Simple Example</h3><h3 id="tbd"><a href="#tbd" class="headerlink" title="[tbd]"></a>[tbd]</h3><h2 id="9-Program-Structure-with-Simple-Example"><a href="#9-Program-Structure-with-Simple-Example" class="headerlink" title="9. Program Structure, with Simple Example"></a>9. Program Structure, with Simple Example</h2><p>[tbd]</p>
+<h2 id="10-Gotchas-Common-Problems-and-Troubleshooting"><a href="#10-Gotchas-Common-Problems-and-Troubleshooting" class="headerlink" title="10. Gotchas: Common Problems and Troubleshooting"></a>10. Gotchas: Common Problems and Troubleshooting</h2><hr>
+<p><strong>Links to Other Information:</strong>   </p>
+<ul>
+<li>ZooKeeper Whitepaper [tbd: find url] : The definitive discussion of ZooKeeper design and performance, by Yahoo! Research</li>
+<li>API Reference [tbd: find url] : The complete reference to the ZooKeeper API</li>
+<li><a href="http://us.dl1.yimg.com/download.yahoo.com/dl/ydn/zookeeper.m4v" target="_blank" rel="noopener">ZooKeeper Talk at the Hadoup Summit 2008</a> : A video introduction to ZooKeeper, by Benjamin Reed of Yahoo! Research</li>
+<li><a href="https://cwiki.apache.org/confluence/display/ZOOKEEPER/Tutorial" target="_blank" rel="noopener">Barrier and Queue Tutorial</a> : The excellent Java tutorial by Flavio Junqueira, implementing simple barriers and producer-consumer queues using ZooKeeper.</li>
+<li><a href="https://cwiki.apache.org/confluence/display/ZOOKEEPER/ZooKeeperArticles" target="_blank" rel="noopener">ZooKeeper - A Reliable, Scalable Distributed Coordination System</a> : An article by Todd Hoff (07/15/2008)</li>
+<li><a href="http://zookeeper.apache.org/doc/current/recipes.html" target="_blank" rel="noopener">ZooKeeper Recipes</a> : Pseudo-level discussion of the implementation of various synchronization solutions with ZooKeeper: Event Handles, Queues, Locks, and Two-phase Commits.</li>
+<li>[tbd] : Any other good sources anyone can think of…</li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/zookeeper/" rel="tag"># zookeeper</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/04/26/backends/zookeeper/ZooKeeper(二) CAP和BASE定理/" rel="next" title="ZooKeeper(二) CAP和BASE定理">
+                <i class="fa fa-chevron-left"></i> ZooKeeper(二) CAP和BASE定理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/uploads/avatar.gif" alt="Javior Wang">
+            
+              <p class="site-author-name" itemprop="name">Javior Wang</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/scorego" title="GitHub &rarr; https://github.com/scorego" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://www.zhihu.com/people/scorego-6" title="Zhihu &rarr; https://www.zhihu.com/people/scorego-6" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>Zhihu</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-The-ZooKeeper-Data-Model"><span class="nav-text">1. The ZooKeeper Data Model</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-ZNodes"><span class="nav-text">1.1 ZNodes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-Time-in-ZooKeeper"><span class="nav-text">1.2 Time in ZooKeeper</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-ZooKeeper-Stat-Structure"><span class="nav-text">1.3 ZooKeeper Stat Structure</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-ZooKeeper-Sessions"><span class="nav-text">2. ZooKeeper Sessions</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Zookeeper-Watches"><span class="nav-text">3. Zookeeper Watches</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-Semantics-of-Watches"><span class="nav-text">3.1 Semantics of Watches</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-What-ZooKeeper-Guarantees-about-Watches"><span class="nav-text">3.2 What ZooKeeper Guarantees about Watches</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-Things-to-Remember-about-Watches"><span class="nav-text">3.3 Things to Remember about Watches</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-ZooKeeper-access-control-using-ACLs"><span class="nav-text">4. ZooKeeper access control using ACLs</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-ACL-Permissions"><span class="nav-text">4.1 ACL Permissions</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-1-Builtin-ACL-Schemes"><span class="nav-text">4.1.1 Builtin ACL Schemes</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-2-ZooKeeper-C-client-API"><span class="nav-text">4.1.2 ZooKeeper C client API</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-Pluggable-ZooKeeper-authentication"><span class="nav-text">5. Pluggable ZooKeeper authentication</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-Consistency-Guarantees"><span class="nav-text">6. Consistency Guarantees</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-Bindings"><span class="nav-text">7. Bindings</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-Java-Binding"><span class="nav-text">7.1 Java Binding</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-C-Binding"><span class="nav-text">7.2 C Binding</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-Building-Blocks-A-Guide-to-ZooKeeper-Operations"><span class="nav-text">8. Building Blocks: A Guide to ZooKeeper Operations</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-Handling-Errors"><span class="nav-text">8.1 Handling Errors</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Connecting-to-ZooKeeper"><span class="nav-text">Connecting to ZooKeeper</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Read-Operations"><span class="nav-text">Read Operations</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Write-Operations"><span class="nav-text">Write Operations</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Handling-Watches"><span class="nav-text">Handling Watches</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Miscelleaneous-ZooKeeper-Operations"><span class="nav-text">Miscelleaneous ZooKeeper Operations</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Program-Structure-with-Simple-Example"><span class="nav-text">Program Structure, with Simple Example</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tbd"><span class="nav-text">[tbd]</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-Program-Structure-with-Simple-Example"><span class="nav-text">9. Program Structure, with Simple Example</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-Gotchas-Common-Problems-and-Troubleshooting"><span class="nav-text">10. Gotchas: Common Problems and Troubleshooting</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Javior Wang</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

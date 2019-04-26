@@ -95,7 +95,7 @@
 
 
   <meta name="description" content="1. 分布式系统分布式系统（distributed system） 由多台计算机和通信的软件组件通过计算机网络连接（本地网络或广域网）组成，是建立在网络之上的软件系统。正是因为软件的特性，分布式系统具有高度的内聚性和透明性，因此，网络和分布式系统之间的区别更多的在于高层软件（特别是操作系统）而不是硬件。分布式系统可以应用在不同的平台如：PC、工作站、局域网、广域网等。分布式系统变得越来越重要，基本">
-<meta name="keywords" content="zookeeper,CAP">
+<meta name="keywords" content="zookeeper">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ZooKeeper(二) CAP和BASE定理">
 <meta property="og:url" content="javior.wang/2019/04/26/backends/zookeeper/ZooKeeper(二) CAP和BASE定理/index.html">
@@ -103,7 +103,7 @@
 <meta property="og:description" content="1. 分布式系统分布式系统（distributed system） 由多台计算机和通信的软件组件通过计算机网络连接（本地网络或广域网）组成，是建立在网络之上的软件系统。正是因为软件的特性，分布式系统具有高度的内聚性和透明性，因此，网络和分布式系统之间的区别更多的在于高层软件（特别是操作系统）而不是硬件。分布式系统可以应用在不同的平台如：PC、工作站、局域网、广域网等。分布式系统变得越来越重要，基本">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="/images/backend/zookeeper/02_01.png">
-<meta property="og:updated_time" content="2019-04-26T05:40:42.768Z">
+<meta property="og:updated_time" content="2019-04-26T10:31:38.166Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ZooKeeper(二) CAP和BASE定理">
 <meta name="twitter:description" content="1. 分布式系统分布式系统（distributed system） 由多台计算机和通信的软件组件通过计算机网络连接（本地网络或广域网）组成，是建立在网络之上的软件系统。正是因为软件的特性，分布式系统具有高度的内聚性和透明性，因此，网络和分布式系统之间的区别更多的在于高层软件（特别是操作系统）而不是硬件。分布式系统可以应用在不同的平台如：PC、工作站、局域网、广域网等。分布式系统变得越来越重要，基本">
@@ -384,7 +384,7 @@
                 
               
 
-              <time title="创建时间：2019-04-26 10:23:42 / 修改时间：13:40:42" itemprop="dateCreated datePublished" datetime="2019-04-26T10:23:42+08:00">2019-04-26</time>
+              <time title="创建时间：2019-04-26 10:23:42 / 修改时间：18:31:38" itemprop="dateCreated datePublished" datetime="2019-04-26T10:23:42+08:00">2019-04-26</time>
             
 
             
@@ -544,13 +544,17 @@
 </tbody>
 </table>
 <h2 id="4-ZooKeeper提供的一致性服务"><a href="#4-ZooKeeper提供的一致性服务" class="headerlink" title="4. ZooKeeper提供的一致性服务"></a>4. ZooKeeper提供的一致性服务</h2><p>ZooKeeper从以下几点保证数据的一致性：</p>
-<ol>
-<li>顺序一致性<br>来自任意客户端的更新都会按其发送顺序提交。</li>
-<li>原子性<br>每个更新要么成功，要么失败。</li>
-<li>单一系统镜像<br>客户端无论连接到哪台服务器，看到的都是相同的系统视图。这意味着若一个客户端在同一个会话中连接到其他的服务器时，它所看到的系统状态不会比在之前服务器上所看到的更老。</li>
-<li>持久性<br>一个更新一旦成功，其结果就会持久存在并且不会被撤销。这表明更新不会受到服务器故障的影响。</li>
-<li>实时性<br>在特定的一段时间内，客户端看到的系统需要保证是实时的。此时间段内任何系统的改变将被客户端看到，或者被客户端侦测到。    </li>
+<ul>
+<li>Sequential Consistency 顺序一致性<br>来自客户端的更新会以发送的顺序执行</li>
+<li>原子性 Atomicity<br>更新要么成功要么失败，没有局部性结果。</li>
+<li>Single System Image 单一系统镜像<br>无论练到那台服务器客户端都会看到相同的镜像。</li>
+<li>Reliability 可靠性<br>一旦一个更新被应用，从此刻起它会在下次更新之前一直存在。由此可以推出：<ol>
+<li>如果一个客户端获得了成功的返回值，这个更新会被应用。一些情况下(如通信故障、超时等)客户端会不知道更新是否被应用。只在获得成功的返回值时有所保证(This is called the <code>monotonicity condition</code> in Paxos)。</li>
+<li>当从server failures恢复时，客户端通过读请求或一次成功的更新看到的所有更新永远不会回滚。</li>
 </ol>
+</li>
+<li>TimeLiness 实时性<br>在特定的一段时间内(on the order of tens of seconds)，客户端看到的系统保证是实时的。在此时间范围内，客户端要么看到系统的更改，要么发现服务中断。  </li>
+</ul>
 <hr>
 <p>(尚未确认正确性)<br>ZooKeeper实际上提供的是单调一致性，原因是：  </p>
 <ol>
@@ -594,8 +598,6 @@
           
             <a href="/tags/zookeeper/" rel="tag"># zookeeper</a>
           
-            <a href="/tags/CAP/" rel="tag"># CAP</a>
-          
         </div>
       
 
@@ -616,6 +618,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/04/26/backends/zookeeper/ZooKeeper(三) ZooKeeper Developer/" rel="prev" title="ZooKeeper(三) ZooKeeper Developer">
+                ZooKeeper(三) ZooKeeper Developer <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -686,7 +692,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-count">9</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -744,7 +750,7 @@
                     
                       
                     
-                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-count">7</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

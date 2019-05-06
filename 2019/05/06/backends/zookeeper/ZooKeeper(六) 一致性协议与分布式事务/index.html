@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="Javior&#39;s Blog">
 <meta property="og:description" content="1. 一致性算法为了解决分布式一致性的问题，在长期的探索研究中，涌现出了大批经典的一致性协议和算法，其中最著名的就是二阶段提交协议、三阶段提交协议和Paxos算法。 1.1 2PC在分布式系统中，每一个节点无法直接获取到其他节点的操作结果，因此当一个事务操作跨越多个分布式节点时，为保持事务处理的ACID特性，需要引入一个协调者(Coordinator)来统一调度所有节点的执行逻辑。这些被调度的节点">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-06T10:40:21.381Z">
+<meta property="og:updated_time" content="2019-05-06T12:46:53.510Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ZooKeeper(六) 一致性协议与分布式事务">
 <meta name="twitter:description" content="1. 一致性算法为了解决分布式一致性的问题，在长期的探索研究中，涌现出了大批经典的一致性协议和算法，其中最著名的就是二阶段提交协议、三阶段提交协议和Paxos算法。 1.1 2PC在分布式系统中，每一个节点无法直接获取到其他节点的操作结果，因此当一个事务操作跨越多个分布式节点时，为保持事务处理的ACID特性，需要引入一个协调者(Coordinator)来统一调度所有节点的执行逻辑。这些被调度的节点">
@@ -382,7 +382,7 @@
                 
               
 
-              <time title="创建时间：2019-05-06 11:27:55 / 修改时间：18:40:21" itemprop="dateCreated datePublished" datetime="2019-05-06T11:27:55+08:00">2019-05-06</time>
+              <time title="创建时间：2019-05-06 11:27:55 / 修改时间：20:46:53" itemprop="dateCreated datePublished" datetime="2019-05-06T11:27:55+08:00">2019-05-06</time>
             
 
             
@@ -546,11 +546,12 @@
 <li>Hypertable<br>Hypertable was an open-source software project to implement a database management system inspired by publications on the design of Google’s Bigtable.</li>
 <li>LibPaxos<br>LibPaxos is a collection of open source implementations of the Paxos algorithmm. Paxos is often used to implement Atomic Broadcast, a useful primitive for building fault-tolerant distributed systems.</li>
 </ul>
-<h3 id="1-4-ZAB"><a href="#1-4-ZAB" class="headerlink" title="1.4 ZAB"></a>1.4 ZAB</h3><p>ZooKeeper并没有直接采用Paxos算法，而是采用了ZAB(ZooKeeper Atomic Broadcast，原子消息广播协议)一致性协议。<br>ZooKeeper官方有一些涉及到ZAB协议的论文：<br><a href="https://www.datadoghq.com/pdf/zab.totally-ordered-broadcast-protocol.2008.pdf" target="_blank" rel="noopener">A simple totally ordered broadcast protocol</a><br><a href="https://knowably-attachments.s3.amazonaws.com/u/55b69a1ce4b00ab397d67250/7c8734d3cf02154499a9b3161ef9f575/Zab_2011.pdf" target="_blank" rel="noopener">Zab: High-performance broadcast for primary-backup systems</a><br>基于ZAB协议，ZK实现了一种主备模式的系统架构来保持集群中各副本之间数据的一致性。具体地，ZK使用一个单一的主进程来接收并处理客户端的所有事务请求，并采用ZAB协议将服务器的状态变更以事务Proposal的形式广播到所有的进程副本。<br>主备模型架构保证了同一时刻集群中只能有一个主进程来广播服务器的状态变更，因此能够很好地处理高并发请求。另外顺序执行的状态变更前后可能会有一定的依赖关系，所以ZAB协议需要保证如果存在依赖关系的一组状态变更的最后一个已经处理了，那么值钱的状态变更应该已经被提前处理掉了。最后，考虑到主进程有可能在任何时候崩溃或重启，ZAB协议还需要做到在当前主进程出现问题时能正常工作。<br>ZAB协议的核心定义是对会改变ZK服务器数据状态的事务请求的处理方式，即：  </p>
+<h3 id="1-4-ZAB"><a href="#1-4-ZAB" class="headerlink" title="1.4 ZAB"></a>1.4 ZAB</h3><p>ZooKeeper并没有直接采用Paxos算法，而是采用了ZAB(ZooKeeper Atomic Broadcast，原子消息广播协议)一致性协议。<br>ZooKeeper官方有一些涉及到ZAB协议的论文：<br><a href="https://www.datadoghq.com/pdf/zab.totally-ordered-broadcast-protocol.2008.pdf" target="_blank" rel="noopener">A simple totally ordered broadcast protocol</a><br><a href="https://knowably-attachments.s3.amazonaws.com/u/55b69a1ce4b00ab397d67250/7c8734d3cf02154499a9b3161ef9f575/Zab_2011.pdf" target="_blank" rel="noopener">Zab: High-performance broadcast for primary-backup systems</a>   </p>
+<p>基于ZAB协议，ZK实现了一种主备模式的系统架构来保持集群中各副本之间数据的一致性。具体地，ZK使用一个单一的主进程来接收并处理客户端的所有事务请求，并采用ZAB协议将服务器的状态变更以事务Proposal的形式广播到所有的进程副本。<br>主备模型架构保证了同一时刻集群中只能有一个主进程来广播服务器的状态变更，因此能够很好地处理高并发请求。另外顺序执行的状态变更前后可能会有一定的依赖关系，所以ZAB协议需要保证如果存在依赖关系的一组状态变更的最后一个已经处理了，那么值钱的状态变更应该已经被提前处理掉了。最后，考虑到主进程有可能在任何时候崩溃或重启，ZAB协议还需要做到在当前主进程出现问题时能正常工作。<br>ZAB协议的核心定义是对会改变ZK服务器数据状态的事务请求的处理方式，即：  </p>
 <blockquote>
 <p>所有的事务请求必须有一个全局唯一的服务器（Leader）来协调处理，而余下的其他服务器称为Follower。Leader负责将一个客户端事务请求转换为一个事务Proposal（提议），并将该Proposal分发给集群中的所有的Follower。之后Leader需要等待所有Follower的反馈，一旦超过半数Follower进行了正反馈，那么Leader会再次向所有的Follower分发commit消息，要求其将前一个Proposal提交。</p>
 </blockquote>
-<p>ZAB协议包括两种基本模式：崩溃回复和消息广播。</p>
+<p>ZAB协议包括两种基本模式：崩溃恢复和消息广播。</p>
 <p>// TODO</p>
 <h3 id="1-5-Raft算法"><a href="#1-5-Raft算法" class="headerlink" title="1.5 Raft算法"></a>1.5 Raft算法</h3><p>Paxos自1990年提出以后，相当长时间内几乎已成为分布式一致性算法的代名词。但其难以理解和实现，目前知名实现仅有Chubby、Zookeeper、libpaxos几种，其中Zookeeper使用的ZAB对Paxos做了大量改进。为此，2013年斯坦福的Diego Ongaro、John Ousterhout，提出了新的更易理解和实现的一致性算法，即Raft。相比传统的Paxos算法，Raft将大量的计算问题分解成为了一些简单的相对独立的子问题。<br>相关论文：<br><a href="https://raft.github.io/raft.pdf" target="_blank" rel="noopener">In Search of an Understandable Consensus Algorithm (Extended Version)</a><br><a href="https://github.com/maemual/raft-zh_cn" target="_blank" rel="noopener">上面论文的中文翻译</a></p>
 <h2 id="2-常见的分布式事务解决方案"><a href="#2-常见的分布式事务解决方案" class="headerlink" title="2. 常见的分布式事务解决方案"></a>2. 常见的分布式事务解决方案</h2><h3 id="2-1-全局消息-DTP模型"><a href="#2-1-全局消息-DTP模型" class="headerlink" title="2.1 全局消息(DTP模型)"></a>2.1 全局消息(DTP模型)</h3><h3 id="2-2-基于可靠消息服务的分布式事务"><a href="#2-2-基于可靠消息服务的分布式事务" class="headerlink" title="2.2 基于可靠消息服务的分布式事务"></a>2.2 基于可靠消息服务的分布式事务</h3><h3 id="2-3-TCC"><a href="#2-3-TCC" class="headerlink" title="2.3 TCC"></a>2.3 TCC</h3><h3 id="2-4-最大努力通知"><a href="#2-4-最大努力通知" class="headerlink" title="2.4 最大努力通知"></a>2.4 最大努力通知</h3>

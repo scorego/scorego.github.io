@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next mist" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/favicon-128x128-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-01.ico?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/uploads/favicon-128x128-01.ico?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="1. 一致性算法为了解决分布式一致性的问题，在长期的探索研究中，涌现出了大批经典的一致性协议和算法，其中最著名的就是二阶段提交协议、三阶段提交协议和Paxos算法。 1.1 2PC在分布式系统中，每一个节点无法直接获取到其他节点的操作结果，因此当一个事务操作跨越多个分布式节点时，为保持事务处理的ACID特性，需要引入一个协调者(Coordinator)来统一调度所有节点的执行逻辑。这些被调度的节点">
+<meta name="keywords" content="zookeeper,分布式事务">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ZooKeeper(六) 一致性协议与分布式事务">
+<meta property="og:url" content="javior.wang/2019/05/06/backends/zookeeper/ZooKeeper(六) 一致性协议与分布式事务/index.html">
+<meta property="og:site_name" content="Javior&#39;s Blog">
+<meta property="og:description" content="1. 一致性算法为了解决分布式一致性的问题，在长期的探索研究中，涌现出了大批经典的一致性协议和算法，其中最著名的就是二阶段提交协议、三阶段提交协议和Paxos算法。 1.1 2PC在分布式系统中，每一个节点无法直接获取到其他节点的操作结果，因此当一个事务操作跨越多个分布式节点时，为保持事务处理的ACID特性，需要引入一个协调者(Coordinator)来统一调度所有节点的执行逻辑。这些被调度的节点">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-05-06T10:40:21.381Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ZooKeeper(六) 一致性协议与分布式事务">
+<meta name="twitter:description" content="1. 一致性算法为了解决分布式一致性的问题，在长期的探索研究中，涌现出了大批经典的一致性协议和算法，其中最著名的就是二阶段提交协议、三阶段提交协议和Paxos算法。 1.1 2PC在分布式系统中，每一个节点无法直接获取到其他节点的操作结果，因此当一个事务操作跨越多个分布式节点时，为保持事务处理的ACID特性，需要引入一个协调者(Coordinator)来统一调度所有节点的执行逻辑。这些被调度的节点">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="javior.wang/2019/05/06/backends/zookeeper/ZooKeeper(六) 一致性协议与分布式事务/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>ZooKeeper(六) 一致性协议与分布式事务 | Javior's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Javior's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/05/06/backends/zookeeper/ZooKeeper(六) 一致性协议与分布式事务/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Javior Wang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Javior's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ZooKeeper(六) 一致性协议与分布式事务
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-05-06 11:27:55 / 修改时间：18:40:21" itemprop="dateCreated datePublished" datetime="2019-05-06T11:27:55+08:00">2019-05-06</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/zookeeper/" itemprop="url" rel="index"><span itemprop="name">zookeeper</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="1-一致性算法"><a href="#1-一致性算法" class="headerlink" title="1. 一致性算法"></a>1. 一致性算法</h2><p>为了解决分布式一致性的问题，在长期的探索研究中，涌现出了大批经典的一致性协议和算法，其中最著名的就是二阶段提交协议、三阶段提交协议和Paxos算法。</p>
+<h3 id="1-1-2PC"><a href="#1-1-2PC" class="headerlink" title="1.1 2PC"></a>1.1 2PC</h3><p>在分布式系统中，每一个节点无法直接获取到其他节点的操作结果，因此当一个事务操作跨越多个分布式节点时，为保持事务处理的ACID特性，需要引入一个<code>协调者(Coordinator)</code>来统一调度所有节点的执行逻辑。这些被调度的节点称为<code>参与者(Participant)</code>。协调者负责调度参与者的行为，并最终决定参与者是否真正提交事务。基于此思想诞生了2PC(二阶段提交，Two-Phase Commit)和3PC(三阶段提交，Three-Phase Commit)两种协议。<br>二阶段提交是计算机网络尤其是数据库领域内，为了基于分布式系统架构下的所有节点在进行事务处理过程中能够保持原子性和一致性而设计的一种算法。通常也把2PC认为是一种一致性协议，用来保证分布式系统数据的一致性。2PC协议应用非常广泛，目前绝大部分的关系型数据库都是采用2PC协议来完成分布式事务处理。  </p>
+<h4 id="A-协议描述"><a href="#A-协议描述" class="headerlink" title="A. 协议描述"></a>A. 协议描述</h4><p>2PC就是将事务的提交过程分成了投票和执行两个阶段来进行处理，核心是对每个事务采用先尝试后提交的办法，因此2PC是一个强一致性算法。流程如下：</p>
+<h5 id="Ⅰ-准备阶段-提交事务请求"><a href="#Ⅰ-准备阶段-提交事务请求" class="headerlink" title="Ⅰ. 准备阶段(提交事务请求)"></a>Ⅰ. 准备阶段(提交事务请求)</h5><p>这一阶段步骤如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1. 事务询问  </span><br><span class="line">协调者向各参与者发送事务内容，询问是够可以执行事务提交操作，等待各参与者响应。</span><br><span class="line">2. 执行事务  </span><br><span class="line">各参与者执行事务操作，并将Undo和Redo信息记入事务日志(但不提交事务)。  </span><br><span class="line">3. 反馈结果  </span><br><span class="line">各参与者向协调者反馈响应。若参与者成功执行了事务操作，反馈Yes响应，即可以提交；否则反馈No，即不可提交。</span><br></pre></td></tr></table></figure></p>
+<p>这一阶段也称为投票阶段，即各参与者投票表明是否要继续执行接下来的事务提交操作。</p>
+<h5 id="Ⅱ-提交阶段-执行事务提交"><a href="#Ⅱ-提交阶段-执行事务提交" class="headerlink" title="Ⅱ. 提交阶段(执行事务提交)"></a>Ⅱ. 提交阶段(执行事务提交)</h5><p>这一阶段协调者会根据各参与者的反馈来决定最终是否进行事务提交。正常情况下包含以下两种可能：  </p>
+<ol>
+<li><p>执行事务提交<br> 如果所有的参与者的反馈都是Yes，那么就会执行事务提交。  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1. 发送提交请求   </span><br><span class="line">协调者向所有参与者发出Commit请求。  </span><br><span class="line">2. 事务提交  </span><br><span class="line">参与者收到Commit请求后，正式执行事务提交操作，并在完成提交操作之后释放整个事务期间占用的资源。</span><br><span class="line">3. 反馈事务提交结果  </span><br><span class="line">参与者完成事务提交后，向协调者发送Ack消息。  </span><br><span class="line">4. 完成事务  </span><br><span class="line">协调者接收到所有参与者的ACK消息后完成事务。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>中断事务<br> 任何一个参与者反馈了No响应，或者等待超时之后仍有参与者响应未被接收，那么就会中断事务。  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1. 发送回滚请求  </span><br><span class="line">协调者向所有参与者发出Rollback请求。  </span><br><span class="line">2. 事务回滚  </span><br><span class="line">参与者接收到Rollback请求后，会利用其在准备阶段记录的Undo日志执行事务回滚，并在完成回滚后释放整个事务期间占用的资源。  </span><br><span class="line">3. 反馈事务回滚结果  </span><br><span class="line">参与者完成事务回滚之后，向协调者发送Ack消息。  </span><br><span class="line">4. 中断事务  </span><br><span class="line">协调者接收到所有参与者的Ack消息后完成事务中断。</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="B-优缺点"><a href="#B-优缺点" class="headerlink" title="B. 优缺点"></a>B. 优缺点</h4><p>优点：<br>原理简单，实现方便。  </p>
+<p>缺点：<br>同步阻塞、单点问题、脑裂、太过保守。  </p>
+<ul>
+<li><p>同步阻塞<br>在二阶段提交的执行过程中，所有参与者相关的逻辑都处于阻塞状态，这会极大限制性能。</p>
+</li>
+<li><p>单点问题<br>协调者一旦出问题，整个流程将无法运转。如果是在阶段二协调者出现问题，那么其他参与者将会一直处于锁定事务资源的状态中，无法继续完成事务操作。</p>
+</li>
+<li><p>数据不一致<br>阶段二当协调者向所有的参与者发送Commit请求后，发生了局部网络异常或协调者自身的崩溃，导致最终只有部分参与者收到了Commit请求。于是收到请求的参与者会进行事务提交，而其他参与者无法进行事务提交，出现了数据不一致的现象。  </p>
+</li>
+<li><p>太过保守<br>投票阶段如果参与者出现故障导致协调者无法获得所有参与者的投票，那么协调者只能依靠超时机制来判断是否中断事务，这样的策略太过保守。换句话说，2PC没有涉及较为完善的容错机制，任意一个节点的失败都会导致整个事务的失败。  </p>
+</li>
+</ul>
+<h3 id="1-2-3PC"><a href="#1-2-3PC" class="headerlink" title="1.2 3PC"></a>1.2 3PC</h3><p>在2PC的基础上改进二来的3PC协议解决了2PC的一些问题。</p>
+<h4 id="A-协议描述-1"><a href="#A-协议描述-1" class="headerlink" title="A. 协议描述"></a>A. 协议描述</h4><p>3PC将2PC的提交阶段一分为二，形成了CanCommit、PreCommit、DoCommit三个阶段。</p>
+<h5 id="Ⅰ-CanCommit"><a href="#Ⅰ-CanCommit" class="headerlink" title="Ⅰ. CanCommit"></a>Ⅰ. CanCommit</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. 事务询问   </span><br><span class="line">协调者向所有的参与者发送一个包含事务内容的canCommit请求，询问是否可以执行事务提交操作，等待各参与者响应。  </span><br><span class="line">2. 反馈响应  </span><br><span class="line">各参与者接收到canCommit请求后，正常情况下，如果其自身认为可以顺利执行事务，会反馈Yes响应并进入预备状态，否则反馈No。</span><br></pre></td></tr></table></figure>
+<h5 id="Ⅱ-PreCommit"><a href="#Ⅱ-PreCommit" class="headerlink" title="Ⅱ. PreCommit"></a>Ⅱ. PreCommit</h5><p>此阶段协调者根据各参与者的反馈来决定是够进行事务的PreCommit，正常情况下包含两种可能：  </p>
+<ol>
+<li><p>执行事务预提交<br>如果协调者收到所有参与者的反馈，且均为Yes，就会执行事务预提交。  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1.  发送预提交请求  </span><br><span class="line">协调者向所有参与者发出preCommit请求，并进入Prepared阶段。</span><br><span class="line">2. 事务预提交  </span><br><span class="line">参与者收到preCommit请求后，执行事务操作，将Undo和Redo信息记录到事务日志中。</span><br><span class="line">3. 反馈响应  </span><br><span class="line">如果参与者成功执行了事务操作，就反馈Ack响应，同时等待最终的指令：提交(commit)或中止(abort)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>中断事务<br>如果任何一个参与者反馈了No响应，或等待超时后协调者无法收到所有参与者的响应，就会中断事务。  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. 发送中断请求  </span><br><span class="line">协调者向各参与者发出abort请求。</span><br><span class="line">2. 中断事务  </span><br><span class="line">无论是收到abort请求，还是等待协调者请求过程超时，参与者都会中断事务。</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h5 id="Ⅲ-DoCommit"><a href="#Ⅲ-DoCommit" class="headerlink" title="Ⅲ. DoCommit"></a>Ⅲ. DoCommit</h5><p>该阶段进行真正的事务提交，存在以下两种可能：</p>
+<ol>
+<li>执行提交</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1. 发送提交请求  </span><br><span class="line">如果协调者正常工作，且收到了所有参与者的Ack响应，则会转换到提交状态，向各参与者发送doCommit请求。</span><br><span class="line">2. 事务提交  </span><br><span class="line">参与者收到doCommit请求后正式执行事务提交操作，并在完成提交之后释放整个事务期间占用的资源。</span><br><span class="line">3. 反馈响应  </span><br><span class="line">参与者完成事务提交之后，向协调者发送Ack消息。</span><br><span class="line">4. 完成事务  </span><br><span class="line">协调者收到所有参与者的Ack后完成事务。</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>中断事务<br>如果协调者正常工作，且任意一个参与者反馈了No响应或超时，就会中断事务。  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1. 发送中断请求  </span><br><span class="line">协调者向所有的参与者发送abort请求。  </span><br><span class="line">2. 事务回滚  </span><br><span class="line">参与者收到abort请求后，会使用阶段二的Undo日志进行事务回滚，回滚结束释放占用的资源。</span><br><span class="line">3. 反馈结果  </span><br><span class="line">参与者完成事务回滚后向协调者发送Ack消息。</span><br><span class="line">4. 中断事务  </span><br><span class="line">协调者收到所有参与者的Ack消息后中断事务。</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>阶段三可能会存在两种故障：</p>
+<ul>
+<li>协调者出现问题。</li>
+<li>协调者和参与者之间的网络出现问题。</li>
+</ul>
+<p>针对这样的情况，参与者会在等待超时之后继续进行事务提交。</p>
+<h4 id="B-优缺点-1"><a href="#B-优缺点-1" class="headerlink" title="B. 优缺点"></a>B. 优缺点</h4><p>优点：<br>相较于2PC，3PC降低了参与者的阻塞范围，且能在出现单点故障后达成一致。  </p>
+<p>缺点：<br>无法解决脑裂；引入了新问题：参与者收到preCommit后出现网络分区时参与者依然会进行事务提交，这会导致数据的不一致。</p>
+<h3 id="1-3-Paxos算法"><a href="#1-3-Paxos算法" class="headerlink" title="1.3 Paxos算法"></a>1.3 Paxos算法</h3><p>无论2PC还是3PC都无法最终解决一致性问题。Paxos是一种基于消息传递且具有高度容错性的一致性算法，是目前公认的解决分布式一致性问题最有效的算法之一。<br>相关论文：  </p>
+<ul>
+<li><a href="https://lamport.azurewebsites.net/pubs/lamport-paxos.pdf" target="_blank" rel="noopener">The Part-Time Parliament</a>  </li>
+<li><a href="https://groups.csail.mit.edu/tds/papers/DePrisco/WDAG97.pdf" target="_blank" rel="noopener">Revisiting the Paxos algorithm</a>  </li>
+<li><a href="https://lamport.azurewebsites.net/pubs/paxos-simple.pdf" target="_blank" rel="noopener">Paxos Made Simple</a></li>
+<li><a href="https://github.com/oldratlee/translations/tree/master/paxos-made-simple" target="_blank" rel="noopener">Paxos Made Simple 中文翻译版</a></li>
+</ul>
+<p>本节按论文<code>Paxos Made Simple</code>描述的问题出发。  </p>
+<h4 id="A-问题描述"><a href="#A-问题描述" class="headerlink" title="A. 问题描述"></a>A. 问题描述</h4><p>假设有一组可以提出提案的进程集合，那么对于一个一致性算法来说需要保证：  </p>
+<ul>
+<li>在这些被提出的提案中，只有一个会被选定。</li>
+<li>如果没有提案被提出，那么就不会有被选定的提案。</li>
+<li>当一个提案被选定后，进程应该可以获取被选定的提案信息。  </li>
+</ul>
+<p>对于一致性来说，安全性(Safty)需求如下：</p>
+<ul>
+<li>只有被提出的提案才能被选定。</li>
+<li>只能有一个值被选定。</li>
+<li>如果某个进程认为某个提案被选定了，那么这个提案必须是真的被选定的那个。</li>
+</ul>
+<p>Paxos算法中有三种参与角色，<code>Proposer</code>、<code>Acceptor</code>、<code>Learner</code>。具体实现中一个进程可能充当不止一种角色。假设不同参与者之间可以通过收发消息进行通信，那么：</p>
+<ul>
+<li>每个参与者以任意速度执行，可能会因为出错而停止，也可能重启。同时，即使一个提案被选定后，所有的参与者也都可能失败或重启，因此除非那些失败或重启的参与者可以记录某些信息，否则将无法确定最终的值。</li>
+<li>消息在传输过程中可能会出爱现不可预知的延迟，也可能重复或丢失，但是消息不会被损坏，即消息内容不会被篡改。</li>
+</ul>
+<h4 id="B-提案的选定"><a href="#B-提案的选定" class="headerlink" title="B. 提案的选定"></a>B. 提案的选定</h4><p>要选定一个唯一提案的最简单方式是只允许一个<code>Acceptor</code>存在，所有的<code>Proposer</code>只能发送提案给该<code>Acceptor</code>，由其选择接收到的第一个提案。但如果<code>Acceptor</code>出现问题，整个系统就无法工作。<br>可以使用多个<code>Acceptor</code>的集合，<code>Proposer</code>向这个集合发送提案。集合中的每个<code>Acceptor</code>都可能会批准提案，当有足够多的<code>Acceptor</code>批准提案时，就可以认为该提案被选定。   </p>
+<h4 id="C-算法陈述"><a href="#C-算法陈述" class="headerlink" title="C. 算法陈述"></a>C. 算法陈述</h4><p>对Paxos算法的提案选定过程进行一个陈述。</p>
+<ol>
+<li><p>阶段一  </p>
+<ol>
+<li>Proposer选择一个提案编号M<sub>n</sub> ，然后向Acceptor的某个超过半数的子集成员发送编号为M<sub>n</sub>的Prepare请求。  </li>
+<li>如果一个Acceptor收到一个编号为M<sub>n</sub>的Prepare请求，且编号M<sub>n</sub>大于该Acceptor已经响应的所有Prepare请求的编号，那么它就会将它已经批准过的最大编号的提案作为响应反馈给Proposer，同时该Acceptor会承诺不再批准任何编号小于M<sub>n</sub>的提案。</li>
+</ol>
+</li>
+<li><p>阶段二  </p>
+<ol>
+<li>如果Proposer说到来自半数以上的Acceptor对于其发出的编号为M<sub>n</sub>的Prepare请求的响应，那么他就会发送一个针对[M<sub>n</sub> , V<sub>n</sub>]提案的Accept请求给Acceptor。<br>注意V<sub>n</sub>的值就是收到的响应中编号最大的提案的值，如果响应中不包含任何提案，那么他就是任意值。  </li>
+<li>如果Acceptor收到这个针对[M<sub>n</sub> , V<sub>n</sub>]提案的Accept请求，只要该Acceptor尚未对编号大于M<sub>n</sub>的Prepare请求做出任何响应，他就可以通过这个提案。</li>
+</ol>
+</li>
+</ol>
+<h4 id="D-提案的获取"><a href="#D-提案的获取" class="headerlink" title="D. 提案的获取"></a>D. 提案的获取</h4><p>在选定一个提案后，Learner可以有多种方案获取提案。  </p>
+<ol>
+<li>方案一<br>最简单的做法是一旦Acceptor批准了一个提案，就将该提案发送给所有的Learner。这样需要让每个Acceptor与所有的Learner逐个进行一次通信，通信的次数至少为二者个数的乘积。</li>
+<li>方案二<br>可让所有的Acceptor将它们对提案的批准发送给一个特定的Learner(主Learner)，主Learner负责通知其他的Learner。<br>这样可以减少通信次数，但主Learner会带来单点故障问题。</li>
+<li>方案三<br>针对方案二，可以将主Learner扩大为一个集合，该集合的每个Learner都会收到提准的提案，然后通知其他Learner。</li>
+</ol>
+<h4 id="E-Paxos的工程实践"><a href="#E-Paxos的工程实践" class="headerlink" title="E. Paxos的工程实践"></a>E. Paxos的工程实践</h4><ul>
+<li>Google Chubby<br>Google公开的Chubby论文：<a href="https://static.googleusercontent.com/media/research.google.com/zh-CN//archive/chubby-osdi06.pdf" target="_blank" rel="noopener">The Chubby lock service for loosely-coupled distributed systems</a></li>
+<li>Hypertable<br>Hypertable was an open-source software project to implement a database management system inspired by publications on the design of Google’s Bigtable.</li>
+<li>LibPaxos<br>LibPaxos is a collection of open source implementations of the Paxos algorithmm. Paxos is often used to implement Atomic Broadcast, a useful primitive for building fault-tolerant distributed systems.</li>
+</ul>
+<h3 id="1-4-ZAB"><a href="#1-4-ZAB" class="headerlink" title="1.4 ZAB"></a>1.4 ZAB</h3><p>ZooKeeper并没有直接采用Paxos算法，而是采用了ZAB(ZooKeeper Atomic Broadcast，原子消息广播协议)一致性协议。<br>ZooKeeper官方有一些涉及到ZAB协议的论文：<br><a href="https://www.datadoghq.com/pdf/zab.totally-ordered-broadcast-protocol.2008.pdf" target="_blank" rel="noopener">A simple totally ordered broadcast protocol</a><br><a href="https://knowably-attachments.s3.amazonaws.com/u/55b69a1ce4b00ab397d67250/7c8734d3cf02154499a9b3161ef9f575/Zab_2011.pdf" target="_blank" rel="noopener">Zab: High-performance broadcast for primary-backup systems</a><br>基于ZAB协议，ZK实现了一种主备模式的系统架构来保持集群中各副本之间数据的一致性。具体地，ZK使用一个单一的主进程来接收并处理客户端的所有事务请求，并采用ZAB协议将服务器的状态变更以事务Proposal的形式广播到所有的进程副本。<br>主备模型架构保证了同一时刻集群中只能有一个主进程来广播服务器的状态变更，因此能够很好地处理高并发请求。另外顺序执行的状态变更前后可能会有一定的依赖关系，所以ZAB协议需要保证如果存在依赖关系的一组状态变更的最后一个已经处理了，那么值钱的状态变更应该已经被提前处理掉了。最后，考虑到主进程有可能在任何时候崩溃或重启，ZAB协议还需要做到在当前主进程出现问题时能正常工作。<br>ZAB协议的核心定义是对会改变ZK服务器数据状态的事务请求的处理方式，即：  </p>
+<blockquote>
+<p>所有的事务请求必须有一个全局唯一的服务器（Leader）来协调处理，而余下的其他服务器称为Follower。Leader负责将一个客户端事务请求转换为一个事务Proposal（提议），并将该Proposal分发给集群中的所有的Follower。之后Leader需要等待所有Follower的反馈，一旦超过半数Follower进行了正反馈，那么Leader会再次向所有的Follower分发commit消息，要求其将前一个Proposal提交。</p>
+</blockquote>
+<p>ZAB协议包括两种基本模式：崩溃回复和消息广播。</p>
+<p>// TODO</p>
+<h3 id="1-5-Raft算法"><a href="#1-5-Raft算法" class="headerlink" title="1.5 Raft算法"></a>1.5 Raft算法</h3><p>Paxos自1990年提出以后，相当长时间内几乎已成为分布式一致性算法的代名词。但其难以理解和实现，目前知名实现仅有Chubby、Zookeeper、libpaxos几种，其中Zookeeper使用的ZAB对Paxos做了大量改进。为此，2013年斯坦福的Diego Ongaro、John Ousterhout，提出了新的更易理解和实现的一致性算法，即Raft。相比传统的Paxos算法，Raft将大量的计算问题分解成为了一些简单的相对独立的子问题。<br>相关论文：<br><a href="https://raft.github.io/raft.pdf" target="_blank" rel="noopener">In Search of an Understandable Consensus Algorithm (Extended Version)</a><br><a href="https://github.com/maemual/raft-zh_cn" target="_blank" rel="noopener">上面论文的中文翻译</a></p>
+<h2 id="2-常见的分布式事务解决方案"><a href="#2-常见的分布式事务解决方案" class="headerlink" title="2. 常见的分布式事务解决方案"></a>2. 常见的分布式事务解决方案</h2><h3 id="2-1-全局消息-DTP模型"><a href="#2-1-全局消息-DTP模型" class="headerlink" title="2.1 全局消息(DTP模型)"></a>2.1 全局消息(DTP模型)</h3><h3 id="2-2-基于可靠消息服务的分布式事务"><a href="#2-2-基于可靠消息服务的分布式事务" class="headerlink" title="2.2 基于可靠消息服务的分布式事务"></a>2.2 基于可靠消息服务的分布式事务</h3><h3 id="2-3-TCC"><a href="#2-3-TCC" class="headerlink" title="2.3 TCC"></a>2.3 TCC</h3><h3 id="2-4-最大努力通知"><a href="#2-4-最大努力通知" class="headerlink" title="2.4 最大努力通知"></a>2.4 最大努力通知</h3>
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/zookeeper/" rel="tag"># zookeeper</a>
+          
+            <a href="/tags/分布式事务/" rel="tag"># 分布式事务</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/05/backends/spring/Spring文档笔记(三) Spring Framework Documentation - Web Servlet - Spring Web MVC/" rel="next" title="Spring文档笔记(三) Spring Framework Documentation - Web Servlet - Spring Web MVC">
+                <i class="fa fa-chevron-left"></i> Spring文档笔记(三) Spring Framework Documentation - Web Servlet - Spring Web MVC
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/uploads/avatar.gif" alt="Javior Wang">
+            
+              <p class="site-author-name" itemprop="name">Javior Wang</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/scorego" title="GitHub &rarr; https://github.com/scorego" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://www.zhihu.com/people/scorego-6" title="Zhihu &rarr; https://www.zhihu.com/people/scorego-6" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>Zhihu</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-一致性算法"><span class="nav-text">1. 一致性算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-2PC"><span class="nav-text">1.1 2PC</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#A-协议描述"><span class="nav-text">A. 协议描述</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Ⅰ-准备阶段-提交事务请求"><span class="nav-text">Ⅰ. 准备阶段(提交事务请求)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Ⅱ-提交阶段-执行事务提交"><span class="nav-text">Ⅱ. 提交阶段(执行事务提交)</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B-优缺点"><span class="nav-text">B. 优缺点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-3PC"><span class="nav-text">1.2 3PC</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#A-协议描述-1"><span class="nav-text">A. 协议描述</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Ⅰ-CanCommit"><span class="nav-text">Ⅰ. CanCommit</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Ⅱ-PreCommit"><span class="nav-text">Ⅱ. PreCommit</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Ⅲ-DoCommit"><span class="nav-text">Ⅲ. DoCommit</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B-优缺点-1"><span class="nav-text">B. 优缺点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-Paxos算法"><span class="nav-text">1.3 Paxos算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#A-问题描述"><span class="nav-text">A. 问题描述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B-提案的选定"><span class="nav-text">B. 提案的选定</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C-算法陈述"><span class="nav-text">C. 算法陈述</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#D-提案的获取"><span class="nav-text">D. 提案的获取</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#E-Paxos的工程实践"><span class="nav-text">E. Paxos的工程实践</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-ZAB"><span class="nav-text">1.4 ZAB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-5-Raft算法"><span class="nav-text">1.5 Raft算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-常见的分布式事务解决方案"><span class="nav-text">2. 常见的分布式事务解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-全局消息-DTP模型"><span class="nav-text">2.1 全局消息(DTP模型)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-基于可靠消息服务的分布式事务"><span class="nav-text">2.2 基于可靠消息服务的分布式事务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-TCC"><span class="nav-text">2.3 TCC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-最大努力通知"><span class="nav-text">2.4 最大努力通知</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Javior Wang</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

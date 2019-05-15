@@ -335,6 +335,580 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/05/14/backends/nosql/redis/Redis(三) Redis实现分布式锁/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Javior Wang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Javior's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/05/14/backends/nosql/redis/Redis(三) Redis实现分布式锁/" class="post-title-link" itemprop="url">Redis(三) Redis实现分布式锁</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-05-14 13:47:01" itemprop="dateCreated datePublished" datetime="2019-05-14T13:47:01+08:00">2019-05-14</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-05-15 13:21:19" itemprop="dateModified" datetime="2019-05-15T13:21:19+08:00">2019-05-15</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/NoSQL/" itemprop="url" rel="index"><span itemprop="name">NoSQL</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>
+              https://redis.io/topics/distlock
+1. 单机Redis的分布式锁1.1 准备工作A. 定义常量类public class LockConstants &#123;    public static final String OK = "OK";    /*      * NX|XX, NX -- Only set the key if it does not already exist.            XX -- Only set the key if it already exist. *     */    public static final S
+              ...
+            </p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/05/14/backends/nosql/redis/Redis(三) Redis实现分布式锁/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/05/13/backends/nosql/redis/Redis(二) Redis数据类型/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Javior Wang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Javior's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/05/13/backends/nosql/redis/Redis(二) Redis数据类型/" class="post-title-link" itemprop="url">Redis(二) Redis数据类型</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-05-13 11:05:24" itemprop="dateCreated datePublished" datetime="2019-05-13T11:05:24+08:00">2019-05-13</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-05-15 13:19:10" itemprop="dateModified" datetime="2019-05-15T13:19:10+08:00">2019-05-15</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/NoSQL/" itemprop="url" rel="index"><span itemprop="name">NoSQL</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>
+               Redis 数据类型  
+Redis不仅仅是一个key-value存储，它实际上是一个数据结构服务器，支持不同类型的value。也就是说，相较于传统的kv存储（键值都是字符串）来说，Redis的value可以支持多种数据类型：
+
+Binary-safe string  
+List根据插入的顺序排序的集合。They are basically linked lists.
+Set无重复、无序的String集合。
+Sorted set类似于Set，但是每个String元素有一个关联的浮点数值，称为score。元素按照它们的score排序。
+Hashfield到value组成的映射。field和va
+              ...
+            </p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/05/13/backends/nosql/redis/Redis(二) Redis数据类型/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/05/13/backends/nosql/redis/Redis(一) Redis简介/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Javior Wang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Javior's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/05/13/backends/nosql/redis/Redis(一) Redis简介/" class="post-title-link" itemprop="url">Redis(一) Redis简介</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-05-13 10:14:28" itemprop="dateCreated datePublished" datetime="2019-05-13T10:14:28+08:00">2019-05-13</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-05-15 13:16:44" itemprop="dateModified" datetime="2019-05-15T13:16:44+08:00">2019-05-15</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/NoSQL/" itemprop="url" rel="index"><span itemprop="name">NoSQL</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>
+              Redis(Remote dictionary server) 是一个开源的、使用ANSI C语言编写的内存数据结构存储系统，可用作数据库、缓存和消息代理。Redis次版本号(第一个小数点后的数字)为偶数表示是稳定版，基数表示是不稳定版。        
+Redis官网Redis命令参考  
+Redis的优点如下：
+
+速度快，因为数据存在内存中。
+支持丰富数据类型。
+支持事务，操作都是原子性。
+丰富的特性。
+支持主从复制。
+支持数据持久化。  
+
+发展历史：  
+
+2009，初始发布
+2010，VMware开始赞助
+2015，Redis 3.0
+2018.10， Redis 5.0 GA  
+
+              ...
+            </p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/05/13/backends/nosql/redis/Redis(一) Redis简介/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="javior.wang/2019/05/06/backends/zookeeper/ZooKeeper(六) 一致性协议与分布式事务/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -380,12 +954,24 @@
                 
               
 
-              <time title="创建时间：2019-05-06 11:27:55 / 修改时间：20:46:53" itemprop="dateCreated datePublished" datetime="2019-05-06T11:27:55+08:00">2019-05-06</time>
+              <time title="创建时间：2019-05-06 11:27:55" itemprop="dateCreated datePublished" datetime="2019-05-06T11:27:55+08:00">2019-05-06</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-05-15 13:24:22" itemprop="dateModified" datetime="2019-05-15T13:24:22+08:00">2019-05-15</time>
               
             
           </span>
@@ -402,7 +988,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/zookeeper/" itemprop="url" rel="index"><span itemprop="name">zookeeper</span></a></span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/ZookKeeper/" itemprop="url" rel="index"><span itemprop="name">ZookKeeper</span></a></span>
 
                 
                 
@@ -552,12 +1138,24 @@
                 
               
 
-              <time title="创建时间：2019-05-05 16:14:40 / 修改时间：19:47:19" itemprop="dateCreated datePublished" datetime="2019-05-05T16:14:40+08:00">2019-05-05</time>
+              <time title="创建时间：2019-05-05 16:14:40" itemprop="dateCreated datePublished" datetime="2019-05-05T16:14:40+08:00">2019-05-05</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-05-15 13:23:20" itemprop="dateModified" datetime="2019-05-15T13:23:20+08:00">2019-05-15</time>
               
             
           </span>
@@ -574,7 +1172,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/spring/" itemprop="url" rel="index"><span itemprop="name">spring</span></a></span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a></span>
 
                 
                 
@@ -724,12 +1322,24 @@
                 
               
 
-              <time title="创建时间：2019-04-29 16:19:25 / 修改时间：17:07:48" itemprop="dateCreated datePublished" datetime="2019-04-29T16:19:25+08:00">2019-04-29</time>
+              <time title="创建时间：2019-04-29 16:19:25" itemprop="dateCreated datePublished" datetime="2019-04-29T16:19:25+08:00">2019-04-29</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-05-15 13:24:38" itemprop="dateModified" datetime="2019-05-15T13:24:38+08:00">2019-05-15</time>
               
             
           </span>
@@ -746,7 +1356,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/zookeeper/" itemprop="url" rel="index"><span itemprop="name">zookeeper</span></a></span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/ZookKeeper/" itemprop="url" rel="index"><span itemprop="name">ZookKeeper</span></a></span>
 
                 
                 
@@ -899,12 +1509,24 @@
                 
               
 
-              <time title="创建时间：2019-04-28 11:52:35 / 修改时间：11:52:25" itemprop="dateCreated datePublished" datetime="2019-04-28T11:52:35+08:00">2019-04-28</time>
+              <time title="创建时间：2019-04-28 11:52:35" itemprop="dateCreated datePublished" datetime="2019-04-28T11:52:35+08:00">2019-04-28</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-05-15 13:24:33" itemprop="dateModified" datetime="2019-05-15T13:24:33+08:00">2019-05-15</time>
               
             
           </span>
@@ -921,7 +1543,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/zookeeper/" itemprop="url" rel="index"><span itemprop="name">zookeeper</span></a></span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/ZookKeeper/" itemprop="url" rel="index"><span itemprop="name">ZookKeeper</span></a></span>
 
                 
                 
@@ -1089,7 +1711,7 @@ To introduce you to the ZooKeeper Java API, we develop here a very simple watch 
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-05-02 12:43:14" itemprop="dateModified" datetime="2019-05-02T12:43:14+08:00">2019-05-02</time>
+                <time title="修改时间：2019-05-15 13:24:28" itemprop="dateModified" datetime="2019-05-15T13:24:28+08:00">2019-05-15</time>
               
             
           </span>
@@ -1106,7 +1728,7 @@ To introduce you to the ZooKeeper Java API, we develop here a very simple watch 
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/zookeeper/" itemprop="url" rel="index"><span itemprop="name">zookeeper</span></a></span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/ZookKeeper/" itemprop="url" rel="index"><span itemprop="name">ZookKeeper</span></a></span>
 
                 
                 
@@ -1277,7 +1899,7 @@ ZooKeeper Programmer’s GuideDeveloping Distributed Applications that use ZooKe
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-05-02 12:42:41" itemprop="dateModified" datetime="2019-05-02T12:42:41+08:00">2019-05-02</time>
+                <time title="修改时间：2019-05-15 13:24:12" itemprop="dateModified" datetime="2019-05-15T13:24:12+08:00">2019-05-15</time>
               
             
           </span>
@@ -1294,7 +1916,7 @@ ZooKeeper Programmer’s GuideDeveloping Distributed Applications that use ZooKe
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/zookeeper/" itemprop="url" rel="index"><span itemprop="name">zookeeper</span></a></span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/ZookKeeper/" itemprop="url" rel="index"><span itemprop="name">ZookKeeper</span></a></span>
 
                 
                 
@@ -1460,7 +2082,7 @@ ZooKeeper Programmer’s GuideDeveloping Distributed Applications that use ZooKe
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-05-06 15:16:45" itemprop="dateModified" datetime="2019-05-06T15:16:45+08:00">2019-05-06</time>
+                <time title="修改时间：2019-05-15 13:24:43" itemprop="dateModified" datetime="2019-05-15T13:24:43+08:00">2019-05-15</time>
               
             
           </span>
@@ -1477,7 +2099,7 @@ ZooKeeper Programmer’s GuideDeveloping Distributed Applications that use ZooKe
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/zookeeper/" itemprop="url" rel="index"><span itemprop="name">zookeeper</span></a></span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/ZookKeeper/" itemprop="url" rel="index"><span itemprop="name">ZookKeeper</span></a></span>
 
                 
                 
@@ -1524,549 +2146,6 @@ Miscellaneous ZooKeeper Documentation (on 2016.10.26)ZooKeeper is a centralized 
           
             <div class="post-button text-center">
               <a class="btn" href="/2019/04/25/backends/zookeeper/ZooKeeper(一) ZooKeeper Overview/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="javior.wang/2019/04/23/backends/spring/Spring文档笔记(二) Spring Framework Documentation - Core - The IoC Container (Ⅱ)/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Javior Wang">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Javior's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/04/23/backends/spring/Spring文档笔记(二) Spring Framework Documentation - Core - The IoC Container (Ⅱ)/" class="post-title-link" itemprop="url">Spring文档笔记(二) Spring Framework Documentation - Core - The IoC Container (Ⅱ)</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-04-23 17:01:40" itemprop="dateCreated datePublished" datetime="2019-04-23T17:01:40+08:00">2019-04-23</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-05-03 11:51:55" itemprop="dateModified" datetime="2019-05-03T11:51:55+08:00">2019-05-03</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/spring/" itemprop="url" rel="index"><span itemprop="name">spring</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>
-              8. Annotation-based Container Configuration
-Are annotations better than XML for configuring Spring?The introduction of annotation-based configuration raised the question of whether this approach is “better” than XML. The short answer is “it depends.” The long answer is that each approach has its pro
-              ...
-            </p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/04/23/backends/spring/Spring文档笔记(二) Spring Framework Documentation - Core - The IoC Container (Ⅱ)/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="javior.wang/2019/04/19/backends/spring/Spring文档笔记(一) Spring Framework Documentation - Core - The IoC Container (Ⅰ)/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Javior Wang">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Javior's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/04/19/backends/spring/Spring文档笔记(一) Spring Framework Documentation - Core - The IoC Container (Ⅰ)/" class="post-title-link" itemprop="url">Spring文档笔记(一) Spring Framework Documentation - Core - The IoC Container (Ⅰ)</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-04-19 20:16:40" itemprop="dateCreated datePublished" datetime="2019-04-19T20:16:40+08:00">2019-04-19</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-05-05 01:08:08" itemprop="dateModified" datetime="2019-05-05T01:08:08+08:00">2019-05-05</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/spring/" itemprop="url" rel="index"><span itemprop="name">spring</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>
-              Spring Framework GithubSpring Framework Documentation : Core (Version 5.1.6.RELEASE)Spring In Action  
-Spring Framework是整个Spring项目的基石。  
- IoC容器(The IoC Container)
-控制反转(Inversion of Control, IoC)也称为依赖注入(dependency injection, DI),是对象定义它们之间依赖关系的过程。对象只能通过构造方法参数、工厂方法参数、从工厂方法或构造方法返回的实例的属性中定义依赖。容器在创建bean的时
-              ...
-            </p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/04/19/backends/spring/Spring文档笔记(一) Spring Framework Documentation - Core - The IoC Container (Ⅰ)/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="javior.wang/2019/04/19/backends/rpc/Thrift学习之路(二) Thrift的一个简单示例/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Javior Wang">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Javior's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/04/19/backends/rpc/Thrift学习之路(二) Thrift的一个简单示例/" class="post-title-link" itemprop="url">Thrift学习之路(二) Thrift的一个简单示例</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-04-19 10:52:22 / 修改时间：11:17:10" itemprop="dateCreated datePublished" datetime="2019-04-19T10:52:22+08:00">2019-04-19</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/RPC/" itemprop="url" rel="index"><span itemprop="name">RPC</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>
-              我们创建一个简单的Hello服务，客户端可以远程调用服务器端的方法，服务器端对客户端传入的参数进行处理并返回处理后的结果。
-Thrift文件首先编写Thrift文件hello.thrift：namespace java wang.javior.hellothriftservice Hello&#123; string helloString(1:string para) , i32 helloInt(1:i32 para), bool helloBoolean(1:bool para),  &#125;
-这个thrift文件定义了Hello服务的3个方法，分别对传入的string/i32/bo
-              ...
-            </p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/04/19/backends/rpc/Thrift学习之路(二) Thrift的一个简单示例/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -2159,7 +2238,7 @@ Thrift文件首先编写Thrift文件hello.thrift：namespace java wang.javior.he
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">13</span>
+                    <span class="site-state-item-count">16</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2184,7 +2263,9 @@ Thrift文件首先编写Thrift文件hello.thrift：namespace java wang.javior.he
                     
                       
                     
-                    <span class="site-state-item-count">4</span>
+                      
+                    
+                    <span class="site-state-item-count">5</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -2219,7 +2300,11 @@ Thrift文件首先编写Thrift文件hello.thrift：namespace java wang.javior.he
                     
                       
                     
-                    <span class="site-state-item-count">9</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">11</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next mist" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/favicon-128x128-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-01.ico?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/uploads/favicon-128x128-01.ico?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Redis 数据类型   Redis不仅仅是一个key-value存储，它实际上是一个数据结构服务器，支持不同类型的value。也就是说，相较于传统的kv存储（键值都是字符串）来说，Redis的value可以支持多种数据类型：  Binary-safe string   List根据插入的顺序排序的集合。They are basically linked lists. Set无重复、无序的Str">
+<meta name="keywords" content="NoSQL,Redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis(二) Redis数据类型">
+<meta property="og:url" content="javior.wang/2019/05/13/backends/nosql/redis/Redis(二) Redis数据类型/index.html">
+<meta property="og:site_name" content="Javior&#39;s Blog">
+<meta property="og:description" content="Redis 数据类型   Redis不仅仅是一个key-value存储，它实际上是一个数据结构服务器，支持不同类型的value。也就是说，相较于传统的kv存储（键值都是字符串）来说，Redis的value可以支持多种数据类型：  Binary-safe string   List根据插入的顺序排序的集合。They are basically linked lists. Set无重复、无序的Str">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-05-15T05:19:10.767Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Redis(二) Redis数据类型">
+<meta name="twitter:description" content="Redis 数据类型   Redis不仅仅是一个key-value存储，它实际上是一个数据结构服务器，支持不同类型的value。也就是说，相较于传统的kv存储（键值都是字符串）来说，Redis的value可以支持多种数据类型：  Binary-safe string   List根据插入的顺序排序的集合。They are basically linked lists. Set无重复、无序的Str">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="javior.wang/2019/05/13/backends/nosql/redis/Redis(二) Redis数据类型/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Redis(二) Redis数据类型 | Javior's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Javior's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/05/13/backends/nosql/redis/Redis(二) Redis数据类型/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Javior Wang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Javior's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Redis(二) Redis数据类型
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-05-13 11:05:24" itemprop="dateCreated datePublished" datetime="2019-05-13T11:05:24+08:00">2019-05-13</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-05-15 13:19:10" itemprop="dateModified" datetime="2019-05-15T13:19:10+08:00">2019-05-15</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/NoSQL/" itemprop="url" rel="index"><span itemprop="name">NoSQL</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><center> <strong>Redis 数据类型</strong>  </center></p>
+<p>Redis不仅仅是一个key-value存储，它实际上是一个数据结构服务器，支持不同类型的value。也就是说，相较于传统的kv存储（键值都是字符串）来说，Redis的value可以支持多种数据类型：</p>
+<ul>
+<li>Binary-safe string  </li>
+<li>List<br>根据插入的顺序排序的集合。They are basically <code>linked lists</code>.</li>
+<li>Set<br>无重复、无序的<code>String</code>集合。</li>
+<li>Sorted set<br>类似于Set，但是每个<code>String</code>元素有一个关联的浮点数值，称为<code>score</code>。元素按照它们的<code>score</code>排序。</li>
+<li>Hash<br>field到value组成的映射。field和value都是String。  </li>
+<li>Bit array (or simply bitmap)<br>可以使用特殊的命令将String的值作为bit数组来处理。如可以设置某个bit的值、将所有bit清0等等。  </li>
+<li>HyperLogLog<br>这是一个概率数据结构，用于估计集合的基数(cardinality)。  </li>
+<li>Stream<br>类似于map的实体，只能追加。用来做抽象的log数据类型。</li>
+</ul>
+<p>Redis的命令可以<a href="https://redis.io/commands" target="_blank" rel="noopener">查询这里</a>。</p>
+<h3 id="Redis-Keys"><a href="#Redis-Keys" class="headerlink" title="Redis Keys"></a>Redis Keys</h3><p>Redis的key是二进制安全的，也就是说可以使用一个二进制序列来作为key，从一个简单的字符串（如”foo”)到一个JPEG文件。空字符串也是允许的。<br>关于key，有一些限制：</p>
+<ul>
+<li>过长的key不太合适。<br>过长的key不仅需要的存储空间大，同时对key的查找也需要比较操作，当key过大时会浪费时间。当遇到这样的情况是使用它的hash值是一个不错的方法。  </li>
+<li>过短的key也不太合适<br>“u1000flw”和”user:1000:followers”相比过于精简，这样导致可读性太差。在key的长度与可读性上需要一个平衡。</li>
+<li>尽量统一格式<br>比如”object-type:id:field”就是一个不错的格式，如”user:1000:name”。<code>.</code>和<code>-</code>常用来作为多个单词的分隔符，如<code>comment:1234:reply.to</code>和<code>comment:1234:reply-to</code>。  </li>
+<li>key size最大为512MB</li>
+</ul>
+<h3 id="1-String"><a href="#1-String" class="headerlink" title="1. String"></a>1. String</h3><p>String是Redis最基本的数据类型。  </p>
+<h4 id="SET-GET"><a href="#SET-GET" class="headerlink" title="SET/GET"></a>SET/GET</h4><p><a href="https://redis.io/commands/set" target="_blank" rel="noopener">https://redis.io/commands/set</a>  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">语法:</span><br><span class="line">SET key value [expiration EX seconds|PX milliseconds] [NX|XX]</span><br><span class="line">GET key</span><br><span class="line"></span><br><span class="line">例子:</span><br><span class="line">&gt; SET mykey somevalue</span><br><span class="line">OK</span><br><span class="line">&gt; GET mykey</span><br><span class="line">&quot;somevalue&quot;</span><br></pre></td></tr></table></figure>
+<p>如果key已经存在，<code>SET</code>会覆盖已经存在的值，无论类型。<br><code>SET</code>的参数：</p>
+<ul>
+<li>EX seconds – Set the specified expire time, in seconds.</li>
+<li>PX milliseconds – Set the specified expire time, in milliseconds.</li>
+<li>NX – Only set the key if it does not already exist.</li>
+<li>XX – Only set the key if it already exist.</li>
+</ul>
+<p><code>SET</code>的返回值:  </p>
+<ul>
+<li>Simple string reply: OK if SET was executed correctly.</li>
+<li>Null reply: a Null Bulk Reply is returned if the SET operation was not performed because the user specified the NX or XX option but the condition was not met.</li>
+</ul>
+<p>如果key不是string，<code>GET</code>命令会返回错误，因为这个命令只处理string参数。<br><code>GET</code>的返回值：</p>
+<ul>
+<li>Bulk string reply: the value of key, or nil when key does not exist.  </li>
+</ul>
+<p>value可以是任意类型的字符串，包括二进制数据。比如可以用一个jepg文件来作为value。value的大小不能超过512MB。       </p>
+<h4 id="INCR-DECR"><a href="#INCR-DECR" class="headerlink" title="INCR/DECR"></a>INCR/DECR</h4><p><a href="https://redis.io/commands/incr" target="_blank" rel="noopener">https://redis.io/commands/incr</a>  </p>
+<p>尽管value值是string，但当其是整数形式时，可以用<code>INCR</code>命令来实现值的递增。Redis中没有整数类型，而<code>INCR</code>命令处理的以字符串存储的整数必须是a base-10 64 bit signed integer。  </p>
+<p>返回值：<br>将key对应的value加一并返回。如果key不存在，则默认初始值为0并开始执行此操作。如果key对应的value不是整数形式，则会返回error。   </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">语法:</span><br><span class="line">INCR key</span><br><span class="line">INCRBY key increment</span><br><span class="line">INCRBYFLOAT key increment</span><br><span class="line"></span><br><span class="line">DECR key</span><br><span class="line">DECRBY key decrement</span><br><span class="line"></span><br><span class="line">redis&gt; SET mykey &quot;10&quot;</span><br><span class="line">&quot;OK&quot;</span><br><span class="line">redis&gt; INCR mykey</span><br><span class="line">(integer) 11</span><br><span class="line">redis&gt; GET mykey</span><br><span class="line">&quot;11&quot;</span><br></pre></td></tr></table></figure>
+<h4 id="一些其他命令"><a href="#一些其他命令" class="headerlink" title="一些其他命令"></a>一些其他命令</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">APPEND key value    向键值末尾追加value</span><br><span class="line"></span><br><span class="line">STRLEN key          返回key对应value的长度</span><br><span class="line"></span><br><span class="line">//设置过期时间</span><br><span class="line">EXPIRE key seconds  </span><br><span class="line">EXPIREAT key timestamp</span><br><span class="line"></span><br><span class="line">KEYS pattern    返回符合pattern的所有key</span><br><span class="line"></span><br><span class="line">MGET key1 [key2...]  获得多个键值</span><br><span class="line">MSET key1 value1 [key2 value2 ...] 同时设置多个键值</span><br><span class="line"></span><br><span class="line">EXISTS key [key ...]    key是否存在</span><br><span class="line"></span><br><span class="line">//位操作</span><br><span class="line">GETBIT key offset</span><br><span class="line">SETBIT key offset value</span><br><span class="line">BITCOUNT key [start end]</span><br><span class="line">BITFIELD key [GET type offset] [SET type offset value] [INCRBY type offset increment] [OVERFLOW WRAP|SAT|FAIL]</span><br><span class="line">BITOP operation destkey key [key...]</span><br><span class="line">BITPOS key bit [start] [end]</span><br></pre></td></tr></table></figure>
+<h3 id="2-List"><a href="#2-List" class="headerlink" title="2. List"></a>2. List</h3><p>Redis的list是通过双向链表实现的。所以无论list的大小，对两端附近的元素的操作都是常数级。若要快速访问中间的元素，可以使用sorted set。  </p>
+<h4 id="LPUSH-RPUSH"><a href="#LPUSH-RPUSH" class="headerlink" title="LPUSH/RPUSH"></a>LPUSH/RPUSH</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">LPUSH key value</span><br><span class="line">RPUSH key value</span><br><span class="line">LPUSHX key value        key不存在时不做任何操作</span><br><span class="line"></span><br><span class="line">LPOP key</span><br><span class="line">RPOP key</span><br><span class="line"></span><br><span class="line">LLEN key        返回列表中元素的个数</span><br><span class="line"></span><br><span class="line">LRANGE key start stop       获得列表片段(包含最右边的元素)</span><br><span class="line"></span><br><span class="line">LREM key count value</span><br><span class="line"></span><br><span class="line">LTRIM key start stop</span><br><span class="line">LINDEX key index</span><br><span class="line">LINSERT key BEFORE|AFTER pivot value</span><br><span class="line">RPOPLPUSH source destination</span><br></pre></td></tr></table></figure>
+<h3 id="3-Hash"><a href="#3-Hash" class="headerlink" title="3. Hash"></a>3. Hash</h3><p>Redis的hash就是field-value对。</p>
+<h4 id="HSET-HGET"><a href="#HSET-HGET" class="headerlink" title="HSET/HGET"></a>HSET/HGET</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">HSET key field value</span><br><span class="line">HSETNX key field value</span><br><span class="line">HGET key field</span><br><span class="line">HGETALL key</span><br><span class="line"></span><br><span class="line">HMSET key field value [field value ...]</span><br><span class="line">HMGET key field [field ...]</span><br><span class="line"></span><br><span class="line">HDEL key field [field ...]</span><br><span class="line"></span><br><span class="line">HINCRBY key field increment</span><br><span class="line">HINCRBYFLOAT key field increment</span><br><span class="line"></span><br><span class="line">HKEYS key</span><br><span class="line"></span><br><span class="line">HSTRLEN key field</span><br></pre></td></tr></table></figure>
+<h3 id="4-Set"><a href="#4-Set" class="headerlink" title="4. Set"></a>4. Set</h3><p>Redis的set是无序的string集合。</p>
+<h4 id="SADD-SREM"><a href="#SADD-SREM" class="headerlink" title="SADD/SREM"></a>SADD/SREM</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">SADD key member [member ...]</span><br><span class="line">SREM key member [member ...]</span><br><span class="line"></span><br><span class="line">SMEMBERS key    </span><br><span class="line">SISMEMBER key member</span><br><span class="line"></span><br><span class="line">SCARD key</span><br><span class="line"></span><br><span class="line">SDIFF key [key ...]</span><br><span class="line">SDIFFSTORE destination key [key ...]</span><br><span class="line">SINTER key [key ...]</span><br><span class="line">SINTERSTORE destination key [key ...]</span><br><span class="line">SUNION key [key ...]</span><br><span class="line">SUNIONSTORE destination key [key ...]</span><br><span class="line"></span><br><span class="line">SMOVE source destination member</span><br><span class="line">SPOP key [count]</span><br><span class="line"></span><br><span class="line">SRANDMEMBER key [count]</span><br></pre></td></tr></table></figure>
+<h3 id="5-Sorted-set"><a href="#5-Sorted-set" class="headerlink" title="5. Sorted set"></a>5. Sorted set</h3><p>sorted set类似于hash和set的结合。所有的元素映射了一个浮点数，称为<code>score</code>。排序规则如下：</p>
+<ul>
+<li>当A和B有不同的score时，A &gt; B if A.score &gt; B.score;</li>
+<li>当A、B的score相同时，按字母顺序排序。由于sorted set不允许重复元素，所以A和B一定不等。  </li>
+</ul>
+<p>可以使用<code>ZADD</code>命令更新<code>score</code>，时间复杂度是O(log(N))。</p>
+<h4 id="ZADD-ZREM"><a href="#ZADD-ZREM" class="headerlink" title="ZADD/ZREM"></a>ZADD/ZREM</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">ZADD key [NX|XX] [CH] [INCR] score member [score member ...]</span><br><span class="line">ZREM key member [member ...]</span><br><span class="line"></span><br><span class="line">ZSCORE key member</span><br><span class="line"></span><br><span class="line">ZRANGE key start stop [WITHSCORES]</span><br><span class="line">ZRANGEBYLEX key min max [LIMIT offset count]</span><br><span class="line">ZRANGEBYSCORE key min max [WITHSCORES] [LIMIT offset count]</span><br><span class="line"></span><br><span class="line">ZINCRBY key increment member</span><br><span class="line"></span><br><span class="line">ZCOUNT key min max</span><br></pre></td></tr></table></figure>
+<h3 id="6-Bitmap"><a href="#6-Bitmap" class="headerlink" title="6. Bitmap"></a>6. Bitmap</h3><p>bitmap实际上不是一种数据类型，而是在string类型上定义的一组面向bit的操作。string是二进制安全的，最大为512MB，所以可以有2<sup>32</sup>种可能(512MB = 2<sup>32</sup> bit)。<br>bit操作可分为两类：O(1)的单bit操作，和多bit操作。  </p>
+<h3 id="7-HyperLogLog"><a href="#7-HyperLogLog" class="headerlink" title="7. HyperLogLog"></a>7. HyperLogLog</h3><p>HyperLogLog是一种概率性的数据结构，用来统计无重复的数量(set的cardinality)。通常要统计无重复元素的数量，需要与元素总数线性的空间，因为要存储所有已检索的元素以避免重复统计。HyperLogLog算法可以用精度换空间，可以再误差范围内估计set的大小，Redis的实现可以将误差控制在1%以内。而这个算法的空间复杂度是O(1)，每个键最多是12KB。HyperLogLog在Redis中以Redis string编码。Redis实现<a href="https://github.com/antirez/redis/blob/unstable/src/hyperloglog.c" target="_blank" rel="noopener">参考这里</a>。</p>
+<h3 id="8-Stream"><a href="#8-Stream" class="headerlink" title="8. Stream"></a>8. Stream</h3><p><code>stream</code>是Redis 5.0新引入的数据类型，它以更抽象的方式对日志数据结构建模，但日志的本质依然是完整的：与日志文件一样，Redis stream通常以只能追加模式打开的文件的形式实现————只能追加型数据结构。由于Redis stream是在内存中的数据类型，所以可以比log文件实现更加强大的操作。<br>Redis stream有一个非必须的特性：Consumer Groups。最初这个实现是Kafka引入的，Redis的实现与其有相同的目的。  </p>
+<h4 id="XADD-XDEL"><a href="#XADD-XDEL" class="headerlink" title="XADD/XDEL"></a>XADD/XDEL</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">XADD key ID field string [field string ...]</span><br><span class="line">XDEL key ID [ID ...]</span><br><span class="line">XLEN key</span><br><span class="line">XTRIM key MAXLEN [~] count</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/NoSQL/" rel="tag"># NoSQL</a>
+          
+            <a href="/tags/Redis/" rel="tag"># Redis</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/13/backends/nosql/redis/Redis(一) Redis简介/" rel="next" title="Redis(一) Redis简介">
+                <i class="fa fa-chevron-left"></i> Redis(一) Redis简介
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/05/14/backends/nosql/redis/Redis(三) Redis实现分布式锁/" rel="prev" title="Redis(三) Redis实现分布式锁">
+                Redis(三) Redis实现分布式锁 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/uploads/avatar.gif" alt="Javior Wang">
+            
+              <p class="site-author-name" itemprop="name">Javior Wang</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">16</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">11</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/scorego" title="GitHub &rarr; https://github.com/scorego" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://www.zhihu.com/people/scorego-6" title="Zhihu &rarr; https://www.zhihu.com/people/scorego-6" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>Zhihu</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis-Keys"><span class="nav-text">Redis Keys</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-String"><span class="nav-text">1. String</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#SET-GET"><span class="nav-text">SET/GET</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#INCR-DECR"><span class="nav-text">INCR/DECR</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一些其他命令"><span class="nav-text">一些其他命令</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-List"><span class="nav-text">2. List</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#LPUSH-RPUSH"><span class="nav-text">LPUSH/RPUSH</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Hash"><span class="nav-text">3. Hash</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#HSET-HGET"><span class="nav-text">HSET/HGET</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Set"><span class="nav-text">4. Set</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#SADD-SREM"><span class="nav-text">SADD/SREM</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-Sorted-set"><span class="nav-text">5. Sorted set</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ZADD-ZREM"><span class="nav-text">ZADD/ZREM</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-Bitmap"><span class="nav-text">6. Bitmap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-HyperLogLog"><span class="nav-text">7. HyperLogLog</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-Stream"><span class="nav-text">8. Stream</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#XADD-XDEL"><span class="nav-text">XADD/XDEL</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Javior Wang</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

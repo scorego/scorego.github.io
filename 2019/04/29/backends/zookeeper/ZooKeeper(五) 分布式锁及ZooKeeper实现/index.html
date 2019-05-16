@@ -95,14 +95,14 @@
 
 
   <meta name="description" content="分布式场景中，为了保证数据的最终一致性，需要很多的技术方案来支持，比如分布式事务、分布式锁等。很多时候需要保证一个方法在同一时间内只能被同一个线程执行。在单机环境中，通过Java提供的并发API可以解决问题，但是在分布式环境下，JVM是无法完成实现锁的。分布式与单机情况下最大的不同在于其不是多线程而是多进程。多线程由于可以共享堆内存，因此可以简单的采取内存作为标记存储位置。而进程之间甚至可能都不在">
-<meta name="keywords" content="ZookKeeper,分布式锁">
+<meta name="keywords" content="分布式锁,ZooKeeper">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ZooKeeper(五) 分布式锁的实现总结及ZooKeeper实现">
 <meta property="og:url" content="javior.wang/2019/04/29/backends/zookeeper/ZooKeeper(五) 分布式锁及ZooKeeper实现/index.html">
 <meta property="og:site_name" content="Javior&#39;s Blog">
 <meta property="og:description" content="分布式场景中，为了保证数据的最终一致性，需要很多的技术方案来支持，比如分布式事务、分布式锁等。很多时候需要保证一个方法在同一时间内只能被同一个线程执行。在单机环境中，通过Java提供的并发API可以解决问题，但是在分布式环境下，JVM是无法完成实现锁的。分布式与单机情况下最大的不同在于其不是多线程而是多进程。多线程由于可以共享堆内存，因此可以简单的采取内存作为标记存储位置。而进程之间甚至可能都不在">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-15T05:33:54.318Z">
+<meta property="og:updated_time" content="2019-05-16T05:42:00.789Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ZooKeeper(五) 分布式锁的实现总结及ZooKeeper实现">
 <meta name="twitter:description" content="分布式场景中，为了保证数据的最终一致性，需要很多的技术方案来支持，比如分布式事务、分布式锁等。很多时候需要保证一个方法在同一时间内只能被同一个线程执行。在单机环境中，通过Java提供的并发API可以解决问题，但是在分布式环境下，JVM是无法完成实现锁的。分布式与单机情况下最大的不同在于其不是多线程而是多进程。多线程由于可以共享堆内存，因此可以简单的采取内存作为标记存储位置。而进程之间甚至可能都不在">
@@ -399,7 +399,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-05-15 13:33:54" itemprop="dateModified" datetime="2019-05-15T13:33:54+08:00">2019-05-15</time>
+                <time title="修改时间：2019-05-16 13:42:00" itemprop="dateModified" datetime="2019-05-16T13:42:00+08:00">2019-05-16</time>
               
             
           </span>
@@ -416,7 +416,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/ZookKeeper/" itemprop="url" rel="index"><span itemprop="name">ZookKeeper</span></a></span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/ZooKeeper/" itemprop="url" rel="index"><span itemprop="name">ZooKeeper</span></a></span>
 
                 
                 
@@ -585,9 +585,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/ZookKeeper/" rel="tag"># ZookKeeper</a>
-          
             <a href="/tags/分布式锁/" rel="tag"># 分布式锁</a>
+          
+            <a href="/tags/ZooKeeper/" rel="tag"># ZooKeeper</a>
           
         </div>
       
@@ -710,6 +710,8 @@
                     
                       
                     
+                      
+                    
                     <span class="site-state-item-count">5</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
@@ -726,6 +728,8 @@
                     
                   
                     
+                    
+                      
                     
                       
                     

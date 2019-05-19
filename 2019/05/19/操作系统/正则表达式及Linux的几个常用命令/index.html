@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next mist" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/favicon-128x128-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-01.ico?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/uploads/favicon-128x128-01.ico?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="1. 正则表达式正则表达式，又称规则表达式(Regular Expression，常简写为regex、regexp、RE)，描述了一种字符串匹配的模式(pattern)，可以用来检查一个串是否含有某种子串、将匹配的子串替换或者从某个串中取出符合某个条件的子串等。正则表达式是由普通字符(例如字符a-z)以及特殊字符(称为”元字符”)组成的文字模式。模式描述在搜索文本时要匹配的一个或多个字符串。正则表">
+<meta name="keywords" content="Linux命令">
+<meta property="og:type" content="article">
+<meta property="og:title" content="正则表达式及Linux的几个常用命令">
+<meta property="og:url" content="javior.wang/2019/05/19/操作系统/正则表达式及Linux的几个常用命令/index.html">
+<meta property="og:site_name" content="Javior&#39;s Blog">
+<meta property="og:description" content="1. 正则表达式正则表达式，又称规则表达式(Regular Expression，常简写为regex、regexp、RE)，描述了一种字符串匹配的模式(pattern)，可以用来检查一个串是否含有某种子串、将匹配的子串替换或者从某个串中取出符合某个条件的子串等。正则表达式是由普通字符(例如字符a-z)以及特殊字符(称为”元字符”)组成的文字模式。模式描述在搜索文本时要匹配的一个或多个字符串。正则表">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-05-19T07:06:13.841Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="正则表达式及Linux的几个常用命令">
+<meta name="twitter:description" content="1. 正则表达式正则表达式，又称规则表达式(Regular Expression，常简写为regex、regexp、RE)，描述了一种字符串匹配的模式(pattern)，可以用来检查一个串是否含有某种子串、将匹配的子串替换或者从某个串中取出符合某个条件的子串等。正则表达式是由普通字符(例如字符a-z)以及特殊字符(称为”元字符”)组成的文字模式。模式描述在搜索文本时要匹配的一个或多个字符串。正则表">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="javior.wang/2019/05/19/操作系统/正则表达式及Linux的几个常用命令/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>正则表达式及Linux的几个常用命令 | Javior's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Javior's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/05/19/操作系统/正则表达式及Linux的几个常用命令/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Javior Wang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Javior's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">正则表达式及Linux的几个常用命令
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-05-19 15:05:28 / 修改时间：15:06:13" itemprop="dateCreated datePublished" datetime="2019-05-19T15:05:28+08:00">2019-05-19</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/操作系统/" itemprop="url" rel="index"><span itemprop="name">操作系统</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="1-正则表达式"><a href="#1-正则表达式" class="headerlink" title="1. 正则表达式"></a>1. 正则表达式</h2><p>正则表达式，又称规则表达式(Regular Expression，常简写为regex、regexp、RE)，描述了一种字符串匹配的模式(pattern)，可以用来检查一个串是否含有某种子串、将匹配的子串替换或者从某个串中取出符合某个条件的子串等。<br>正则表达式是由普通字符(例如字符a-z)以及特殊字符(称为”元字符”)组成的文字模式。模式描述在搜索文本时要匹配的一个或多个字符串。正则表达式作为一个模板，将某个字符模式与所搜索的字符串进行匹配。  </p>
+<ol>
+<li><p>普通字符<br>普通字符包括没有显式指定为元字符的所有可打印和不可打印字符。这包括所有大写和小写字母、所有数字、所有标点符号和一些其他符号。  </p>
+<ul>
+<li>非打印字符<br>非打印字符也可以是正则表达式的组成部分。</li>
+</ul>
+</li>
+<li><p>特殊字符<br>所谓特殊字符，就是一些有特殊含义的字符，许多元字符要求在试图匹配它们时特别对待。若要匹配这些特殊字符，必须首先使字符转义，即将反斜杠字符<code>\</code>放在它们前面。下表列出了正则表达式中的特殊字符：    </p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">元字符</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">$</td>
+<td style="text-align:left">匹配输入字符串的结尾位置。如果设置了RegExp对象的<code>Multiline</code>属性，则<code>$</code>也匹配<code>\n</code>或<code>\r</code>。</td>
+</tr>
+<tr>
+<td style="text-align:center">( )</td>
+<td style="text-align:left">标记一个子表达式的开始和结束位置。子表达式可以获取供以后使用。</td>
+</tr>
+<tr>
+<td style="text-align:center">*</td>
+<td style="text-align:left">匹配前面的子表达式零次或多次。</td>
+</tr>
+<tr>
+<td style="text-align:center">+</td>
+<td style="text-align:left">匹配前面的子表达式一次或多次。</td>
+</tr>
+<tr>
+<td style="text-align:center">.</td>
+<td style="text-align:left">匹配除换行符 \n 之外的任何单字符。</td>
+</tr>
+<tr>
+<td style="text-align:center">[</td>
+<td style="text-align:left">标记一个中括号表达式的开始。</td>
+</tr>
+<tr>
+<td style="text-align:center">?</td>
+<td style="text-align:left">匹配前面的子表达式零次或一次，或指明一个非贪婪限定符。</td>
+</tr>
+<tr>
+<td style="text-align:center">\</td>
+<td style="text-align:left">将下一个字符标记为或特殊字符、或原义字符、或向后引用、或八进制转义符。</td>
+</tr>
+<tr>
+<td style="text-align:center">^</td>
+<td style="text-align:left">匹配输入字符串的开始位置，除非在方括号表达式中使用，此时它表示不接受该字符集合。</td>
+</tr>
+<tr>
+<td style="text-align:center">{</td>
+<td style="text-align:left">标记限定符表达式的开始。</td>
+</tr>
+<tr>
+<td style="text-align:center">&#124;</td>
+<td style="text-align:left">指明两项之间的一个选择。</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>限定符<br>限定符用来指定正则表达式的一个给定组件必须要出现多少次才能满足匹配。<code>*</code>、<code>+</code>限定符都是贪婪的，因为它们会尽可能多的匹配文字，只有在它们的后面加上一个<code>?</code>就可以实现非贪婪或最小匹配。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">*</td>
+<td style="text-align:left">匹配前面的子表达式零次或多次。</td>
+</tr>
+<tr>
+<td style="text-align:center">+</td>
+<td style="text-align:left">匹配前面的子表达式一次或多次。</td>
+</tr>
+<tr>
+<td style="text-align:center">?</td>
+<td style="text-align:left">匹配前面的子表达式零次或一次。</td>
+</tr>
+<tr>
+<td style="text-align:center">{n}</td>
+<td style="text-align:left">n 是一个非负整数。匹配确定的 n 次。</td>
+</tr>
+<tr>
+<td style="text-align:center">{n,}</td>
+<td style="text-align:left">n 是一个非负整数。至少匹配n 次。</td>
+</tr>
+<tr>
+<td style="text-align:center">{n,m}</td>
+<td style="text-align:left">m 和 n 均为非负整数，其中n &lt;= m。最少匹配 n 次且最多匹配 m 次。</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>定位符<br>定位符能够将正则表达式固定到行首或行尾。它们还能够创建这样的正则表达式，这些正则表达式出现在一个单词内、在一个单词的开头或者一个单词的结尾。定位符用来描述字符串或单词的边界，<code>^</code>和<code>$</code>分别指字符串的开始与结束，<code>\b</code>描述单词的前或后边界，<code>\B</code>表示非单词边界。<br>不能将限定符与定位符一起使用。由于在紧靠换行或者单词边界的前面或后面不能有一个以上位置，因此不允许诸如<code>^*</code>之类的表达式。<br>若要匹配一行文本开始处的文本，请在正则表达式的开始使用<code>^</code>字符。不要将<code>^</code>的这种用法与中括号表达式内的用法混淆。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">^</td>
+<td style="text-align:left">匹配输入字符串开始的位置。如果设置了 RegExp 对象的 Multiline 属性，^ 还会与 \n 或 \r 之后的位置匹配。</td>
+</tr>
+<tr>
+<td style="text-align:center">$</td>
+<td style="text-align:left">匹配输入字符串结尾的位置。如果设置了 RegExp 对象的 Multiline 属性，$ 还会与 \n 或 \r 之前的位置匹配。</td>
+</tr>
+<tr>
+<td style="text-align:center">\b</td>
+<td style="text-align:left">匹配一个单词边界，即字与空格间的位置。</td>
+</tr>
+<tr>
+<td style="text-align:center">\B</td>
+<td style="text-align:left">非单词边界匹配。</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>选择<br>用圆括号将所有选择项括起来，相邻的选择项之间用<code>|</code>分隔。但用圆括号会有一个副作用，使相关的匹配会被缓存，此时可用<code>?:</code>放在第一个选项前来消除这种副作用。<br>其中 <code>?:</code> 是非捕获元之一，还有两个非捕获元是 <code>?=</code> 和 <code>?!</code>，这两个还有更多的含义，前者为正向预查，在任何开始匹配圆括号内的正则表达式模式的位置来匹配搜索字符串，后者为负向预查，在任何开始不匹配该正则表达式模式的位置来匹配搜索字符串。  </p>
+</li>
+<li><p>反向引用<br>对一个正则表达式模式或部分模式两边添加圆括号将导致相关匹配存储到一个临时缓冲区中，所捕获的每个子匹配都按照在正则表达式模式中从左到右出现的顺序存储。缓冲区编号从1开始，最多可存储99个捕获的子表达式。每个缓冲区都可以使用<code>\n</code>访问，其中n为一个标识特定缓冲区的一位或两位十进制数。<br>可以使用非捕获元字符 <code>?:</code>、<code>?=</code> 或 <code>?!</code> 来重写捕获，忽略对相关匹配的保存。<br>反向引用的最简单的、最有用的应用之一，是提供查找文本中两个相同的相邻单词的匹配项的能力。</p>
+</li>
+</ul>
+<h2 id="2-Linux的几个文本命令"><a href="#2-Linux的几个文本命令" class="headerlink" title="2. Linux的几个文本命令"></a>2. Linux的几个文本命令</h2><p><code>grep</code>、<code>sed</code>、<code>awk</code>被称为linux中的”三剑客”。其中，<code>grep</code>更适合单纯的查找或匹配文本,<code>sed</code>更适合编辑匹配到的文本,<code>awk</code>更适合格式化文本，对文本进行较复杂格式处理。  </p>
+<h3 id="2-1-grep"><a href="#2-1-grep" class="headerlink" title="2.1 grep"></a>2.1 grep</h3><p><code>grep</code>(Global search a Regular Expression and Print,全面搜索正则表达式并打印)是一个强大的文本搜索工具，它能使用特定模式(包括正则表达式)匹配搜索文本，并默认输出匹配行。Unix的grep家族包括<code>grep</code>、<code>egrep</code>和<code>fgrep</code>。Windows系统下类似命令<code>findstr</code>。<br><code>egrep</code>和<code>fgrep</code>的命令只跟<code>grep</code>有很小不同。<code>egrep</code>是<code>grep</code>的扩展，支持更多的re元字符，<code>fgrep</code>就是<code>fixed grep</code>或<code>fast grep</code>，它们把所有的字母都看作单词，也就是说，正则表达式中的元字符表示回其自身的字面意义，不再特殊。linux使用GNU版本的<code>grep</code>。它功能更强，可以通过-G、-E、-F命令行选项来使用<code>egrep</code>和<code>fgrep</code>的功能。<br>grep的工作方式是这样的，它在一个或多个文件中搜索字符串模板。如果模板包括空格，则必须被引起来，因为模板后的所有字符串被看作文件名。搜索的结果被送到标准输出，不影响原文件内容。<code>grep</code>还可用于shell脚本，因为<code>grep</code>通过返回一个状态值来说明搜索的状态，如果模板搜索成功，则返回0，如果搜索不成功，则返回1，如果搜索的文件不存在，则返回2。利用这些返回值就可进行一些自动化的文本处理工作。</p>
+<p>语法:  </p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line"> grep [-abcEFGhHilLnqrsvVwxy][-A&lt;显示列数&gt;][-B&lt;显示列数&gt;][-C&lt;显示列数&gt;][-d&lt;进行动作&gt;][-e&lt;范本样式&gt;][-f&lt;范本文件&gt;][--help][范本样式][文件或目录...]</span><br><span class="line"> ```  </span><br><span class="line"></span><br><span class="line">参数：  </span><br><span class="line"></span><br><span class="line">- `-a`或`--text`  </span><br><span class="line">不要忽略二进制的数据。  </span><br><span class="line"></span><br><span class="line">- `-A n` 或 `--after-context=n`  </span><br><span class="line">除了显示匹配到的字符串的的那一行及该行后n行。</span><br><span class="line"></span><br><span class="line">- `-b`或`--byte-offset`  </span><br><span class="line">在显示符合样式的那一行之前，标示出该行第一个字符的编号。  </span><br><span class="line"></span><br><span class="line">- `-B n`或`--before-context=n`    </span><br><span class="line">除了显示匹配到的字符串的的那一行及该行前n行。</span><br><span class="line"></span><br><span class="line">- `-c`或`--count`    </span><br><span class="line">显示符合样式的列数。</span><br><span class="line"></span><br><span class="line">- `--color`  </span><br><span class="line">将匹配到的内容以颜色高亮显示。</span><br><span class="line"></span><br><span class="line">- `-C n`或`--context=n`或`-n`  </span><br><span class="line">除了显示匹配到的字符串的的那一行及该行前后各n行。</span><br><span class="line"></span><br><span class="line">- `-d &lt;动作&gt;` 或 `--directories=&lt;动作&gt;`   </span><br><span class="line">当指定要查找的是目录而非文件时，必须使用这项参数，否则grep指令将回报信息并停止动作。</span><br><span class="line"></span><br><span class="line">- `-e&lt;范本样式&gt;`或`--regexp=&lt;范本样式&gt;`   </span><br><span class="line">指定字符串做为查找文件内容的样式。</span><br><span class="line"></span><br><span class="line">- `-E`或`--extended-regexp`   </span><br><span class="line">开启扩展(EXTEND)的正则表达式。</span><br><span class="line"></span><br><span class="line">- `-f&lt;规则文件&gt;` 或 `--file=&lt;规则文件&gt;`   </span><br><span class="line">指定规则文件，其内容含有一个或多个规则样式，让`grep`查找符合规则条件的文件内容，格式为每行一个规则样式。  </span><br><span class="line"></span><br><span class="line">- `-F`或`--fixed-regexp`  </span><br><span class="line">将样式视为固定字符串的列表。</span><br><span class="line"></span><br><span class="line">- `-G`或`--basic-regexp`  </span><br><span class="line">将样式视为普通的表示法来使用。</span><br><span class="line"></span><br><span class="line">- `-h`或`--no-filename`  </span><br><span class="line">在显示符合样式的那一行之前，不标示该行所属的文件名称。</span><br><span class="line"></span><br><span class="line">- `-H`或`--with-filename`  </span><br><span class="line">在显示符合样式的那一行之前，表示该行所属的文件名称。</span><br><span class="line"></span><br><span class="line">- `-i`或`--ignore-case`   </span><br><span class="line">忽略大小写。</span><br><span class="line"></span><br><span class="line">- `-l`或`--file-with-matches`  </span><br><span class="line">列出文件内容符合指定的样式的文件名称。</span><br><span class="line"></span><br><span class="line">- `-L`或`--files-without-match`  </span><br><span class="line">列出文件内容不符合指定的样式的文件名称。</span><br><span class="line"></span><br><span class="line">- `-n`或`--line-number`  </span><br><span class="line">显示行号。</span><br><span class="line"></span><br><span class="line">- `-o`或`--only-matching`  </span><br><span class="line">只显示匹配PATTERN的部分。</span><br><span class="line"></span><br><span class="line">- `-q`或`--quiet`或`--silent`   </span><br><span class="line">不显示任何信息。</span><br><span class="line"></span><br><span class="line">- `-r`或`--recursive`  </span><br><span class="line">此参数的效果和指定&quot;-d recurse&quot;参数相同。</span><br><span class="line"></span><br><span class="line">- `-s`或`--no-messages`  </span><br><span class="line">不显示错误信息。</span><br><span class="line"></span><br><span class="line">- `-v`或`--revert-match`  </span><br><span class="line">显示不包含匹配文本的所有行。</span><br><span class="line"></span><br><span class="line">- `-V`或`--version`  </span><br><span class="line">显示版本信息。</span><br><span class="line"></span><br><span class="line">- `-w`或`--word-regexp`  </span><br><span class="line">被匹配的文本只能是单词，而不能是单词中的某一部分。</span><br><span class="line"></span><br><span class="line">- `-x --line-regexp`  </span><br><span class="line">只显示全列符合的列。</span><br><span class="line"></span><br><span class="line">- `-y`  </span><br><span class="line">此参数的效果和指定&quot;-i&quot;参数相同。</span><br><span class="line"></span><br><span class="line">示例：</span><br></pre></td></tr></table></figure>
+<p>$ grep test test* #查找前缀有”test”的文件包含”test”字符串的文件  </p>
+<p>$ grep -r update /etc/acpi #以递归的方式查找”etc/acpi”中符合条件的文件</p>
+<p>$ grep -v test <em>test</em> #查找文件名包含test的文件中不包含test的行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### 2.2 awk</span><br><span class="line"></span><br><span class="line">`awk`是一种优良的文本处理工具，由Alfred Aho、Peter Weinberger和Brian Kernighan三人创造，以三人的姓氏的首字母命名。三位创建者已将`awk`的语法正式定义为`样式扫描和处理语言`。它允许创建简短的程序来读取输入文件、为数据排序、处理数据、对输入执行计算以及生成报表，以及一些其他的功能。`awk`经过改进生成的新的版本`nawk`,`gawk`，现在默认linux系统下日常使用的是`gawk`，用命令`ls -l /bin/awk` 可以查看正在应用的`awk`的来源。    </span><br><span class="line"></span><br><span class="line">语法：  </span><br><span class="line">`awk &apos;&#123;pattern + action&#125;&apos; &#123;filenames&#125;`   </span><br><span class="line"></span><br><span class="line">awk是行处理器，在处理庞大文件时不会出现内存溢出或是处理缓慢的问题，通常用来格式化文本信息。awk的处理过程是依次对每一行进行处理，然后输出。  </span><br><span class="line"></span><br><span class="line">awk命令形式:  </span><br><span class="line">`awk [-F|-f|-v] &apos;BEGIN&#123;&#125; //&#123;command1; command2&#125; END&#123;&#125;&apos; file`</span><br><span class="line"></span><br><span class="line">- [-F|-f|-v]  </span><br><span class="line">大参数，-F指定分隔符，-f调用脚本，-v定义变量 var=value</span><br><span class="line"></span><br><span class="line">- `&apos;  &apos;`          </span><br><span class="line">引用代码块</span><br><span class="line"></span><br><span class="line">- `BEGIN`  </span><br><span class="line">初始化代码块，在对每一行进行处理之前，初始化代码，主要是引用全局变量，设置FS分隔符</span><br><span class="line"></span><br><span class="line">- `//`             </span><br><span class="line">匹配代码块，可以是字符串或正则表达式</span><br><span class="line"></span><br><span class="line">- `&#123;&#125;`            </span><br><span class="line">命令代码块，包含一条或多条命令</span><br><span class="line">- `;`          </span><br><span class="line">多条命令使用分号分隔</span><br><span class="line"></span><br><span class="line">- `END`      </span><br><span class="line">结尾代码块，在对每一行进行处理之后再执行的代码块，主要是进行最终计算或输出结尾摘要信息</span><br><span class="line"></span><br><span class="line">特殊要点:</span><br></pre></td></tr></table></figure></p>
+<p>$0           表示整个当前行<br>$1           每行第一个字段<br>NF           字段数量变量<br>NR           每行的记录号，多文件记录递增<br>FNR          与NR类似，不过多文件记录不递增，每个文件都从1开始<br>\t           制表符<br>\n           换行符<br>FS           BEGIN时定义分隔符<br>RS           输入的记录分隔符， 默认为换行符(即文本是按一行一行输入)<br>~            匹配，与==相比不是精确比较<br>!~           不匹配，不精确比较<br>==           等于，必须全部相等，精确比较<br>!=           不等于，精确比较<br>&amp;&amp;　         逻辑与<br>||           逻辑或</p>
+<ul>
+<li>匹配时表示1个或1个以上<br>/[0-9][0-9]+/    两个或两个以上数字<br>/[0-9][0-9]*/    一个或一个以上数字<br>FILENAME         文件名<br>OFS              输出字段分隔符， 默认也是空格，可以改为制表符等<br>ORS              输出的记录分隔符，默认为换行符,即处理结果也是一行一行输出到屏幕<br>-F’[:#/]’        定义三个分隔符<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 2.3 sed</span><br><span class="line"></span><br><span class="line">Linux `sed`命令是利用脚本来处理文本文件，是一个面向字符流的非交互式编辑器。`sed` 可依照脚本的指令来处理、编辑文本文件。`sed` 主要用来自动编辑一个或多个文件、简化对文件的反复操作、编写转换程序等。  </span><br><span class="line"></span><br><span class="line">语法：</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>sed [options] ‘command’ file(s)<br>sed [-hnV][-e <script>][-f &lt;script文件&gt;][文本文件]<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- `-e &lt;script&gt;`或`--expression=&lt;script&gt;`  </span><br><span class="line">以选项中指定的script来处理输入的文本文件。</span><br><span class="line"></span><br><span class="line">- `-f &lt;script文件&gt;`或`--file=&lt;script文件&gt;`   </span><br><span class="line">以选项中指定的script文件来处理输入的文本文件。</span><br><span class="line"></span><br><span class="line">- `-h`或`--help`   </span><br><span class="line">显示帮助。</span><br><span class="line"></span><br><span class="line">- `-n`或`--quiet`或`--silent`</span><br><span class="line">仅显示script处理后的结果。</span><br><span class="line"></span><br><span class="line">- `-V`或`--version`   </span><br><span class="line">显示版本信息。</span><br><span class="line"></span><br><span class="line">- a ：新增， a 的后面可以接字串，而这些字串会在新的一行出现(目前的下一行)～</span><br><span class="line">- c ：取代， c 的后面可以接字串，这些字串可以取代 n1,n2 之间的行！</span><br><span class="line">- d ：删除选择的行；</span><br><span class="line">- D ：删除模板块的第一行</span><br><span class="line">- i ：插入， i 的后面可以接字串，而这些字串会在新的一行出现(目前的上一行)；</span><br><span class="line">- p ：打印，亦即将某个选择的数据印出。通常 p 会与参数 sed -n 一起运行～</span><br><span class="line">- s ：替换指定的字符</span><br><span class="line">- h : 拷贝模板块的内容到内存中的缓冲区</span><br><span class="line">- H : 追加模板块的内容到内存中的缓冲区</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 2.4 printf</span><br><span class="line"></span><br><span class="line">语法：</span><br></pre></td></tr></table></figure></p>
+<p>echo string<br>printf [format] [文本1] [文本2] ..<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Shell的`echo`指令与PHP的`echo`指令类似，都是用于字符串的输出。`printf`命令模仿C程序库(library)里的`printf()`程序,由POSIX标准定义，因此使用`printf`的脚本比使用`echo`移植性好。`printf`使用引用文本或空格分隔的参数，外面可以在`printf`中使用格式化字符串，还可以制定字符串的宽度、左右对齐方式等。默认`printf`不会像`echo`自动添加换行符，可以手动添加`\n`。</span><br><span class="line"></span><br><span class="line">## 3. Linux的几个进程相关命令</span><br><span class="line"></span><br><span class="line">### 3.1 ps</span><br><span class="line"></span><br><span class="line">Linux ps命令用于显示当前进程 (process) 的状态。  </span><br><span class="line"></span><br><span class="line">语法：</span><br></pre></td></tr></table></figure></p>
+<p>ps [options] [–help]</p>
+<p>-A 列出所有的行程<br>-w 显示加宽可以显示较多的资讯<br>-au 显示较详细的资讯<br>-aux 显示所有包含其他使用者的行程<br>au(x) 输出格式<br>USER PID %CPU %MEM VSZ RSS TTY STAT START TIME COMMAND<br>USER: 行程拥有者<br>PID: pid<br>%CPU: 占用的 CPU 使用率<br>%MEM: 占用的记忆体使用率<br>VSZ: 占用的虚拟记忆体大小<br>RSS: 占用的记忆体大小<br>TTY: 终端的次要装置号码 (minor device number of tty)<br>STAT: 该行程的状态:<br>D: 无法中断的休眠状态 (通常 IO 的进程)<br>R: 正在执行中<br>S: 静止状态<br>…<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">### 3.2 pstree</span><br><span class="line"></span><br><span class="line">Linux pstree命令将所有行程以树状图显示，树状图将会以 pid (如果有指定) 或是以 init 这个基本行程为根 (root)，如果有指定使用者 id，则树状图会只显示该使用者所拥有的行程。</span><br></pre></td></tr></table></figure></p>
+<p>pstree [-a] [-c] [-h|-Hpid] [-l] [-n] [-p] [-u] [-G|-U] [pid|user]<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### 3.3 top</span><br><span class="line"></span><br><span class="line">Linux top命令用于实时显示 process 的动态。top命令显示CPU占用率可能超过100%，这是因为其显示的的是程序占用的cpu的总数，也就是说如果你是4核cpu那么cpu最高占用率可达400%，top里显示的是把所有使用率加起来。可以按`1`来查看各核的状态。</span><br></pre></td></tr></table></figure></p>
+<p>top -hv | -bcisSHM -d delay -n iterations [-u user | -U user] -p pid [,pid …]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### 3.4 kill</span><br><span class="line"></span><br><span class="line">Linux kill命令用于删除执行中的程序或工作。  </span><br><span class="line">kill可将指定的信息送至程序。预设的信息为SIGTERM(15)，可将指定程序终止。若仍无法终止该程序，可使用SIGKILL(9)信息尝试强制删除程序。程序或工作的编号可利用ps指令或jobs指令查看。</span><br></pre></td></tr></table></figure>
+<p>kill [-s &lt;信息名称或编号&gt;][程序]　或　kill [-l &lt;信息编号&gt;]</p>
+<p>-l &lt;信息编号&gt; 　若不加&lt;信息编号&gt;选项，则-l参数会列出全部的信息名称。<br>-s &lt;信息名称或编号&gt; 　指定要送出的信息。<br>[程序] 　[程序]可以是程序的PID或是PGID，也可以是工作编号。<br><code>`</code></p>
+</script></p>
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux命令/" rel="tag"># Linux命令</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/14/backends/nosql/redis/Redis(三) Redis实现分布式锁/" rel="next" title="Redis(三) Redis实现分布式锁">
+                <i class="fa fa-chevron-left"></i> Redis(三) Redis实现分布式锁
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/uploads/avatar.gif" alt="Javior Wang">
+            
+              <p class="site-author-name" itemprop="name">Javior Wang</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">17</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/scorego" title="GitHub &rarr; https://github.com/scorego" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://www.zhihu.com/people/scorego-6" title="Zhihu &rarr; https://www.zhihu.com/people/scorego-6" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>Zhihu</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-正则表达式"><span class="nav-text">1. 正则表达式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Linux的几个文本命令"><span class="nav-text">2. Linux的几个文本命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-grep"><span class="nav-text">2.1 grep</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Javior Wang</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

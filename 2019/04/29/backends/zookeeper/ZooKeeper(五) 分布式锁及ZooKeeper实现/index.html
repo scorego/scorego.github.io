@@ -95,7 +95,7 @@
 
 
   <meta name="description" content="分布式场景中，为了保证数据的最终一致性，需要很多的技术方案来支持，比如分布式事务、分布式锁等。很多时候需要保证一个方法在同一时间内只能被同一个线程执行。在单机环境中，通过Java提供的并发API可以解决问题，但是在分布式环境下，JVM是无法完成实现锁的。分布式与单机情况下最大的不同在于其不是多线程而是多进程。多线程由于可以共享堆内存，因此可以简单的采取内存作为标记存储位置。而进程之间甚至可能都不在">
-<meta name="keywords" content="分布式锁,ZooKeeper">
+<meta name="keywords" content="ZooKeeper,分布式锁">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ZooKeeper(五) 分布式锁的实现总结及ZooKeeper实现">
 <meta property="og:url" content="javior.wang/2019/04/29/backends/zookeeper/ZooKeeper(五) 分布式锁及ZooKeeper实现/index.html">
@@ -585,9 +585,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/分布式锁/" rel="tag"># 分布式锁</a>
-          
             <a href="/tags/ZooKeeper/" rel="tag"># ZooKeeper</a>
+          
+            <a href="/tags/分布式锁/" rel="tag"># 分布式锁</a>
           
         </div>
       
@@ -683,7 +683,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">17</span>
+                    <span class="site-state-item-count">18</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -699,8 +699,6 @@
                     
                   
                     
-                    
-                      
                     
                       
                     
@@ -757,7 +755,7 @@
                     
                       
                     
-                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-count">13</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

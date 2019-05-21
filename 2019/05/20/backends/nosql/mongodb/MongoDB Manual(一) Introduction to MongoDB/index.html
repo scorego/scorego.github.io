@@ -103,7 +103,7 @@
 <meta property="og:description" content="MongoDB 官网MONGODB MANUAL 4.0MONGODB 中文社区 一、概述MongoDB是一种面向文档的数据库管理系统，用C++等语言撰写而成，旨在为WEB应用提供可扩展的高性能数据存储解决方案。MongoDB名字来自于英文单词”Humongous”，中文含义为“庞大”。MongoDB的数据模式可以随着应用程序的发展而灵活地更新，与此同时，它也为开发人员提供了传统数据库的功能：二级">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="/images/backend/nosql/mongodb/01/01.png">
-<meta property="og:updated_time" content="2019-05-20T11:32:17.774Z">
+<meta property="og:updated_time" content="2019-05-21T08:21:12.475Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MongoDB Manual(一) Introduction to MongoDB">
 <meta name="twitter:description" content="MongoDB 官网MONGODB MANUAL 4.0MONGODB 中文社区 一、概述MongoDB是一种面向文档的数据库管理系统，用C++等语言撰写而成，旨在为WEB应用提供可扩展的高性能数据存储解决方案。MongoDB名字来自于英文单词”Humongous”，中文含义为“庞大”。MongoDB的数据模式可以随着应用程序的发展而灵活地更新，与此同时，它也为开发人员提供了传统数据库的功能：二级">
@@ -384,12 +384,24 @@
                 
               
 
-              <time title="创建时间：2019-05-20 15:42:38 / 修改时间：19:32:17" itemprop="dateCreated datePublished" datetime="2019-05-20T15:42:38+08:00">2019-05-20</time>
+              <time title="创建时间：2019-05-20 15:42:38" itemprop="dateCreated datePublished" datetime="2019-05-20T15:42:38+08:00">2019-05-20</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-05-21 16:21:12" itemprop="dateModified" datetime="2019-05-21T16:21:12+08:00">2019-05-21</time>
               
             
           </span>
@@ -531,7 +543,7 @@
 </tr>
 </tbody>
 </table>
-<div align="center"><br>      <img src="/images/backend/nosql/mongodb/01/01.png" width="500" height="500"><br></div>
+<div align="center"><br>      <img src="/images/backend/nosql/mongodb/01/01.png" width="700" height="700"><br></div>
 
 <h3 id="2-1-database"><a href="#2-1-database" class="headerlink" title="2.1 database"></a>2.1 database</h3><p>一个MongoDB可以创建多个数据库，默认数据库为<code>db</code>，存在data目录中。MongoDB的单个实例可以容纳多个独立的数据库，每一个都有自己的集合和权限，不同的数据库也放在不同的文件中。数据库通过名字来标识。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">//当库myNewDB和集合myNewCollection1都不存在时，insertOne会创建它们</span><br><span class="line">use myNewDB</span><br><span class="line">db.myNewCollection1.insertOne( &#123; x: 1 &#125; )</span><br></pre></td></tr></table></figure>

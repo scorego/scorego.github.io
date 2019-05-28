@@ -94,18 +94,18 @@
 
 
 
-  <meta name="description" content="Redis(Remote dictionary server) 是一个开源的、使用ANSI C语言编写的内存数据结构存储系统，可用作数据库、缓存和消息代理。Redis次版本号(第一个小数点后的数字)为偶数表示是稳定版，基数表示是不稳定版。         Redis官网Redis命令参考   Redis的优点如下：  速度快，因为数据存在内存中。 支持丰富数据类型。 支持事务，操作都是原子性。 丰">
-<meta name="keywords" content="NoSQL,Redis">
+  <meta name="description" content="一、 fail-fast总结fail-fast机制是java集合的一种错误机制，当多个线程对同一集合的内容进行操作时，就可能产生fail-fast事件，抛出ConcurrentModificationException异常。   解决办法fail-fast机制只能用来检测错误，因为JDK并不保证fail-fast机制一定会发生。若在多线程环境下使用集合，建议使用java.util.concurre">
+<meta name="keywords" content="数据结构,Java集合">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Redis(一) Redis简介">
-<meta property="og:url" content="javior.wang/2019/05/13/backends/nosql/redis/Redis(一) Redis简介/index.html">
+<meta property="og:title" content="Java集合(二) fail-fast和fail-safe">
+<meta property="og:url" content="javior.wang/2019/05/28/数据结构/Java集合(二) fail-fast和fail-safe/index.html">
 <meta property="og:site_name" content="Javior&#39;s Blog">
-<meta property="og:description" content="Redis(Remote dictionary server) 是一个开源的、使用ANSI C语言编写的内存数据结构存储系统，可用作数据库、缓存和消息代理。Redis次版本号(第一个小数点后的数字)为偶数表示是稳定版，基数表示是不稳定版。         Redis官网Redis命令参考   Redis的优点如下：  速度快，因为数据存在内存中。 支持丰富数据类型。 支持事务，操作都是原子性。 丰">
+<meta property="og:description" content="一、 fail-fast总结fail-fast机制是java集合的一种错误机制，当多个线程对同一集合的内容进行操作时，就可能产生fail-fast事件，抛出ConcurrentModificationException异常。   解决办法fail-fast机制只能用来检测错误，因为JDK并不保证fail-fast机制一定会发生。若在多线程环境下使用集合，建议使用java.util.concurre">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-15T05:16:44.569Z">
+<meta property="og:updated_time" content="2019-05-28T13:55:03.041Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Redis(一) Redis简介">
-<meta name="twitter:description" content="Redis(Remote dictionary server) 是一个开源的、使用ANSI C语言编写的内存数据结构存储系统，可用作数据库、缓存和消息代理。Redis次版本号(第一个小数点后的数字)为偶数表示是稳定版，基数表示是不稳定版。         Redis官网Redis命令参考   Redis的优点如下：  速度快，因为数据存在内存中。 支持丰富数据类型。 支持事务，操作都是原子性。 丰">
+<meta name="twitter:title" content="Java集合(二) fail-fast和fail-safe">
+<meta name="twitter:description" content="一、 fail-fast总结fail-fast机制是java集合的一种错误机制，当多个线程对同一集合的内容进行操作时，就可能产生fail-fast事件，抛出ConcurrentModificationException异常。   解决办法fail-fast机制只能用来检测错误，因为JDK并不保证fail-fast机制一定会发生。若在多线程环境下使用集合，建议使用java.util.concurre">
 
 
 
@@ -113,7 +113,7 @@
 
   
   
-  <link rel="canonical" href="javior.wang/2019/05/13/backends/nosql/redis/Redis(一) Redis简介/">
+  <link rel="canonical" href="javior.wang/2019/05/28/数据结构/Java集合(二) fail-fast和fail-safe/">
 
 
 
@@ -123,7 +123,7 @@
   };
 </script>
 
-  <title>Redis(一) Redis简介 | Javior's Blog</title>
+  <title>Java集合(二) fail-fast和fail-safe | Javior's Blog</title>
   
 
 
@@ -339,7 +339,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="javior.wang/2019/05/13/backends/nosql/redis/Redis(一) Redis简介/">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/05/28/数据结构/Java集合(二) fail-fast和fail-safe/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Javior Wang">
@@ -356,7 +356,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Redis(一) Redis简介
+          <h1 class="post-title" itemprop="name headline">Java集合(二) fail-fast和fail-safe
 
               
             
@@ -382,24 +382,12 @@
                 
               
 
-              <time title="创建时间：2019-05-13 10:14:28" itemprop="dateCreated datePublished" datetime="2019-05-13T10:14:28+08:00">2019-05-13</time>
+              <time title="创建时间：2019-05-28 21:46:56 / 修改时间：21:55:03" itemprop="dateCreated datePublished" datetime="2019-05-28T21:46:56+08:00">2019-05-28</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-05-15 13:16:44" itemprop="dateModified" datetime="2019-05-15T13:16:44+08:00">2019-05-15</time>
               
             
           </span>
@@ -416,7 +404,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/NoSQL/" itemprop="url" rel="index"><span itemprop="name">NoSQL</span></a></span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/数据结构/" itemprop="url" rel="index"><span itemprop="name">数据结构</span></a></span>
 
                 
                 
@@ -451,34 +439,18 @@
       
 
       
-        <p><strong>Redis(Remote dictionary server)</strong> 是一个开源的、使用ANSI C语言编写的内存数据结构存储系统，可用作数据库、缓存和消息代理。Redis次版本号(第一个小数点后的数字)为偶数表示是稳定版，基数表示是不稳定版。        </p>
-<p><a href="https://redis.io/" target="_blank" rel="noopener">Redis官网</a><br><a href="http://redisdoc.com/index.html" target="_blank" rel="noopener">Redis命令参考</a>  </p>
-<p>Redis的优点如下：</p>
-<ul>
-<li>速度快，因为数据存在内存中。</li>
-<li>支持丰富数据类型。</li>
-<li>支持事务，操作都是原子性。</li>
-<li>丰富的特性。</li>
-<li>支持主从复制。</li>
-<li>支持数据持久化。  </li>
-</ul>
-<p><strong>发展历史：</strong>  </p>
-<ul>
-<li>2009，初始发布</li>
-<li>2010，VMware开始赞助</li>
-<li>2015，Redis 3.0</li>
-<li>2018.10， Redis 5.0 GA  </li>
-</ul>
-<p><strong>安装：</strong>  </p>
+        <h2 id="一、-fail-fast总结"><a href="#一、-fail-fast总结" class="headerlink" title="一、 fail-fast总结"></a>一、 fail-fast总结</h2><p>fail-fast机制是java集合的一种错误机制，当多个线程对同一集合的内容进行操作时，就可能产生fail-fast事件，抛出<code>ConcurrentModificationException</code>异常。  </p>
+<h3 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h3><p>fail-fast机制只能用来检测错误，因为JDK并不保证fail-fast机制一定会发生。若在多线程环境下使用集合，建议使用<code>java.util.concurrent</code>包下的类取代<code>java.util</code>包的类。</p>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>产生fail-fast事件，是通过抛出<code>ConcurrentModificationException</code>异常来触发的，那么<code>ArrayList</code>何时抛出<code>ConcurrentModificationException</code>异常的呢?<br>查看<code>Iterator</code>源码，可以发现在调用<code>next()</code>和<code>remove()</code>时，都会执行<code>checkForComodification()</code>。若<code>modCount</code>不等于<code>expectedModCount</code>，则抛出<code>ConcurrentModificationException</code>异常，产生<code>fail-fast</code>事件。从Itr类中，我们知道 <code>expectedModCount</code>在创建Itr对象时，被赋值为<code>modCount</code>。所以，需要考证的就是modCount何时会被修改。接下来查看ArrayList源码，发现无论是<code>add()</code>、<code>remove()</code>，还是<code>clear()</code>，只要涉及到修改集合中的元素个数时，都会改变<code>modCount</code>的值。<br>即，当多个线程对同一个集合进行操作的时候，某线程访问集合的过程中，该集合的内容被其他线程所改变(即其它线程通过<code>add</code>、<code>remove</code>、<code>clear</code>等方法，改变了<code>modCount</code>的值)；这时，就会抛出<code>ConcurrentModificationException</code>异常，产生fail-fast事件。</p>
+<h3 id="解决原理"><a href="#解决原理" class="headerlink" title="解决原理"></a>解决原理</h3><p>查看CopyOnWriteArrayList源码，可以看出:  </p>
 <ol>
-<li><p>POSIX系统  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ wget http://download.redis.io/releases/redis-5.0.4.tar.gz</span><br><span class="line">$ tar xzf redis-5.0.4.tar.gz</span><br><span class="line">$ cd redis-5.0.4</span><br><span class="line">$ make</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>OS X<br>可以通过Homebrew和MaxPorts等安装。  </p>
-</li>
-<li><p>Windows<br>Redis官方不支持windows。非官方版本：<a href="https://github.com/microsoftarchive/redis" target="_blank" rel="noopener">https://github.com/microsoftarchive/redis</a>  </p>
-</li>
+<li>和<code>ArrayList</code>继承于<code>AbstractList</code>不同，<code>CopyOnWriteArrayList</code>没有继承于<code>AbstractList</code>，它仅仅只是实现了<code>List</code>接口。  </li>
+<li><code>ArrayList</code>的<code>iterator()</code>函数返回的<code>Iterator</code>是在<code>AbstractList</code>中实现的；而<code>CopyOnWriteArrayList</code>是自己实现<code>Iterator</code>。  </li>
+<li><code>ArrayList</code>的<code>Iterator</code>实现类中调用<code>next()</code>时，会调用<code>checkForComodification()</code>比较<code>expectedModCount</code>和<code>modCount</code>的大小；  </li>
+<li><code>CopyOnWriteArrayList</code>的<code>Iterator</code>实现类中，没有<code>checkForComodification()</code>，更不会抛出<code>ConcurrentModificationException</code>异常。  </li>
 </ol>
+<h2 id="二、-fail-fast和fail-safe区别"><a href="#二、-fail-fast和fail-safe区别" class="headerlink" title="二、 fail-fast和fail-safe区别"></a>二、 fail-fast和fail-safe区别</h2><p>简单的来说：在<code>java.util</code>下的集合都是发生fail-fast，而在<code>java.util.concurrent</code>下的发生的都是fail-safe。</p>
+<p><code>fail-safe</code>即安全失败，在<code>java.util.concurrent</code>下的类，都是线程安全的类，他们在迭代的过程中，如果有线程进行结构的改变，不会报异常，而是正常遍历，这就是安全失败。<br>为什么在java.util.concurrent包下对集合有结构的改变，却不会报异常？<br>在concurrent下的集合类增加元素的时候使用<code>Arrays.copyOf()</code>来拷贝副本，在副本上增加元素，如果有其他线程在此改变了集合的结构，那也是在副本上的改变，而不是影响到原集合，<br>迭代器还是照常遍历，遍历完之后，改变原引用指向副本，所以总的一句话就是如果在次包下的类进行增加删除，就会出现一个副本。所以能防止fail-fast，这种机制并不会出错，所以我们叫这种现象为fail-safe。　　　<br>vector也是线程安全的，为什么是fail-fast呢？<br>这里搞清楚一个问题，并不是说线程安全的集合就不会报fail-fast，而是报fail-safe，你得搞清楚前面所说答案的原理，出现fail-safe是因为他们在实现增删的底层机制不一样，就像上面说的，会有一个副本，而像<code>arrayList</code>、<code>linekdList</code>、<code>verctor</code>等，他们底层就是对着真正的引用进行操作，所以才会发生异常。<br>既然是线程安全的，为什么在迭代的时候，还会有别的线程来改变其集合的结构呢(也就是对其删除和增加等操作)？<br>首先，我们迭代的时候，根本就没用到集合中的删除、增加，查询的操作，就拿vector来说，我们都没有用那些加锁的方法，也就是方法锁放在那没人拿，在迭代的过程中，有人拿了那把锁，我们也没有办法，因为那把锁就放在那边。　</p>
 
       
     </div>
@@ -502,9 +474,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/NoSQL/" rel="tag"># NoSQL</a>
+            <a href="/tags/数据结构/" rel="tag"># 数据结构</a>
           
-            <a href="/tags/Redis/" rel="tag"># Redis</a>
+            <a href="/tags/Java集合/" rel="tag"># Java集合</a>
           
         </div>
       
@@ -517,8 +489,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/05/06/backends/zookeeper/ZooKeeper(六) 一致性协议与分布式事务/" rel="next" title="ZooKeeper(六) 一致性协议与分布式事务">
-                <i class="fa fa-chevron-left"></i> ZooKeeper(六) 一致性协议与分布式事务
+              <a href="/2019/05/28/数据结构/Java集合(一) 总览/" rel="next" title="Java集合(一) 总览">
+                <i class="fa fa-chevron-left"></i> Java集合(一) 总览
               </a>
             
           </div>
@@ -526,10 +498,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/05/13/backends/nosql/redis/Redis(二) Redis数据类型/" rel="prev" title="Redis(二) Redis数据类型">
-                Redis(二) Redis数据类型 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -573,8 +541,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -722,6 +699,23 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、-fail-fast总结"><span class="nav-text">一、 fail-fast总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#解决办法"><span class="nav-text">解决办法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原理"><span class="nav-text">原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决原理"><span class="nav-text">解决原理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、-fail-fast和fail-safe区别"><span class="nav-text">二、 fail-fast和fail-safe区别</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       

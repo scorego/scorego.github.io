@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next mist" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/favicon-128x128-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-01.ico?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/uploads/favicon-128x128-01.ico?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="一、 Java集合结构图         java.util.*包提供了一些集合类，包含了常用的数据结构：集合、链表、队列、栈、数组、映射等，这些集合类又被称为容器。集合类与数组的不同是：数组的长度是固定的，集合的长度是可变的；数组用来存放基本类型的数据，集合用来存放对象的引用。Java集合主要可以划分为4个部分：List(列表)、Set(集合)、Map(映射)、工具类(Iterator迭代器、E">
+<meta name="keywords" content="数据结构,Java集合">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java集合(一) 总览">
+<meta property="og:url" content="javior.wang/2019/05/28/数据结构/Java集合(一) 总览/index.html">
+<meta property="og:site_name" content="Javior&#39;s Blog">
+<meta property="og:description" content="一、 Java集合结构图         java.util.*包提供了一些集合类，包含了常用的数据结构：集合、链表、队列、栈、数组、映射等，这些集合类又被称为容器。集合类与数组的不同是：数组的长度是固定的，集合的长度是可变的；数组用来存放基本类型的数据，集合用来存放对象的引用。Java集合主要可以划分为4个部分：List(列表)、Set(集合)、Map(映射)、工具类(Iterator迭代器、E">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="/images/数据结构/01_02collection.png">
+<meta property="og:image" content="/images/数据结构/01_04map.png">
+<meta property="og:updated_time" content="2019-05-28T13:43:30.053Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java集合(一) 总览">
+<meta name="twitter:description" content="一、 Java集合结构图         java.util.*包提供了一些集合类，包含了常用的数据结构：集合、链表、队列、栈、数组、映射等，这些集合类又被称为容器。集合类与数组的不同是：数组的长度是固定的，集合的长度是可变的；数组用来存放基本类型的数据，集合用来存放对象的引用。Java集合主要可以划分为4个部分：List(列表)、Set(集合)、Map(映射)、工具类(Iterator迭代器、E">
+<meta name="twitter:image" content="/images/数据结构/01_02collection.png">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="javior.wang/2019/05/28/数据结构/Java集合(一) 总览/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Java集合(一) 总览 | Javior's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Javior's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/05/28/数据结构/Java集合(一) 总览/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Javior Wang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Javior's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java集合(一) 总览
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-05-28 20:34:44 / 修改时间：21:43:30" itemprop="dateCreated datePublished" datetime="2019-05-28T20:34:44+08:00">2019-05-28</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/数据结构/" itemprop="url" rel="index"><span itemprop="name">数据结构</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="一、-Java集合结构图"><a href="#一、-Java集合结构图" class="headerlink" title="一、 Java集合结构图"></a>一、 Java集合结构图</h2><div align="center"><br>      <img src="/images/数据结构/01_02collection.png" width="1000" height="1000"><br></div>
+
+
+<p><code>java.util.*</code>包提供了一些集合类，包含了常用的数据结构：集合、链表、队列、栈、数组、映射等，这些集合类又被称为<code>容器</code>。集合类与数组的不同是：数组的长度是固定的，集合的长度是可变的；数组用来存放基本类型的数据，集合用来存放对象的引用。<br>Java集合主要可以划分为4个部分：<code>List(列表)</code>、<code>Set(集合)</code>、<code>Map(映射)</code>、<code>工具类(Iterator迭代器、Enumeration枚举类、Arrays和Collections)</code>。  </p>
+<p>对于框架图，先抓主干：<code>Collection</code>和<code>Map</code>。</p>
+<ul>
+<li><code>Collection</code>是一个接口，包含了集合的基本操作和属性。<code>Collection</code>包含<code>List</code>和<code>Set</code>两大分支：<ul>
+<li><code>List</code>是一个有序队列，每个元素都有索引，第一个元素索引是0。<br>  <code>List</code>的实现类有<code>LinkedList</code>，<code>ArrayList</code>，<code>Vector</code>，<code>Stack</code>。</li>
+<li><code>Set</code>是一个不允许有重复元素的集合。<br>  <code>Set</code>的实现类有<code>HashSet</code>和<code>TreeSet</code>。<code>HashSet</code>依赖于<code>HashMap</code>，它实际上是通过<code>HashMap</code>实现的；<code>TreeSet</code>依赖于<code>TreeMap</code>，它实际上是通过<code>TreeMap</code>实现的。</li>
+</ul>
+</li>
+<li><code>Map</code>是一个映射接口，即key-value键值对。<code>Map</code>中的每一个元素包含一个key和”key对应的value”。  <ul>
+<li><code>AbstractMap</code>是一个抽象类，实现了<code>Map</code>接口中的大部分API。<code>HashMap</code>、<code>TreeMap</code>、<code>WeakHashMap</code>都继承于<code>AbstractMap</code>。  </li>
+<li><code>Hashtable</code>实现了<code>Map</code>接口。</li>
+</ul>
+</li>
+<li><code>Iterator</code>是遍历集合的工具。之所以说<code>Collection</code>依赖于<code>Iterator</code>，是因为<code>Collection</code>的实现类都要实现<code>iterator()</code>函数，返回一个<code>Iterator()</code>对象。</li>
+<li><code>Enumeration</code>的作用也是遍历集合，但它的功能比<code>Iterator</code>少。<code>Enumeration</code>只能在<code>Hashtable</code>、<code>Vector</code>、<code>Stack</code>中使用。</li>
+<li><code>Arrays</code>和<code>Collections</code>是操作数组、集合的两个工具类。</li>
+</ul>
+<h2 id="二、-Collection"><a href="#二、-Collection" class="headerlink" title="二、 Collection"></a>二、 Collection</h2><p><code>Collection</code>是一个接口，它的主要分支是：<strong>List</strong> 和 <strong>Set</strong> 。<code>List</code>和<code>Set</code>都是接口，<code>List</code>是有序的队列，可以有重复的元素；<code>Set</code>是数学概念中的集合，没有重复元素。<br>为了方便，抽象出了<code>AbstractCollection</code>抽象类，它实现了<code>Collection</code>中的绝大部分函数，<code>AbstractList</code>和<code>AbstractSet</code>都继承于它。<br><code>Collection</code>中有一个<code>iterator()</code>函数，作用是返回一个<code>Iterator</code>对象。<code>ListIterator</code>是<code>List</code>接口特有的，通过<code>ListIterator()</code>返回一个<code>ListIterator</code>对象。</p>
+<p><code>Collection</code>的定义是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public interface Collection&lt;E&gt; extends Iterable&lt;E&gt; &#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>它包含了集合的基本操作：添加、删除、清空、遍历(读取)、是够为空、获取大小、是够保护某元素等。<br><code>Collection</code>接口的所有子类必须实现2种构造函数：无参构造函数和参数为Collection的构造函数。带参数的构造函数可以用来转换<code>Collection</code>的类型。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">// Collection的API</span><br><span class="line">abstract boolean         add(E object)</span><br><span class="line">abstract boolean         addAll(Collection&lt;? extends E&gt; collection)</span><br><span class="line">abstract void            clear()</span><br><span class="line">abstract boolean         contains(Object object)</span><br><span class="line">abstract boolean         containsAll(Collection&lt;?&gt; collection)</span><br><span class="line">abstract boolean         equals(Object object)</span><br><span class="line">abstract int             hashCode()</span><br><span class="line">abstract boolean         isEmpty()</span><br><span class="line">abstract Iterator&lt;E&gt;     iterator()</span><br><span class="line">abstract boolean         remove(Object object)</span><br><span class="line">abstract boolean         removeAll(Collection&lt;?&gt; collection)</span><br><span class="line">abstract boolean         retainAll(Collection&lt;?&gt; collection)</span><br><span class="line">abstract int             size()</span><br><span class="line">abstract &lt;T&gt; T[]         toArray(T[] array)</span><br><span class="line">abstract Object[]        toArray()</span><br></pre></td></tr></table></figure>
+<h3 id="2-1-List-列表"><a href="#2-1-List-列表" class="headerlink" title="2.1 List(列表)"></a>2.1 List(列表)</h3><p><code>List</code>是一个继承于<code>Collection</code>的接口。<code>List</code>集合中的元素允许重复，各元素的顺序就是对象插入的顺序。类似数组，用户通过使用索引来访问集合中的元素，第一个元素索引是0。<br>List的定义为:  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public interface List&lt;E&gt; extends Collection&lt;E&gt; &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p><code>List</code>接口继承了<code>Collection</code>接口，此外还定义了两个非常重要的方法：  </p>
+<ul>
+<li><code>get (int index)</code>： 获取指定索引位置的元素。</li>
+<li><code>set(int index, Object obj)</code>: 将集合中指定索引位置的对象修改为指定的对象。  </li>
+</ul>
+<p><code>List</code>接口的常用实现类有<code>ArrayList</code>和<code>LinkedList</code>。</p>
+<ul>
+<li><code>ArrayList</code>实现了可变数组，允许保存所有元素（包括null）。</li>
+<li><code>LinkedList</code>类采用链表结构保存对象。  </li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 相比与Collection，List新增的API：</span><br><span class="line">abstract void                add(int location, E object)</span><br><span class="line">abstract boolean             addAll(int location, Collection&lt;? extends E&gt; collection)</span><br><span class="line">abstract E                   get(int location)</span><br><span class="line">abstract int                 indexOf(Object object)</span><br><span class="line">abstract int                 lastIndexOf(Object object)</span><br><span class="line">abstract ListIterator&lt;E&gt;     listIterator(int location)</span><br><span class="line">abstract ListIterator&lt;E&gt;     listIterator()</span><br><span class="line">abstract E                   remove(int location)</span><br><span class="line">abstract E                   set(int location, E object)</span><br><span class="line">abstract List&lt;E&gt;             subList(int start, int end)</span><br></pre></td></tr></table></figure>
+<h3 id="2-2-Set集合"><a href="#2-2-Set集合" class="headerlink" title="2.2 Set集合"></a>2.2 Set集合</h3><p><code>Set</code>集合的对象不按特定顺序排序，但不能包含重复对象。必须小心操作可变对象，如果一个Set中的可变元素改变了自身状态导致<code>Object1.equals(Object2) == true</code>，则会出现一些问题。Set的定义如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public interface Set&lt;E&gt; extends Collection&lt;E&gt; &#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Set的API和Collection完全一样。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">// Set的API</span><br><span class="line">abstract boolean         add(E object)</span><br><span class="line">abstract boolean         addAll(Collection&lt;? extends E&gt; collection)</span><br><span class="line">abstract void            clear()</span><br><span class="line">abstract boolean         contains(Object object)</span><br><span class="line">abstract boolean         containsAll(Collection&lt;?&gt; collection)</span><br><span class="line">abstract boolean         equals(Object object)</span><br><span class="line">abstract int             hashCode()</span><br><span class="line">abstract boolean         isEmpty()</span><br><span class="line">abstract Iterator&lt;E&gt;     iterator()</span><br><span class="line">abstract boolean         remove(Object object)</span><br><span class="line">abstract boolean         removeAll(Collection&lt;?&gt; collection)</span><br><span class="line">abstract boolean         retainAll(Collection&lt;?&gt; collection)</span><br><span class="line">abstract int             size()</span><br><span class="line">abstract &lt;T&gt; T[]         toArray(T[] array)</span><br><span class="line">abstract Object[]        toArray()</span><br></pre></td></tr></table></figure></p>
+<p>Set接口常用的实现类有HashSet与TreeSet类。</p>
+<ul>
+<li>HashSet类由哈希表支持，不保证Set的迭代顺序，特别是不保证该顺序恒久不变，该类允许使用null元素。</li>
+<li>TreeSet实现了Set接口和java.util.SortedSet接口，因此TreeSet类实现的Set在遍历集合时按照自然顺序递增排序，也可以按照指定比较器递增排序。TreeSet新增的方法如下表。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">方法</th>
+<th style="text-align:left">功能描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">last()</td>
+<td style="text-align:left">返回此Set中当前最后一个（最高）元素</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">first()</td>
+<td style="text-align:left">返回此Set中当前第一个（最低）元素</td>
+</tr>
+<tr>
+<td style="text-align:center">comparator()</td>
+<td style="text-align:left">返回对此Set中元素进行排序的比较器，如果此Set使用自然顺序，返回null</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">headSet(E toElement)</td>
+<td style="text-align:left">返回一个新的Set集合，包含toElement(不包含此)之前的所有对象</td>
+</tr>
+<tr>
+<td style="text-align:center">subSet(E fromElement, E fromElement)</td>
+<td style="text-align:left">返回一个新的Set集合，包含fromElement(包含此)与fromElement（包含此）之间的所有对象</td>
+</tr>
+<tr>
+<td style="text-align:center">tailSet(E fromElement)</td>
+<td style="text-align:left">返回一个新的Set集合，包含fromElement(包含此)之后的所有对象</td>
+</tr>
+</tbody>
+</table>
+<h3 id="2-3-AbstractCollection"><a href="#2-3-AbstractCollection" class="headerlink" title="2.3 AbstractCollection"></a>2.3 AbstractCollection</h3><p><code>AbstractCollection</code>的定义如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public abstract class AbstractCollection&lt;E&gt; implements Collection&lt;E&gt; &#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>AbstractCollection</code>是一个抽象类，它实现了Collection中除<code>iterator()</code>和<code>size()</code>之外的函数。它的主要作用是实现了<code>Collection</code>接口中的大部分函数，从而方便其他类实现<code>Collection</code>，如<code>ArrayList</code>、<code>LinkedList</code>(通过继承<code>AbstractCollection</code>就已经实现了大部分接口)。</p>
+<h3 id="2-4-AbstractList"><a href="#2-4-AbstractList" class="headerlink" title="2.4 AbstractList"></a>2.4 AbstractList</h3><p><code>AbstractList</code>类的定义如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public abstract class AbstractList&lt;E&gt; extends AbstractCollection&lt;E&gt; implements List&lt;E&gt; &#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>AbstractList</code>是一个继承于AbstractCollection并实现了List接口的抽象类。它实现了List中除<code>size()</code>、<code>get(int location)</code>之外的函数，主要作用是：实现了List接口的大部分函数，从而方便其他类继承List。<br>另外，与AbstractCollection相比，AbstractList抽象类实现了<code>iterator()</code>接口。  </p>
+<h3 id="2-5-AbstractSet"><a href="#2-5-AbstractSet" class="headerlink" title="2.5 AbstractSet"></a>2.5 AbstractSet</h3><p><code>AbstractSet</code>类的定义如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public abstract class AbstractSet&lt;E&gt; extends AbstractCollection&lt;E&gt; implements Set&lt;E&gt; &#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>AbstractSet</code>是一个继承于<code>AbstractCollection</code>并实现<code>Set</code>接口的类。由于<code>Set</code>接口和<code>Collection</code>接口的API一样，<code>Set</code>也就没有自己单独的API。<code>AbstractSet</code>实现了<code>Set</code>中除<code>iterator()</code>和<code>size()</code>之外的函数，主要作用是：实现了Set接口的大部分函数，从而方便其他类实现<code>Set</code>接口。</p>
+<h3 id="2-6-Iterator"><a href="#2-6-Iterator" class="headerlink" title="2.6 Iterator"></a>2.6 Iterator</h3><p><code>Iterator</code>的定义如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public interface Iterator&lt;E&gt; &#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>Iterator</code>是一个接口，它是集合的迭代器。注意：<code>Iterator</code>遍历<code>Collection</code>时是fail-fast机制的，即当某一个线程A通过<code>iterator</code>去遍历某集合的过程中，若该集合的内容被其他线程改变了，那么线程A访问集合时会抛出<code>ConcurrentModificationException</code>异常，产生fail-fast事件。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// Iterator的API</span><br><span class="line">abstract boolean hasNext()</span><br><span class="line">abstract E next()</span><br><span class="line">abstract void remove()</span><br></pre></td></tr></table></figure></p>
+<h3 id="2-7-ListIterator"><a href="#2-7-ListIterator" class="headerlink" title="2.7 ListIterator"></a>2.7 ListIterator</h3><p><code>ListIterator</code>的定义如下：  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public interface ListIterator&lt;E&gt; extends Iterator&lt;E&gt; &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p><code>ListIterator</code>是一个继承于<code>Iterator</code>的接口，它是队列迭代器,专门用于遍历<code>List</code>，能提供向前/向后遍历。相比于<code>Iterator</code>，它新增了添加、是否存在上一个元素、获取上一个元素等等API接口。  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 新增API接口</span><br><span class="line">abstract void add(E object)</span><br><span class="line">abstract boolean hasPrevious()</span><br><span class="line">abstract int nextIndex()</span><br><span class="line">abstract E previous()</span><br><span class="line">abstract int previousIndex()</span><br><span class="line">abstract void set(E object)</span><br></pre></td></tr></table></figure>
+<h2 id="三、-Map"><a href="#三、-Map" class="headerlink" title="三、 Map"></a>三、 Map</h2><div align="center"><br>      <img src="/images/数据结构/01_04map.png" width="600" height="500"><br></div>
+
+
+<ol>
+<li><code>Map</code>是映射接口，<code>Map</code>中存储的是键值对(key-value)。</li>
+<li><code>AbstractMap</code>是继承<code>Map</code>的抽象类，它实现了<code>Map</code>中的大部分API。其他<code>Map</code>可以继承<code>AbstractMap</code>来减少重复编码。</li>
+<li><code>SortedMap</code>是继承<code>Map</code>的接口。<code>SortedMap</code>中的内容是排序的键值对，排序方法是通过比较器(Comparator)。</li>
+<li><code>NavigableMap</code>是继承于<code>SortedMap</code>的接口，相对于<code>SortedMap</code>，其有一系列导航方法，如”获取大于/等于某对象的键值对”、”获取小于/等于某对象的键值对”。</li>
+<li><code>TreeMap</code>继承于<code>AbstractMap</code>，且实现了<code>NavigableMap</code>接口，因此<code>TreeMap</code>中内容是”有序的键值对”。</li>
+<li><code>HashMap</code>继承于<code>AbstractMap</code>，且没有实现<code>NavigableMap</code>接口，<code>HashMap</code>的内容是”键值对，但不保证次序”。</li>
+<li><code>Hashtable</code>虽然不是继承于<code>AbstractMap</code>，但它继承于<code>Dictionary</code>(<code>Dictionary</code>也是键值对的接口)，而且也实现<code>Map</code>接口；因此，<code>Hashtable</code>的内容也是”键值对，也不保证次序”。但和<code>HashMap</code>相比，<code>Hashtable</code>是线程安全的，而且它支持通过<code>Enumeration</code>去遍历。</li>
+<li><code>WeakHashMap</code>继承于<code>AbstractMap</code>。它和<code>HashMap</code>的键类型不同，它是”弱键”。</li>
+</ol>
+<h3 id="3-1-Map接口"><a href="#3-1-Map接口" class="headerlink" title="3.1 Map接口"></a>3.1 Map接口</h3><p>定义：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public interface Map&lt;K, V&gt; &#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>Map</code>是一个键值对(key-value)映射接口，映射中不能包含重复的键，每个键最多只能映射到一个值。<br><code>Map</code>接口提供三种<code>Collection</code>视图，允许以键集、值集、键-值映射关系集的形式查看某个映射内容。<br><code>Map</code>的实现类应该提供2个”标准的”构造方法：①void(无参数)构造方法，用于创建空映射；②带有单个Map类型参数的构造方法，用于创建一个与其参数具有相同键-值映射关系的新映射。实际上，后一个构造方法允许用户复制任意映射，生成所需类的一个等价映射。尽管无法强制执行此建议(因为接口不能包含构造方法)，但是JDK中所有通用的映射实现都遵从它。  </p>
+<p>Map接口的API：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">abstract void                 clear()</span><br><span class="line">abstract boolean              containsKey(Object key)</span><br><span class="line">abstract boolean              containsValue(Object value)</span><br><span class="line">abstract Set&lt;Entry&lt;K, V&gt;&gt;     entrySet()</span><br><span class="line">abstract boolean              equals(Object object)</span><br><span class="line">abstract V                    get(Object key)</span><br><span class="line">abstract int                  hashCode()</span><br><span class="line">abstract boolean              isEmpty()</span><br><span class="line">abstract Set&lt;K&gt;               keySet()</span><br><span class="line">abstract V                    put(K key, V value)</span><br><span class="line">abstract void                 putAll(Map&lt;? extends K, ? extends V&gt; map)</span><br><span class="line">abstract V                    remove(Object key)</span><br><span class="line">abstract int                  size()</span><br><span class="line">abstract Collection&lt;V&gt;        values()</span><br></pre></td></tr></table></figure></p>
+<p>说明：  </p>
+<ol>
+<li><code>Map</code>提供接口分别用于返回键集、值集、键-值映射关系集。<ul>
+<li><code>entrySet()</code>用于返回键-值集的Set集合。</li>
+<li><code>ketSet()</code>用于返回键值的Set集合。</li>
+<li><code>values()</code>用于范湖值集的Collection集合。</li>
+</ul>
+</li>
+<li><code>Map</code>提供了键-值对、根据键获取值、删除键、获取容量大小等方法。</li>
+</ol>
+<h3 id="3-2-Map-Entry"><a href="#3-2-Map-Entry" class="headerlink" title="3.2 Map.Entry"></a>3.2 Map.Entry</h3><p><code>Map.Entry</code>是<code>Map</code>内部的一个接口，<code>Map.Entry</code>是键值对，<code>Map</code>通过<code>entrySet()</code>获取<code>Map.Entry</code>的键值对集合，从而通过该集合实现对键值对的操作。<br><code>Map.Entry</code>的API<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">abstract boolean     equals(Object object)</span><br><span class="line">abstract K             getKey()</span><br><span class="line">abstract V             getValue()</span><br><span class="line">abstract int         hashCode()</span><br><span class="line">abstract V             setValue(V object)</span><br></pre></td></tr></table></figure></p>
+<h3 id="3-3-AbstractMap"><a href="#3-3-AbstractMap" class="headerlink" title="3.3 AbstractMap"></a>3.3 AbstractMap</h3><p>定义：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public abstract class AbstractMap&lt;K,V&gt; implements Map&lt;K,V&gt; &#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>AbstractMap</code>类提供<code>Map</code>接口的骨干实现，以最大限度地减少实现此接口所需的工作。  </p>
+<ul>
+<li>要实现不可修改的映射，编程人员只需扩展此类并提供<code>entrySet</code>方法的实现即可，该方法将返回映射的映射关系<code>set</code>视图。通常，返回的<code>set</code>将依次在<code>AbstractSet</code>上实现。此<code>set</code>不支持<code>add()</code>或<code>remove()</code>方法，其迭代器也不支持<code>remove()</code>方法。</li>
+<li>要实现可修改的映射，编程人员必须另外重写此类的<code>put</code>方法(否则将抛出<code>UnsupportedOperationException</code>)，<code>entrySet().iterator()</code>返回的迭代器也必须另外实现其<code>remove</code>方法。</li>
+</ul>
+<p>API:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">abstract Set&lt;Entry&lt;K, V&gt;&gt;     entrySet()</span><br><span class="line">         void                 clear()</span><br><span class="line">         boolean              containsKey(Object key)</span><br><span class="line">         boolean              containsValue(Object value)</span><br><span class="line">         boolean              equals(Object object)</span><br><span class="line">         V                    get(Object key)</span><br><span class="line">         int                  hashCode()</span><br><span class="line">         boolean              isEmpty()</span><br><span class="line">         Set&lt;K&gt;               keySet()</span><br><span class="line">         V                    put(K key, V value)</span><br><span class="line">         void                 putAll(Map&lt;? extends K, ? extends V&gt; map)</span><br><span class="line">         V                    remove(Object key)</span><br><span class="line">         int                  size()</span><br><span class="line">         String               toString()</span><br><span class="line">         Collection&lt;V&gt;        values()</span><br><span class="line">         Object               clone()</span><br></pre></td></tr></table></figure></p>
+<h3 id="3-4-SortedMap"><a href="#3-4-SortedMap" class="headerlink" title="3.4 SortedMap"></a>3.4 SortedMap</h3><p>定义：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public interface SortedMap&lt;K,V&gt; extends Map&lt;K,V&gt; &#123; &#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>SortedMap</code>是一个继承于<code>Map</code>接口的接口。它是一个有序的<code>SortedMap</code>键值映射。<br><code>SortedMap</code>的排序方式有两种：自然排序 或者 用户指定比较器。 插入有序<code>SortedMap</code>的所有元素都必须实现<code>Comparable</code>接口(或者被指定的比较器所接受)。<br>另外，所有<code>SortedMap</code>实现类都应该提供4个”标准”构造方法：  </p>
+<ol>
+<li>void(无参数)构造方法，它创建一个空的有序映射，按照键的自然顺序进行排序。  </li>
+<li>带有一个<code>Comparator</code>类型参数的构造方法，它创建一个空的有序映射，根据指定的比较器进行排序。  </li>
+<li>带有一个<code>Map</code>类型参数的构造方法，它创建一个新的有序映射，其键-值映射关系与参数相同，按照键的自然顺序进行排序。  </li>
+<li>带有一个<code>SortedMap</code>类型参数的构造方法，它创建一个新的有序映射，其键-值映射关系和排序方法与输入的有序映射相同。无法保证强制实施此建议，因为接口不能包含构造方法。<br>API：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">// 继承于Map的API</span><br><span class="line">abstract void                 clear()</span><br><span class="line">abstract boolean              containsKey(Object key)</span><br><span class="line">abstract boolean              containsValue(Object value)</span><br><span class="line">abstract Set&lt;Entry&lt;K, V&gt;&gt;     entrySet()</span><br><span class="line">abstract boolean              equals(Object object)</span><br><span class="line">abstract V                    get(Object key)</span><br><span class="line">abstract int                  hashCode()</span><br><span class="line">abstract boolean              isEmpty()</span><br><span class="line">abstract Set&lt;K&gt;               keySet()</span><br><span class="line">abstract V                    put(K key, V value)</span><br><span class="line">abstract void                 putAll(Map&lt;? extends K, ? extends V&gt; map)</span><br><span class="line">abstract V                    remove(Object key)</span><br><span class="line">abstract int                  size()</span><br><span class="line">abstract Collection&lt;V&gt;        values()</span><br><span class="line"></span><br><span class="line">// SortedMap新增的API</span><br><span class="line">abstract Comparator&lt;? super K&gt;     comparator()</span><br><span class="line">abstract K                         firstKey()</span><br><span class="line">abstract SortedMap&lt;K, V&gt;           headMap(K endKey)</span><br><span class="line">abstract K                         lastKey()</span><br><span class="line">abstract SortedMap&lt;K, V&gt;           subMap(K startKey, K endKey)</span><br><span class="line">abstract SortedMap&lt;K, V&gt;           tailMap(K startKey)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="3-5-NavigableMap"><a href="#3-5-NavigableMap" class="headerlink" title="3.5 NavigableMap"></a>3.5 NavigableMap</h3><p>定义：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public interface NavigableMap&lt;K,V&gt; extends SortedMap&lt;K,V&gt; &#123; &#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>NavigableMap</code>是继承于<code>SortedMap</code>的接口，具有给定搜索目标报告最接近匹配项的导航方法。<br>API：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">abstract Entry&lt;K, V&gt;             ceilingEntry(K key)</span><br><span class="line">abstract Entry&lt;K, V&gt;             firstEntry()</span><br><span class="line">abstract Entry&lt;K, V&gt;             floorEntry(K key)</span><br><span class="line">abstract Entry&lt;K, V&gt;             higherEntry(K key)</span><br><span class="line">abstract Entry&lt;K, V&gt;             lastEntry()</span><br><span class="line">abstract Entry&lt;K, V&gt;             lowerEntry(K key)</span><br><span class="line">abstract Entry&lt;K, V&gt;             pollFirstEntry()</span><br><span class="line">abstract Entry&lt;K, V&gt;             pollLastEntry()</span><br><span class="line">abstract K                       ceilingKey(K key)</span><br><span class="line">abstract K                       floorKey(K key)</span><br><span class="line">abstract K                       higherKey(K key)</span><br><span class="line">abstract K                       lowerKey(K key)</span><br><span class="line">abstract NavigableSet&lt;K&gt;         descendingKeySet()</span><br><span class="line">abstract NavigableSet&lt;K&gt;         navigableKeySet()</span><br><span class="line">abstract NavigableMap&lt;K, V&gt;      descendingMap()</span><br><span class="line">abstract NavigableMap&lt;K, V&gt;      headMap(K toKey, boolean inclusive)</span><br><span class="line">abstract SortedMap&lt;K, V&gt;         headMap(K toKey)</span><br><span class="line">abstract SortedMap&lt;K, V&gt;         subMap(K fromKey, K toKey)</span><br><span class="line">abstract NavigableMap&lt;K, V&gt;      subMap(K fromKey, boolean fromInclusive, K toKey, boolean toInclusive)</span><br><span class="line">abstract SortedMap&lt;K, V&gt;         tailMap(K fromKey)</span><br><span class="line">abstract NavigableMap&lt;K, V&gt;      tailMap(K fromKey, boolean inclusive)</span><br></pre></td></tr></table></figure></p>
+<p>说明：<br><code>NavigableMap</code>除了继承<code>SortedMap</code>的特性外，它的提供的功能可以分为4类：  </p>
+<ol>
+<li>提供操作键-值对的方法。<ul>
+<li><code>lowerEntry</code>、<code>floorEntry</code>、<code>ceilingEntry</code>和<code>higherEntry</code>方法，它们分别返回与小于、小于等于、大于等于、大于给定键的键关联的<code>Map.Entry</code>对象。  </li>
+<li><code>firstEntry</code>、<code>pollFirstEntry</code>、<code>lastEntry</code>和<code>pollLastEntry</code>方法，它们返回和/或移除最小和最大的映射关系（如果存在），否则返回<code>null</code>。</li>
+</ul>
+</li>
+<li>提供操作键的方法。这个和第1类比较类似<ul>
+<li><code>lowerKey</code>、<code>floorKey</code>、<code>ceilingKey</code>和<code>higherKey</code>方法，它们分别返回与小于、小于等于、大于等于、大于给定键的键。</li>
+</ul>
+</li>
+<li>获取键集。<ul>
+<li><code>navigableKeySet</code>、<code>descendingKeySet</code>分别获取正序/反序的键集。</li>
+</ul>
+</li>
+<li>获取键-值对的子集。</li>
+</ol>
+<h3 id="3-6-Dictionary"><a href="#3-6-Dictionary" class="headerlink" title="3.6 Dictionary"></a>3.6 Dictionary</h3><p>定义:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public abstract class Dictionary&lt;K,V&gt; &#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>Dictionary</code>是JDK 1.0定义的键值对的接口，它也包括了操作键值对的基本函数。<br>API:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">abstract Enumeration&lt;V&gt;     elements()</span><br><span class="line">abstract V                  get(Object key)</span><br><span class="line">abstract boolean            isEmpty()</span><br><span class="line">abstract Enumeration&lt;K&gt;     keys()</span><br><span class="line">abstract V                  put(K key, V value)</span><br><span class="line">abstract V                  remove(Object key)</span><br><span class="line">abstract int                size()</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据结构/" rel="tag"># 数据结构</a>
+          
+            <a href="/tags/Java集合/" rel="tag"># Java集合</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/20/backends/nosql/mongodb/MongoDB Manual(一) Introduction to MongoDB/" rel="next" title="MongoDB Manual(一) Introduction to MongoDB">
+                <i class="fa fa-chevron-left"></i> MongoDB Manual(一) Introduction to MongoDB
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/uploads/avatar.gif" alt="Javior Wang">
+            
+              <p class="site-author-name" itemprop="name">Javior Wang</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">15</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/scorego" title="GitHub &rarr; https://github.com/scorego" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://www.zhihu.com/people/scorego-6" title="Zhihu &rarr; https://www.zhihu.com/people/scorego-6" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>Zhihu</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、-Java集合结构图"><span class="nav-text">一、 Java集合结构图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、-Collection"><span class="nav-text">二、 Collection</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-List-列表"><span class="nav-text">2.1 List(列表)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-Set集合"><span class="nav-text">2.2 Set集合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-AbstractCollection"><span class="nav-text">2.3 AbstractCollection</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-AbstractList"><span class="nav-text">2.4 AbstractList</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-AbstractSet"><span class="nav-text">2.5 AbstractSet</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-Iterator"><span class="nav-text">2.6 Iterator</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-7-ListIterator"><span class="nav-text">2.7 ListIterator</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、-Map"><span class="nav-text">三、 Map</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-Map接口"><span class="nav-text">3.1 Map接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-Map-Entry"><span class="nav-text">3.2 Map.Entry</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-AbstractMap"><span class="nav-text">3.3 AbstractMap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-SortedMap"><span class="nav-text">3.4 SortedMap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-NavigableMap"><span class="nav-text">3.5 NavigableMap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6-Dictionary"><span class="nav-text">3.6 Dictionary</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Javior Wang</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

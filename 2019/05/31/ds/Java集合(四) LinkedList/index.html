@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next mist" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/favicon-128x128-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-01.ico?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/uploads/favicon-128x128-01.ico?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="LinkedList     LinkedList是一个继承于AbstractSequentialList的双向链表，也可以当作栈、队列或双端队列进行操作。    LinkedList实现了List接口，能对它进行列表操作。 LinkedList实现了Deque接口，能将它当做双端队列使用。 LinkedList实现了Cloneable接口，即覆盖了函数clone()，能克隆。 LinkedLi">
+<meta name="keywords" content="数据结构,Java集合">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java集合(四) LinkedList">
+<meta property="og:url" content="javior.wang/2019/05/31/ds/Java集合(四) LinkedList/index.html">
+<meta property="og:site_name" content="Javior&#39;s Blog">
+<meta property="og:description" content="LinkedList     LinkedList是一个继承于AbstractSequentialList的双向链表，也可以当作栈、队列或双端队列进行操作。    LinkedList实现了List接口，能对它进行列表操作。 LinkedList实现了Deque接口，能将它当做双端队列使用。 LinkedList实现了Cloneable接口，即覆盖了函数clone()，能克隆。 LinkedLi">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-05-31T06:26:40.872Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java集合(四) LinkedList">
+<meta name="twitter:description" content="LinkedList     LinkedList是一个继承于AbstractSequentialList的双向链表，也可以当作栈、队列或双端队列进行操作。    LinkedList实现了List接口，能对它进行列表操作。 LinkedList实现了Deque接口，能将它当做双端队列使用。 LinkedList实现了Cloneable接口，即覆盖了函数clone()，能克隆。 LinkedLi">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="javior.wang/2019/05/31/ds/Java集合(四) LinkedList/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Java集合(四) LinkedList | Javior's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Javior's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/05/31/ds/Java集合(四) LinkedList/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Javior Wang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Javior's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java集合(四) LinkedList
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-05-31 10:59:34 / 修改时间：14:26:40" itemprop="dateCreated datePublished" datetime="2019-05-31T10:59:34+08:00">2019-05-31</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/数据结构/" itemprop="url" rel="index"><span itemprop="name">数据结构</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><center> <strong>LinkedList</strong>    </center></p>
+<p><code>LinkedList</code>是一个继承于<code>AbstractSequentialList</code>的双向链表，也可以当作栈、队列或双端队列进行操作。  </p>
+<ul>
+<li><code>LinkedList</code>实现了<code>List</code>接口，能对它进行列表操作。</li>
+<li><code>LinkedList</code>实现了<code>Deque</code>接口，能将它当做双端队列使用。</li>
+<li><code>LinkedList</code>实现了<code>Cloneable</code>接口，即覆盖了函数<code>clone()</code>，能克隆。</li>
+<li><code>LinkedList</code>实现了<code>java.io.Serializable</code>接口，意味着它支持序列化，能通过序列化传输。</li>
+<li><code>LinkedList</code>是非线程安全的。</li>
+</ul>
+<h3 id="1-LinkedList数据结构"><a href="#1-LinkedList数据结构" class="headerlink" title="1. LinkedList数据结构"></a>1. LinkedList数据结构</h3><p>继承关系：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">java.lang.Object</span><br><span class="line">   ↳     java.util.AbstractCollection&lt;E&gt;</span><br><span class="line">         ↳     java.util.AbstractList&lt;E&gt;</span><br><span class="line">               ↳     java.util.AbstractSequentialList&lt;E&gt;</span><br><span class="line">                     ↳     java.util.LinkedList&lt;E&gt;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LinkedList</span>&lt;<span class="title">E</span>&gt;</span></span><br><span class="line"><span class="class">    <span class="keyword">extends</span> <span class="title">AbstractSequentialList</span>&lt;<span class="title">E</span>&gt;</span></span><br><span class="line"><span class="class">    <span class="keyword">implements</span> <span class="title">List</span>&lt;<span class="title">E</span>&gt;, <span class="title">Deque</span>&lt;<span class="title">E</span>&gt;, <span class="title">Cloneable</span>, <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span> </span>&#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>LinkedList</code>的本质是双向链表：   </p>
+<ol>
+<li><code>LinkedList</code>继承于<code>AbstractSequentialList</code>，并且实现了<code>Dequeue</code>接口。   </li>
+<li><code>LinkedList</code>包含两个重要的成员：<code>first</code>和<code>last</code>。  <ul>
+<li><code>first</code>是双向链表的表头，指向第一个结点；<code>last</code>指向最后一个结点。它们的类型是内部类<code>Node&lt;E&gt;</code>。  </li>
+<li><code>size</code>是双向链表中节点的个数。</li>
+</ul>
+</li>
+</ol>
+<h4 id="AbstractSequentialList类"><a href="#AbstractSequentialList类" class="headerlink" title="AbstractSequentialList类"></a>AbstractSequentialList类</h4><p><code>AbstractSequentialList</code>继承于<code>AbstractList</code>，提供了一个基本的<code>List</code>接口实现，为实现序列访问的数据储存结构的提供了所需要的最小化的接口实现。<code>AbstractSequentialList</code>实现了<code>get(int index)</code>、<code>set(int index, E element)</code>、<code>add(int index, E element)</code> 和<code>remove(int index)</code>这些函数，它们都是提供随机访问的。      </p>
+<h3 id="2-构造函数"><a href="#2-构造函数" class="headerlink" title="2. 构造函数"></a>2. 构造函数</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">LinkedList</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">LinkedList(Collection&lt;? extends E&gt; c)&#123;</span><br><span class="line">    <span class="keyword">this</span>();</span><br><span class="line">    addAll(c);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-LinkedList的API"><a href="#3-LinkedList的API" class="headerlink" title="3. LinkedList的API"></a>3. LinkedList的API</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//LinkedList的API</span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      E           <span class="title">getFirst</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      E           <span class="title">getLast</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      E           <span class="title">removeFirst</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      E           <span class="title">removeLast</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      <span class="keyword">void</span>        <span class="title">addFirst</span><span class="params">(E e)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      <span class="keyword">void</span>        <span class="title">addLast</span><span class="params">(E e)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      <span class="keyword">boolean</span>     <span class="title">contains</span><span class="params">(Object o)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      <span class="keyword">int</span>         <span class="title">size</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      <span class="keyword">boolean</span>     <span class="title">add</span><span class="params">(E e)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      <span class="keyword">boolean</span>     <span class="title">remove</span><span class="params">(Object o)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      <span class="keyword">boolean</span>     <span class="title">addAll</span><span class="params">(Collection&lt;? extends E&gt; c)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      <span class="keyword">boolean</span>     <span class="title">addAll</span><span class="params">(<span class="keyword">int</span> index, Collection&lt;? extends E&gt; c)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      <span class="keyword">void</span>        <span class="title">clear</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      E           <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      E           <span class="title">set</span><span class="params">(<span class="keyword">int</span> index, E element)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      <span class="keyword">void</span>        <span class="title">add</span><span class="params">(<span class="keyword">int</span> index, E element)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      E           <span class="title">remove</span><span class="params">(<span class="keyword">int</span> index)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      <span class="keyword">int</span>         <span class="title">indexOf</span><span class="params">(Object o)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      <span class="keyword">int</span>         <span class="title">lastIndexOf</span><span class="params">(Object o)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      E           <span class="title">peek</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      E           <span class="title">element</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      E           <span class="title">poll</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      E           <span class="title">remove</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      <span class="keyword">boolean</span>     <span class="title">offer</span><span class="params">(E e)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      <span class="keyword">boolean</span>     <span class="title">offerFirst</span><span class="params">(E e)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      <span class="keyword">boolean</span>     <span class="title">offerLast</span><span class="params">(E e)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      E           <span class="title">peekFirst</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      E           <span class="title">peekLast</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      E           <span class="title">pollFirst</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      E           <span class="title">pollLast</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      <span class="keyword">void</span>        <span class="title">push</span><span class="params">(E e)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      E           <span class="title">pop</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      <span class="keyword">boolean</span>     <span class="title">removeFirstOccurrence</span><span class="params">(Object o)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      <span class="keyword">boolean</span>     <span class="title">removeLastOccurrence</span><span class="params">(Object o)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      ListIterator&lt;E&gt;     <span class="title">listIterator</span><span class="params">(<span class="keyword">int</span> index)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      Iterator&lt;E&gt;         <span class="title">descendingIterator</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      Object      <span class="title">clone</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      Object[]    <span class="title">toArray</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      &lt;T&gt; T[]     <span class="title">toArray</span><span class="params">(T[] a)</span>  <span class="comment">// @SuppressWarnings("unchecked")</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>      Spliterator&lt;E&gt;      <span class="title">spliterator</span><span class="params">()</span>       <span class="comment">// @Override @since 1.8</span></span></span><br></pre></td></tr></table></figure>
+<h3 id="4-部分函数源码"><a href="#4-部分函数源码" class="headerlink" title="4. 部分函数源码"></a>4. 部分函数源码</h3><p><code>LinkedList</code>实际上是通过双向链表去实现的，它的结点类定义如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    E item;</span><br><span class="line">    Node&lt;E&gt; next;</span><br><span class="line">    Node&lt;E&gt; prev;</span><br><span class="line"></span><br><span class="line">    Node(Node&lt;E&gt; prev, E element, Node&lt;E&gt; next) &#123;</span><br><span class="line">        <span class="keyword">this</span>.item = element;</span><br><span class="line">        <span class="keyword">this</span>.next = next;</span><br><span class="line">        <span class="keyword">this</span>.prev = prev;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>LinkedList</code>也实现了<code>List</code>接口，也就是说，它实现了<code>get(int index)</code>、<code>remove(int index)</code>等随机访问方法。<code>LinkedList</code>的随机访问是通过一个计数索引值来实现的。当调用<code>get(int index)</code>时，首先会比较<code>index</code>和”链表长度的一半”，若前者大，则从链表头开始往后查找<code>index</code>次；否则，从链表末尾开始向前查找。<strong><code>LinkedList</code>的顺序访问比较高效，而随机访问效率比较低。</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> E <span class="title">get</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    checkElementIndex(index);</span><br><span class="line">    <span class="keyword">return</span> node(index).item;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">Node&lt;E&gt; <span class="title">node</span><span class="params">(<span class="keyword">int</span> index)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// assert isElementIndex(index);</span></span><br><span class="line">    <span class="keyword">if</span> (index &lt; (size &gt;&gt; <span class="number">1</span>)) &#123;</span><br><span class="line">        Node&lt;E&gt; x = first;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index; i++)</span><br><span class="line">            x = x.next;</span><br><span class="line">        <span class="keyword">return</span> x;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        Node&lt;E&gt; x = last;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = size - <span class="number">1</span>; i &gt; index; i--)</span><br><span class="line">            x = x.prev;</span><br><span class="line">        <span class="keyword">return</span> x;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>LinkedList</code>的<code>clone()</code>函数，是将全部结点克隆到一个新的<code>LinkedList</code>的结点中，但结点的<code>item</code>域不会克隆：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">clone</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    LinkedList&lt;E&gt; clone = superClone();</span><br><span class="line">    <span class="comment">// Put clone into "virgin" state</span></span><br><span class="line">    clone.first = clone.last = <span class="keyword">null</span>;</span><br><span class="line">    clone.size = <span class="number">0</span>;</span><br><span class="line">    clone.modCount = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">// Initialize clone with our elements</span></span><br><span class="line">    <span class="keyword">for</span> (Node&lt;E&gt; x = first; x != <span class="keyword">null</span>; x = x.next)</span><br><span class="line">        clone.add(x.item);</span><br><span class="line">    <span class="keyword">return</span> clone;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    linkLast(e);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">linkLast</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Node&lt;E&gt; l = last;</span><br><span class="line">    <span class="keyword">final</span> Node&lt;E&gt; newNode = <span class="keyword">new</span> Node&lt;&gt;(l, e, <span class="keyword">null</span>);</span><br><span class="line">    last = newNode;</span><br><span class="line">    <span class="keyword">if</span> (l == <span class="keyword">null</span>)</span><br><span class="line">        first = newNode;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        l.next = newNode;</span><br><span class="line">    size++;</span><br><span class="line">    modCount++;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Node的构造方法</span></span><br><span class="line">Node(Node&lt;E&gt; prev, E element, Node&lt;E&gt; next) &#123;</span><br><span class="line">    <span class="keyword">this</span>.item = element;</span><br><span class="line">    <span class="keyword">this</span>.next = next;</span><br><span class="line">    <span class="keyword">this</span>.prev = prev;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>LinkedList</code>实现了<code>Deque</code>接口，<code>Deque</code>是<code>double ended queue</code>的缩写，读作<code>deck</code>。<code>Deque</code>接口定义了在双端队列两端访问元素的方法,提供双端插入、移除和检查元素的方法。    </p>
+<p>LinkedList可以作为FIFO(先进先出)的队列，作为FIFO的队列时，下表的方法等价：<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> 队列方法       等效方法</span><br><span class="line">add(e)        addLast(e)</span><br><span class="line">offer(e)      offerLast(e)</span><br><span class="line">remove()      removeFirst()</span><br><span class="line">poll()        pollFirst()</span><br><span class="line">element()     getFirst()</span><br><span class="line">peek()        peekFirst()</span><br></pre></td></tr></table></figure></p>
+<p>(07) LinkedList可以作为LIFO(后进先出)的栈，作为LIFO的栈时，下表的方法等价：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">栈方法        等效方法</span><br><span class="line">push(e)      addFirst(e)</span><br><span class="line">pop()        removeFirst()</span><br><span class="line">peek()       peekFirst()</span><br></pre></td></tr></table></figure></p>
+<h3 id="5-遍历方式"><a href="#5-遍历方式" class="headerlink" title="5. 遍历方式"></a>5. 遍历方式</h3><p><code>LinkedList</code>支持多种遍历方式，建议不要采用随机访问的方式遍历<code>LinkedList</code>，而是采用逐个遍历的方式。<br>首先新建一个<code>LinkedList</code>:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; list = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">    list.add(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li><p>通过迭代器遍历    </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Iterator&lt;Integer&gt; iter = list.iterator();</span><br><span class="line"><span class="keyword">while</span> (iter.hasNext())&#123;</span><br><span class="line">    System.out.println(iter.next());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过快速随机访问遍历LinkedList  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; list.size(); i++)&#123;</span><br><span class="line">    System.out.println(list.get(i));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过foreach来遍历LinkedList  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(Integer i : list)&#123;</span><br><span class="line">    System.out.println(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过pollFirst()来遍历LinkedList</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Integer a;</span><br><span class="line"><span class="keyword">while</span>((a = list.pollFirst()) != <span class="keyword">null</span>)&#123;</span><br><span class="line">    System.out.println(a);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过pollLast()来逆序遍历LinkedList</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Integer a;</span><br><span class="line"><span class="keyword">while</span>((a = list.pollLast()) != <span class="keyword">null</span>)&#123;</span><br><span class="line">    System.out.println(a);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过removeFirst()来遍历LinkedList</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Integer a;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">while</span>((a = list.removeFirst()) != <span class="keyword">null</span>)&#123;</span><br><span class="line">        System.out.println(a);</span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="keyword">catch</span> (NoSuchElementException e) &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过removeLast()来遍历LinkedList</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Integer a;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">while</span>((a = list.removeLast()) != <span class="keyword">null</span>)&#123;</span><br><span class="line">        System.out.println(a);</span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="keyword">catch</span> (NoSuchElementException e) &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>遍历<code>LinkedList</code>时，使用<code>removeFist()</code>或<code>removeLast()</code>效率很高，但它们会删除原始数据。<br>无论如何，千万不要通过随机访问去遍历<code>LinkedList</code>，从源码来看，使用随机访问遍历<code>LinkedList</code>，时间复杂度是O(n<sup>2</sup>)。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据结构/" rel="tag"># 数据结构</a>
+          
+            <a href="/tags/Java集合/" rel="tag"># Java集合</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/29/ds/Java集合(三) ArrayList/" rel="next" title="Java集合(三) ArrayList">
+                <i class="fa fa-chevron-left"></i> Java集合(三) ArrayList
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/uploads/avatar.gif" alt="Javior Wang">
+            
+              <p class="site-author-name" itemprop="name">Javior Wang</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">22</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">15</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/scorego" title="GitHub &rarr; https://github.com/scorego" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://www.zhihu.com/people/scorego-6" title="Zhihu &rarr; https://www.zhihu.com/people/scorego-6" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>Zhihu</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-LinkedList数据结构"><span class="nav-text">1. LinkedList数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#AbstractSequentialList类"><span class="nav-text">AbstractSequentialList类</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-构造函数"><span class="nav-text">2. 构造函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-LinkedList的API"><span class="nav-text">3. LinkedList的API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-部分函数源码"><span class="nav-text">4. 部分函数源码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-遍历方式"><span class="nav-text">5. 遍历方式</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Javior Wang</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -95,20 +95,20 @@
 
 
   <meta name="description" content="根据jdk1.8整理一下Java的集合类。  一、 Java集合结构图         java.util.*包提供了一些集合类，包含了常用的数据结构：集合、链表、队列、栈、数组、映射等，这些集合类又被称为容器。集合类与数组的不同是：数组的长度是固定的，集合的长度是可变的；数组用来存放基本类型的数据，集合用来存放对象的引用。Java集合主要可以划分为4个部分：List(列表)、Set(集合)、M">
-<meta name="keywords" content="数据结构,Java集合">
+<meta name="keywords" content="Java集合">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java集合(一) 综述">
-<meta property="og:url" content="javior.wang/2019/05/28/ds/Java集合(一) 综述/index.html">
+<meta property="og:url" content="javior.wang/2019/05/28/java/集合/Java集合(一) 综述/index.html">
 <meta property="og:site_name" content="Javior&#39;s Blog">
 <meta property="og:description" content="根据jdk1.8整理一下Java的集合类。  一、 Java集合结构图         java.util.*包提供了一些集合类，包含了常用的数据结构：集合、链表、队列、栈、数组、映射等，这些集合类又被称为容器。集合类与数组的不同是：数组的长度是固定的，集合的长度是可变的；数组用来存放基本类型的数据，集合用来存放对象的引用。Java集合主要可以划分为4个部分：List(列表)、Set(集合)、M">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="/images/ds/01_02collection.png">
-<meta property="og:image" content="/images/ds/01_04map.png">
-<meta property="og:updated_time" content="2019-06-01T07:38:00.720Z">
+<meta property="og:image" content="/images/java/collection/01_02collection.png">
+<meta property="og:image" content="/images/java/collection/01_04map.png">
+<meta property="og:updated_time" content="2019-06-02T05:50:45.365Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java集合(一) 综述">
 <meta name="twitter:description" content="根据jdk1.8整理一下Java的集合类。  一、 Java集合结构图         java.util.*包提供了一些集合类，包含了常用的数据结构：集合、链表、队列、栈、数组、映射等，这些集合类又被称为容器。集合类与数组的不同是：数组的长度是固定的，集合的长度是可变的；数组用来存放基本类型的数据，集合用来存放对象的引用。Java集合主要可以划分为4个部分：List(列表)、Set(集合)、M">
-<meta name="twitter:image" content="/images/ds/01_02collection.png">
+<meta name="twitter:image" content="/images/java/collection/01_02collection.png">
 
 
 
@@ -116,7 +116,7 @@
 
   
   
-  <link rel="canonical" href="javior.wang/2019/05/28/ds/Java集合(一) 综述/">
+  <link rel="canonical" href="javior.wang/2019/05/28/java/集合/Java集合(一) 综述/">
 
 
 
@@ -342,7 +342,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="javior.wang/2019/05/28/ds/Java集合(一) 综述/">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/05/28/java/集合/Java集合(一) 综述/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Javior Wang">
@@ -402,7 +402,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-06-01 15:38:00" itemprop="dateModified" datetime="2019-06-01T15:38:00+08:00">2019-06-01</time>
+                <time title="修改时间：2019-06-02 13:50:45" itemprop="dateModified" datetime="2019-06-02T13:50:45+08:00">2019-06-02</time>
               
             
           </span>
@@ -419,7 +419,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/数据结构/" itemprop="url" rel="index"><span itemprop="name">数据结构</span></a></span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Java集合/" itemprop="url" rel="index"><span itemprop="name">Java集合</span></a></span>
 
                 
                 
@@ -457,7 +457,7 @@
         <blockquote>
 <p>根据jdk1.8整理一下Java的集合类。</p>
 </blockquote>
-<h2 id="一、-Java集合结构图"><a href="#一、-Java集合结构图" class="headerlink" title="一、 Java集合结构图"></a>一、 Java集合结构图</h2><div align="center"><br>      <img src="/images/ds/01_02collection.png" width="1000" height="1000"><br></div>
+<h2 id="一、-Java集合结构图"><a href="#一、-Java集合结构图" class="headerlink" title="一、 Java集合结构图"></a>一、 Java集合结构图</h2><div align="center"><br>      <img src="/images/java/collection/01_02collection.png" width="1000" height="1000"><br></div>
 
 
 <p><code>java.util.*</code>包提供了一些集合类，包含了常用的数据结构：集合、链表、队列、栈、数组、映射等，这些集合类又被称为<code>容器</code>。<br>集合类与数组的不同是：数组的长度是固定的，集合的长度是可变的；数组用来存放基本类型的数据，集合用来存放对象的引用。<br>Java集合主要可以划分为4个部分：<code>List(列表)</code>、<code>Set(集合)</code>、<code>Map(映射)</code>、<code>工具类(Iterator迭代器、Enumeration枚举类、Arrays和Collections)</code>。  </p>
@@ -521,7 +521,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ListIterator</span>&lt;<span class="title">E</span>&gt; <span class="keyword">extends</span> <span class="title">Iterator</span>&lt;<span class="title">E</span>&gt; </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
 <p><code>ListIterator</code>是一个继承于<code>Iterator</code>的接口，它是队列迭代器,专门用于遍历<code>List</code>，能提供向前/向后遍历。<br>相比于<code>Iterator</code>，它新增了添加、是否存在上一个元素、获取上一个元素等等API接口。  </p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ListIterator的API接口</span></span><br><span class="line">        <span class="function"><span class="keyword">boolean</span>     <span class="title">hasNext</span><span class="params">()</span></span></span><br><span class="line"><span class="function">        E           <span class="title">next</span><span class="params">()</span></span></span><br><span class="line"><span class="function">        <span class="keyword">boolean</span>     <span class="title">hasPrevious</span><span class="params">()</span></span></span><br><span class="line"><span class="function">        <span class="keyword">int</span>         <span class="title">nextIndex</span><span class="params">()</span></span></span><br><span class="line"><span class="function">        E           <span class="title">previous</span><span class="params">()</span></span></span><br><span class="line"><span class="function">        <span class="keyword">int</span>         <span class="title">previousIndex</span><span class="params">()</span></span></span><br><span class="line"><span class="function">        <span class="keyword">void</span>        <span class="title">remove</span><span class="params">()</span></span></span><br><span class="line"><span class="function">        <span class="keyword">void</span>        <span class="title">set</span><span class="params">(E e)</span></span></span><br><span class="line"><span class="function">        <span class="keyword">void</span>        <span class="title">add</span><span class="params">(E e)</span></span></span><br></pre></td></tr></table></figure>
-<h2 id="三、-Map"><a href="#三、-Map" class="headerlink" title="三、 Map"></a>三、 Map</h2><div align="center"><br>      <img src="/images/ds/01_04map.png" width="600" height="500"><br></div>
+<h2 id="三、-Map"><a href="#三、-Map" class="headerlink" title="三、 Map"></a>三、 Map</h2><div align="center"><br>      <img src="/images/java/collection/01_04map.png" width="600" height="500"><br></div>
 
 
 <ol>
@@ -610,8 +610,6 @@
       
         <div class="post-tags">
           
-            <a href="/tags/数据结构/" rel="tag"># 数据结构</a>
-          
             <a href="/tags/Java集合/" rel="tag"># Java集合</a>
           
         </div>
@@ -635,7 +633,7 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/05/28/ds/Java集合(二) fail-fast和fail-safe/" rel="prev" title="Java集合(二) fail-fast和fail-safe">
+              <a href="/2019/05/28/java/集合/Java集合(二) fail-fast和fail-safe/" rel="prev" title="Java集合(二) fail-fast和fail-safe">
                 Java集合(二) fail-fast和fail-safe <i class="fa fa-chevron-right"></i>
               </a>
             
@@ -708,7 +706,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">25</span>
+                    <span class="site-state-item-count">27</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -739,7 +737,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">7</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">8</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -755,6 +757,8 @@
                     
                   
                     
+                    
+                      
                     
                       
                     

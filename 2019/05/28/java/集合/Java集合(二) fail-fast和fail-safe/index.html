@@ -95,14 +95,14 @@
 
 
   <meta name="description" content="一、 fail-fastfail-fast机制是java集合的一种错误机制，当多个线程对同一集合的内容进行操作时，就可能产生fail-fast事件，抛出ConcurrentModificationException异常。   解决办法fail-fast机制只能用来检测错误，因为JDK并不保证fail-fast机制一定会发生。若在多线程环境下使用集合，建议使用java.util.concurrent">
-<meta name="keywords" content="数据结构,Java集合">
+<meta name="keywords" content="Java集合">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java集合(二) fail-fast和fail-safe">
-<meta property="og:url" content="javior.wang/2019/05/28/ds/Java集合(二) fail-fast和fail-safe/index.html">
+<meta property="og:url" content="javior.wang/2019/05/28/java/集合/Java集合(二) fail-fast和fail-safe/index.html">
 <meta property="og:site_name" content="Javior&#39;s Blog">
 <meta property="og:description" content="一、 fail-fastfail-fast机制是java集合的一种错误机制，当多个线程对同一集合的内容进行操作时，就可能产生fail-fast事件，抛出ConcurrentModificationException异常。   解决办法fail-fast机制只能用来检测错误，因为JDK并不保证fail-fast机制一定会发生。若在多线程环境下使用集合，建议使用java.util.concurrent">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-29T08:48:26.965Z">
+<meta property="og:updated_time" content="2019-06-02T05:49:07.184Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java集合(二) fail-fast和fail-safe">
 <meta name="twitter:description" content="一、 fail-fastfail-fast机制是java集合的一种错误机制，当多个线程对同一集合的内容进行操作时，就可能产生fail-fast事件，抛出ConcurrentModificationException异常。   解决办法fail-fast机制只能用来检测错误，因为JDK并不保证fail-fast机制一定会发生。若在多线程环境下使用集合，建议使用java.util.concurrent">
@@ -113,7 +113,7 @@
 
   
   
-  <link rel="canonical" href="javior.wang/2019/05/28/ds/Java集合(二) fail-fast和fail-safe/">
+  <link rel="canonical" href="javior.wang/2019/05/28/java/集合/Java集合(二) fail-fast和fail-safe/">
 
 
 
@@ -339,7 +339,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="javior.wang/2019/05/28/ds/Java集合(二) fail-fast和fail-safe/">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/05/28/java/集合/Java集合(二) fail-fast和fail-safe/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Javior Wang">
@@ -399,7 +399,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-05-29 16:48:26" itemprop="dateModified" datetime="2019-05-29T16:48:26+08:00">2019-05-29</time>
+                <time title="修改时间：2019-06-02 13:49:07" itemprop="dateModified" datetime="2019-06-02T13:49:07+08:00">2019-06-02</time>
               
             
           </span>
@@ -416,7 +416,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/数据结构/" itemprop="url" rel="index"><span itemprop="name">数据结构</span></a></span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Java集合/" itemprop="url" rel="index"><span itemprop="name">Java集合</span></a></span>
 
                 
                 
@@ -485,8 +485,6 @@
       
         <div class="post-tags">
           
-            <a href="/tags/数据结构/" rel="tag"># 数据结构</a>
-          
             <a href="/tags/Java集合/" rel="tag"># Java集合</a>
           
         </div>
@@ -500,7 +498,7 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/05/28/ds/Java集合(一) 综述/" rel="next" title="Java集合(一) 综述">
+              <a href="/2019/05/28/java/集合/Java集合(一) 综述/" rel="next" title="Java集合(一) 综述">
                 <i class="fa fa-chevron-left"></i> Java集合(一) 综述
               </a>
             
@@ -510,7 +508,7 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/05/29/ds/Java集合(三) ArrayList/" rel="prev" title="Java集合(三) ArrayList">
+              <a href="/2019/05/29/java/集合/Java集合(三) ArrayList/" rel="prev" title="Java集合(三) ArrayList">
                 Java集合(三) ArrayList <i class="fa fa-chevron-right"></i>
               </a>
             
@@ -583,7 +581,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">25</span>
+                    <span class="site-state-item-count">27</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -614,7 +612,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">7</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">8</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -630,6 +632,8 @@
                     
                   
                     
+                    
+                      
                     
                       
                     

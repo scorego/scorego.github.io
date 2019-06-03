@@ -335,7 +335,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="javior.wang/2019/06/01/ds/Java集合(七) HashMap/">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/06/02/java/并发/Java并发02 基本概念/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Javior Wang">
@@ -355,7 +355,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/06/01/ds/Java集合(七) HashMap/" class="post-title-link" itemprop="url">Java集合(七) HashMap</a>
+                <a href="/2019/06/02/java/并发/Java并发02 基本概念/" class="post-title-link" itemprop="url">Java并发02 基本概念</a>
               
             
           </h1>
@@ -380,12 +380,24 @@
                 
               
 
-              <time title="创建时间：2019-06-01 18:13:32 / 修改时间：19:46:41" itemprop="dateCreated datePublished" datetime="2019-06-01T18:13:32+08:00">2019-06-01</time>
+              <time title="创建时间：2019-06-02 14:33:41" itemprop="dateCreated datePublished" datetime="2019-06-02T14:33:41+08:00">2019-06-02</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-06-03 18:22:02" itemprop="dateModified" datetime="2019-06-03T18:22:02+08:00">2019-06-03</time>
               
             
           </span>
@@ -402,7 +414,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/数据结构/" itemprop="url" rel="index"><span itemprop="name">数据结构</span></a></span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Java并发/" itemprop="url" rel="index"><span itemprop="name">Java并发</span></a></span>
 
                 
                 
@@ -440,16 +452,26 @@
         
           
             <p>
-               HashMap  
-HashMap是一个散列表，它存储的是键值对(key-value)映射。基本上其与HashTable差不多，除了它不是线程安全的且允许key为null。HashMap不保证映射的顺序，也不保证这些顺序不会改变。  
-1. 数据结构继承结构：public class HashMap&lt;K,V&gt; extends AbstractMap&lt;K,V&gt;    implements Map&lt;K,V&gt;, Cloneable, Serializable &#123;&#125;
-HashMap继承于AbstractMap，实现了Map、Cloneable、
+              1. Java线程状态Java Language Specification : Chapter 17. Threads and Locks
+线程可以有以下6种状态：
+
+New / 新建
+Runnable / 可运行
+Blocked / 被阻塞
+Waiting / 等待
+Timed waiting / 计时等待
+Terminated / 终止
+
+      
+
+
+线程状态涉及到有Object、Thread和Synchronized关键字等。Object类有notify()、notifyAll()、wait()方法，Thread类定义了一些sleep()、yield()、interrupt()、
               ...
             </p>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2019/06/01/ds/Java集合(七) HashMap/#more" rel="contents">
+              <a class="btn" href="/2019/06/02/java/并发/Java并发02 基本概念/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -509,7 +531,7 @@ HashMap继承于AbstractMap，实现了Map、Cloneable、
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="javior.wang/2019/06/01/ds/Java集合(六) CopyOnWriteArrayList/">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/06/02/java/并发/Java并发01 并发简述/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Javior Wang">
@@ -529,7 +551,7 @@ HashMap继承于AbstractMap，实现了Map、Cloneable、
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/06/01/ds/Java集合(六) CopyOnWriteArrayList/" class="post-title-link" itemprop="url">Java集合(六) CopyOnWriteArrayList</a>
+                <a href="/2019/06/02/java/并发/Java并发01 并发简述/" class="post-title-link" itemprop="url">Java并发01 并发简述</a>
               
             
           </h1>
@@ -554,12 +576,24 @@ HashMap继承于AbstractMap，实现了Map、Cloneable、
                 
               
 
-              <time title="创建时间：2019-06-01 16:11:32 / 修改时间：17:24:53" itemprop="dateCreated datePublished" datetime="2019-06-01T16:11:32+08:00">2019-06-01</time>
+              <time title="创建时间：2019-06-02 13:55:43" itemprop="dateCreated datePublished" datetime="2019-06-02T13:55:43+08:00">2019-06-02</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-06-03 19:31:35" itemprop="dateModified" datetime="2019-06-03T19:31:35+08:00">2019-06-03</time>
               
             
           </span>
@@ -576,7 +610,382 @@ HashMap继承于AbstractMap，实现了Map、Cloneable、
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/数据结构/" itemprop="url" rel="index"><span itemprop="name">数据结构</span></a></span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Java并发/" itemprop="url" rel="index"><span itemprop="name">Java并发</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>
+              1. 并发简介自多道系统以来，操作系统的演进支持着进程的出现，从而实现了程序由串行执行到并发执行，大大提高了效率。操作系统为各个独立的进程分配内存、文件句柄、安全证书等各种资源，还提供了IPC以及进程同步机制来允许进程间通信以及数据共享。进程作为CPU调度和资源分配的最小单位，其并发执行，可以：  
+
+提高资源利用率尤其是I/O等速率跟不上CPU速率。
+公平性可以通过调度算法来使进程轮流占用资源，而不是一个进程执行完在启动下一个程序。
+便利性编写多个程序共同完成任务比之编写一个程序来实现所有任务容易。
+
+同样，这些促使进程出现的因素也促使着线程的出现。线程是轻量级进程，继承了进程”CPU调度的
+              ...
+            </p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/06/02/java/并发/Java并发01 并发简述/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/06/01/java/集合/Java集合(七) HashMap/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Javior Wang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Javior's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/06/01/java/集合/Java集合(七) HashMap/" class="post-title-link" itemprop="url">Java集合(七) HashMap</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-06-01 18:13:32" itemprop="dateCreated datePublished" datetime="2019-06-01T18:13:32+08:00">2019-06-01</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-06-02 13:48:55" itemprop="dateModified" datetime="2019-06-02T13:48:55+08:00">2019-06-02</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Java集合/" itemprop="url" rel="index"><span itemprop="name">Java集合</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>
+               HashMap  
+HashMap是一个散列表，它存储的是键值对(key-value)映射。基本上其与HashTable差不多，除了它不是线程安全的且允许key为null。HashMap不保证映射的顺序，也不保证这些顺序不会改变。  
+1. 数据结构继承结构：public class HashMap&lt;K,V&gt; extends AbstractMap&lt;K,V&gt;    implements Map&lt;K,V&gt;, Cloneable, Serializable &#123;&#125;
+HashMap继承于AbstractMap，实现了Map、Cloneable、
+              ...
+            </p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/06/01/java/集合/Java集合(七) HashMap/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/06/01/java/集合/Java集合(六) CopyOnWriteArrayList/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Javior Wang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Javior's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/06/01/java/集合/Java集合(六) CopyOnWriteArrayList/" class="post-title-link" itemprop="url">Java集合(六) CopyOnWriteArrayList</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-06-01 16:11:32" itemprop="dateCreated datePublished" datetime="2019-06-01T16:11:32+08:00">2019-06-01</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-06-03 16:37:09" itemprop="dateModified" datetime="2019-06-03T16:37:09+08:00">2019-06-03</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Java集合/" itemprop="url" rel="index"><span itemprop="name">Java集合</span></a></span>
 
                 
                 
@@ -624,7 +1033,7 @@ CopyOnWriteArrayList是ArrayList线程安全的变种，其所有的可变操作
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2019/06/01/ds/Java集合(六) CopyOnWriteArrayList/#more" rel="contents">
+              <a class="btn" href="/2019/06/01/java/集合/Java集合(六) CopyOnWriteArrayList/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -684,7 +1093,7 @@ CopyOnWriteArrayList是ArrayList线程安全的变种，其所有的可变操作
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="javior.wang/2019/06/01/ds/Java集合(五) Vector & Stack/">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/06/01/java/集合/Java集合(五) Vector & Stack/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Javior Wang">
@@ -704,7 +1113,7 @@ CopyOnWriteArrayList是ArrayList线程安全的变种，其所有的可变操作
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/06/01/ds/Java集合(五) Vector & Stack/" class="post-title-link" itemprop="url">Java集合(五) Vector & Stack</a>
+                <a href="/2019/06/01/java/集合/Java集合(五) Vector & Stack/" class="post-title-link" itemprop="url">Java集合(五) Vector & Stack</a>
               
             
           </h1>
@@ -729,12 +1138,24 @@ CopyOnWriteArrayList是ArrayList线程安全的变种，其所有的可变操作
                 
               
 
-              <time title="创建时间：2019-06-01 12:25:44 / 修改时间：17:22:57" itemprop="dateCreated datePublished" datetime="2019-06-01T12:25:44+08:00">2019-06-01</time>
+              <time title="创建时间：2019-06-01 12:25:44" itemprop="dateCreated datePublished" datetime="2019-06-01T12:25:44+08:00">2019-06-01</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-06-02 13:48:41" itemprop="dateModified" datetime="2019-06-02T13:48:41+08:00">2019-06-02</time>
               
             
           </span>
@@ -751,7 +1172,7 @@ CopyOnWriteArrayList是ArrayList线程安全的变种，其所有的可变操作
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/数据结构/" itemprop="url" rel="index"><span itemprop="name">数据结构</span></a></span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Java集合/" itemprop="url" rel="index"><span itemprop="name">Java集合</span></a></span>
 
                 
                 
@@ -802,7 +1223,7 @@ Vector中的操作是线程安全的。
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2019/06/01/ds/Java集合(五) Vector & Stack/#more" rel="contents">
+              <a class="btn" href="/2019/06/01/java/集合/Java集合(五) Vector & Stack/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -862,7 +1283,7 @@ Vector中的操作是线程安全的。
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="javior.wang/2019/05/31/ds/Java集合(四) LinkedList/">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/05/31/java/集合/Java集合(四) LinkedList/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Javior Wang">
@@ -882,7 +1303,7 @@ Vector中的操作是线程安全的。
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/05/31/ds/Java集合(四) LinkedList/" class="post-title-link" itemprop="url">Java集合(四) LinkedList</a>
+                <a href="/2019/05/31/java/集合/Java集合(四) LinkedList/" class="post-title-link" itemprop="url">Java集合(四) LinkedList</a>
               
             
           </h1>
@@ -907,12 +1328,24 @@ Vector中的操作是线程安全的。
                 
               
 
-              <time title="创建时间：2019-05-31 10:59:34 / 修改时间：16:46:43" itemprop="dateCreated datePublished" datetime="2019-05-31T10:59:34+08:00">2019-05-31</time>
+              <time title="创建时间：2019-05-31 10:59:34" itemprop="dateCreated datePublished" datetime="2019-05-31T10:59:34+08:00">2019-05-31</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-06-02 13:48:47" itemprop="dateModified" datetime="2019-06-02T13:48:47+08:00">2019-06-02</time>
               
             
           </span>
@@ -929,7 +1362,7 @@ Vector中的操作是线程安全的。
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/数据结构/" itemprop="url" rel="index"><span itemprop="name">数据结构</span></a></span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Java集合/" itemprop="url" rel="index"><span itemprop="name">Java集合</span></a></span>
 
                 
                 
@@ -982,7 +1415,7 @@ LinkedList是非线程安全的。
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2019/05/31/ds/Java集合(四) LinkedList/#more" rel="contents">
+              <a class="btn" href="/2019/05/31/java/集合/Java集合(四) LinkedList/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1042,7 +1475,7 @@ LinkedList是非线程安全的。
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="javior.wang/2019/05/29/ds/Java集合(三) ArrayList/">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/05/29/java/集合/Java集合(三) ArrayList/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Javior Wang">
@@ -1062,7 +1495,7 @@ LinkedList是非线程安全的。
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/05/29/ds/Java集合(三) ArrayList/" class="post-title-link" itemprop="url">Java集合(三) ArrayList</a>
+                <a href="/2019/05/29/java/集合/Java集合(三) ArrayList/" class="post-title-link" itemprop="url">Java集合(三) ArrayList</a>
               
             
           </h1>
@@ -1104,7 +1537,7 @@ LinkedList是非线程安全的。
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-05-31 11:19:46" itemprop="dateModified" datetime="2019-05-31T11:19:46+08:00">2019-05-31</time>
+                <time title="修改时间：2019-06-02 13:51:16" itemprop="dateModified" datetime="2019-06-02T13:51:16+08:00">2019-06-02</time>
               
             
           </span>
@@ -1121,7 +1554,7 @@ LinkedList是非线程安全的。
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/数据结构/" itemprop="url" rel="index"><span itemprop="name">数据结构</span></a></span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Java集合/" itemprop="url" rel="index"><span itemprop="name">Java集合</span></a></span>
 
                 
                 
@@ -1170,7 +1603,7 @@ ArrayList实现了
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2019/05/29/ds/Java集合(三) ArrayList/#more" rel="contents">
+              <a class="btn" href="/2019/05/29/java/集合/Java集合(三) ArrayList/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1230,7 +1663,7 @@ ArrayList实现了
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="javior.wang/2019/05/28/ds/Java集合(二) fail-fast和fail-safe/">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/05/28/java/集合/Java集合(二) fail-fast和fail-safe/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Javior Wang">
@@ -1250,7 +1683,7 @@ ArrayList实现了
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/05/28/ds/Java集合(二) fail-fast和fail-safe/" class="post-title-link" itemprop="url">Java集合(二) fail-fast和fail-safe</a>
+                <a href="/2019/05/28/java/集合/Java集合(二) fail-fast和fail-safe/" class="post-title-link" itemprop="url">Java集合(二) fail-fast和fail-safe</a>
               
             
           </h1>
@@ -1292,7 +1725,7 @@ ArrayList实现了
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-05-29 16:48:26" itemprop="dateModified" datetime="2019-05-29T16:48:26+08:00">2019-05-29</time>
+                <time title="修改时间：2019-06-02 13:49:07" itemprop="dateModified" datetime="2019-06-02T13:49:07+08:00">2019-06-02</time>
               
             
           </span>
@@ -1309,7 +1742,7 @@ ArrayList实现了
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/数据结构/" itemprop="url" rel="index"><span itemprop="name">数据结构</span></a></span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Java集合/" itemprop="url" rel="index"><span itemprop="name">Java集合</span></a></span>
 
                 
                 
@@ -1355,7 +1788,7 @@ ArrayList实现了
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2019/05/28/ds/Java集合(二) fail-fast和fail-safe/#more" rel="contents">
+              <a class="btn" href="/2019/05/28/java/集合/Java集合(二) fail-fast和fail-safe/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1415,7 +1848,7 @@ ArrayList实现了
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="javior.wang/2019/05/28/ds/Java集合(一) 综述/">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/05/28/java/集合/Java集合(一) 综述/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Javior Wang">
@@ -1435,7 +1868,7 @@ ArrayList实现了
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/05/28/ds/Java集合(一) 综述/" class="post-title-link" itemprop="url">Java集合(一) 综述</a>
+                <a href="/2019/05/28/java/集合/Java集合(一) 综述/" class="post-title-link" itemprop="url">Java集合(一) 综述</a>
               
             
           </h1>
@@ -1477,7 +1910,7 @@ ArrayList实现了
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-06-01 15:38:00" itemprop="dateModified" datetime="2019-06-01T15:38:00+08:00">2019-06-01</time>
+                <time title="修改时间：2019-06-02 13:50:45" itemprop="dateModified" datetime="2019-06-02T13:50:45+08:00">2019-06-02</time>
               
             
           </span>
@@ -1494,7 +1927,7 @@ ArrayList实现了
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/数据结构/" itemprop="url" rel="index"><span itemprop="name">数据结构</span></a></span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Java集合/" itemprop="url" rel="index"><span itemprop="name">Java集合</span></a></span>
 
                 
                 
@@ -1547,7 +1980,7 @@ Collection是
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2019/05/28/ds/Java集合(一) 综述/#more" rel="contents">
+              <a class="btn" href="/2019/05/28/java/集合/Java集合(一) 综述/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1776,375 +2209,6 @@ Collection是
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="javior.wang/2019/05/19/操作系统/正则表达式及Linux的几个常用命令/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Javior Wang">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Javior's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/05/19/操作系统/正则表达式及Linux的几个常用命令/" class="post-title-link" itemprop="url">正则表达式及Linux的几个常用命令</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-05-19 15:05:28" itemprop="dateCreated datePublished" datetime="2019-05-19T15:05:28+08:00">2019-05-19</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-05-20 11:54:56" itemprop="dateModified" datetime="2019-05-20T11:54:56+08:00">2019-05-20</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/操作系统/" itemprop="url" rel="index"><span itemprop="name">操作系统</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>
-              1. 正则表达式正则表达式，又称规则表达式(Regular Expression，常简写为regex、regexp、RE)，描述了一种字符串匹配的模式(pattern)，可以用来检查一个串是否含有某种子串、将匹配的子串替换或者从某个串中取出符合某个条件的子串等。正则表达式是由普通字符(例如字符a-z)以及特殊字符(称为”元字符”)组成的文字模式。模式描述在搜索文本时要匹配的一个或多个字符串。正则表达式作为一个模板，将某个字符模式与所搜索的字符串进行匹配。  
-
-普通字符普通字符包括没有显式指定为元字符的所有可打印和不可打印字符。这包括所有大写和小写字母、所有数字、所有标点符号和一些其他符号。 
-              ...
-            </p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/05/19/操作系统/正则表达式及Linux的几个常用命令/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="javior.wang/2019/05/14/backends/nosql/redis/Redis(三) Redis实现分布式锁/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Javior Wang">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Javior's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/05/14/backends/nosql/redis/Redis(三) Redis实现分布式锁/" class="post-title-link" itemprop="url">Redis(三) Redis实现分布式锁</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-05-14 13:47:01" itemprop="dateCreated datePublished" datetime="2019-05-14T13:47:01+08:00">2019-05-14</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-05-15 16:27:02" itemprop="dateModified" datetime="2019-05-15T16:27:02+08:00">2019-05-15</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/NoSQL/" itemprop="url" rel="index"><span itemprop="name">NoSQL</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>
-              https://redis.io/topics/distlock
-1. 单机Redis的分布式锁1.1 准备工作A. 定义常量类public class LockConstants &#123;    public static final String OK = "OK";    /*      * NX|XX, NX -- Only set the key if it does not already exist.            XX -- Only set the key if it already exist. *     */    public static final S
-              ...
-            </p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/05/14/backends/nosql/redis/Redis(三) Redis实现分布式锁/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2193,7 +2257,7 @@ Collection是
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">25</span>
+                    <span class="site-state-item-count">27</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2224,7 +2288,11 @@ Collection是
                     
                       
                     
-                    <span class="site-state-item-count">7</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">8</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -2240,6 +2308,8 @@ Collection是
                     
                   
                     
+                    
+                      
                     
                       
                     

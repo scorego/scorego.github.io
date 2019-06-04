@@ -94,25 +94,18 @@
 
 
 
-  <meta name="description" content="开源RPC框架简介RPC(Remote Procedure Call,远程过程调用)，是一种通过网络从远程计算机程序上请求服务而不需要了解底层网络技术的协议。目前RPC框架大致分为两类，一种偏重服务治理(如Dubbo)，另一种侧重跨语言调用。服务治理型框架特点是功能丰富，提供高性能远程调用、服务发现及服务治理能力，适用于大型服务的解耦及治理，对于特定语言(如Java)项目可以实现透明化接入。缺点是">
-<meta name="keywords" content="RPC,Thrift">
+  <meta name="description" content="1. Synchronized2. volatile">
+<meta name="keywords" content="Java并发">
 <meta property="og:type" content="article">
-<meta property="og:title" content="开源RPC框架简介">
-<meta property="og:url" content="javior.wang/2019/04/18/backends/rpc/开源RPC框架简介/index.html">
+<meta property="og:title" content="Java并发03 Synchronized和volatile">
+<meta property="og:url" content="javior.wang/2019/06/04/java/并发/Java并发03 Synchronized和volatile/index.html">
 <meta property="og:site_name" content="Javior&#39;s Blog">
-<meta property="og:description" content="开源RPC框架简介RPC(Remote Procedure Call,远程过程调用)，是一种通过网络从远程计算机程序上请求服务而不需要了解底层网络技术的协议。目前RPC框架大致分为两类，一种偏重服务治理(如Dubbo)，另一种侧重跨语言调用。服务治理型框架特点是功能丰富，提供高性能远程调用、服务发现及服务治理能力，适用于大型服务的解耦及治理，对于特定语言(如Java)项目可以实现透明化接入。缺点是">
+<meta property="og:description" content="1. Synchronized2. volatile">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="/images/backend/rpc/dubbo_architecture.png">
-<meta property="og:image" content="/images/backend/rpc/motan_architecture.jpg">
-<meta property="og:image" content="/images/backend/rpc/tars_architecture.png">
-<meta property="og:image" content="/images/backend/rpc/springcloud_architecture.png">
-<meta property="og:image" content="/images/backend/rpc/grpc_architecture.png">
-<meta property="og:image" content="/images/backend/rpc/thrift_architecture.png">
-<meta property="og:updated_time" content="2019-04-19T03:00:02.845Z">
+<meta property="og:updated_time" content="2019-06-04T06:52:23.550Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="开源RPC框架简介">
-<meta name="twitter:description" content="开源RPC框架简介RPC(Remote Procedure Call,远程过程调用)，是一种通过网络从远程计算机程序上请求服务而不需要了解底层网络技术的协议。目前RPC框架大致分为两类，一种偏重服务治理(如Dubbo)，另一种侧重跨语言调用。服务治理型框架特点是功能丰富，提供高性能远程调用、服务发现及服务治理能力，适用于大型服务的解耦及治理，对于特定语言(如Java)项目可以实现透明化接入。缺点是">
-<meta name="twitter:image" content="/images/backend/rpc/dubbo_architecture.png">
+<meta name="twitter:title" content="Java并发03 Synchronized和volatile">
+<meta name="twitter:description" content="1. Synchronized2. volatile">
 
 
 
@@ -120,7 +113,7 @@
 
   
   
-  <link rel="canonical" href="javior.wang/2019/04/18/backends/rpc/开源RPC框架简介/">
+  <link rel="canonical" href="javior.wang/2019/06/04/java/并发/Java并发03 Synchronized和volatile/">
 
 
 
@@ -130,7 +123,7 @@
   };
 </script>
 
-  <title>开源RPC框架简介 | Javior's Blog</title>
+  <title>Java并发03 Synchronized和volatile | Javior's Blog</title>
   
 
 
@@ -346,7 +339,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="javior.wang/2019/04/18/backends/rpc/开源RPC框架简介/">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/06/04/java/并发/Java并发03 Synchronized和volatile/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Javior Wang">
@@ -363,7 +356,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">开源RPC框架简介
+          <h1 class="post-title" itemprop="name headline">Java并发03 Synchronized和volatile
 
               
             
@@ -389,24 +382,12 @@
                 
               
 
-              <time title="创建时间：2019-04-18 12:14:24" itemprop="dateCreated datePublished" datetime="2019-04-18T12:14:24+08:00">2019-04-18</time>
+              <time title="创建时间：2019-06-04 14:51:23 / 修改时间：14:52:23" itemprop="dateCreated datePublished" datetime="2019-06-04T14:51:23+08:00">2019-06-04</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-04-19 11:00:02" itemprop="dateModified" datetime="2019-04-19T11:00:02+08:00">2019-04-19</time>
               
             
           </span>
@@ -423,7 +404,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/RPC/" itemprop="url" rel="index"><span itemprop="name">RPC</span></a></span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Java并发/" itemprop="url" rel="index"><span itemprop="name">Java并发</span></a></span>
 
                 
                 
@@ -458,66 +439,7 @@
       
 
       
-        <h3 id="开源RPC框架简介"><a href="#开源RPC框架简介" class="headerlink" title="开源RPC框架简介"></a>开源RPC框架简介</h3><p>RPC(Remote Procedure Call,远程过程调用)，是一种通过网络从远程计算机程序上请求服务而不需要了解底层网络技术的协议。目前RPC框架大致分为两类，一种偏重服务治理(如Dubbo)，另一种侧重跨语言调用。服务治理型框架特点是功能丰富，提供高性能远程调用、服务发现及服务治理能力，适用于大型服务的解耦及治理，对于特定语言(如Java)项目可以实现透明化接入。缺点是语言耦合度加高，跨语言支持难度较大。常用的RPC开源框架有:</p>
-<ul>
-<li><p>Dubbo<br>  国内最早开源的RPC框架，由阿里开发并于2011年开源，仅支持Java。  </p>
-</li>
-<li><p>Motan<br>  微博内部使用的RPC框架，于2016年开源。  </p>
-</li>
-<li><p>Tars<br>  腾讯内部使用的RPC框架，于2017年开源。  </p>
-</li>
-<li><p>Spring Cloud<br>  包含RPC功能，仅支持Java。</p>
-</li>
-<li><p>gRPC<br>  Google于2015年对外开源的跨语言RPC框架。  </p>
-</li>
-<li><p>Thrift<br>  最初由Facebook开发的内部系统跨语言RPC框架，2007年贡献给Apache基金，成为Apache开源项目之一。</p>
-</li>
-</ul>
-<h3 id="框架架构"><a href="#框架架构" class="headerlink" title="框架架构"></a>框架架构</h3><h4 id="Dubbo"><a href="#Dubbo" class="headerlink" title="Dubbo"></a>Dubbo</h4><div align="center"><br>    <img src="/images/backend/rpc/dubbo_architecture.png" width="500" height="500"><br></div>
-
-
-<p><a href="http://dubbo.apache.org" target="_blank" rel="noopener">Dubbo(http://dubbo.apache.org)</a>是一款高性能、轻量级的开源Java RPC框架，它提供了三大核心能力:面向接口的远程方法调用，智能容错和负载均衡，以及服务自动注册和发现。架构主要包含4个角色，Consumer是服务消费者，Provider是服务提供者，Registry是注册中心，Monitor是监控系统。具体流程是Consumer通过注册中心获取到Provider节点后，通过Dubbo的客户端SDK与Provider建立连接并发起调用。Provider通过Dubbo的服务端SDK接收到Consumer的请求，处理后把结果返回给Consumer。  </p>
-<h4 id="Motan"><a href="#Motan" class="headerlink" title="Motan"></a>Motan</h4><div align="center"><br>      <img src="/images/backend/rpc/motan_architecture.jpg" width="500" height="500"><br></div>
-
-<p><a href="https://github.com/weibocom/motan" target="_blank" rel="noopener">Motan(https://github.com/weibocom/motan)</a>是基于Java开发的高性能轻量级RPC框架，支持Java/Go/PHP/Lua。底层通讯引擎采用Netty网络框架整体架构与Dubbo类似，都需要在Client端和Server端引入SDK。Motan框架主要包含一下几个功能模块:  </p>
-<ul>
-<li>register: 用来和注册中心交互，包括注册服务、订阅服务、服务变更通知、服务心跳发送等功能。  </li>
-<li>protocal: 用来进行RPC服务的描述和RPC服务的配置管理。还可以添加不同功能的filter来完成统计、并发限制等功能。</li>
-<li>serialize: 将RPC请求中的参数、结果等对象进行序列化与反序列化。</li>
-<li>transport: 用来进行远程通信。默认使用Netty NIO的TCP长连接方式。</li>
-<li>cluster: 请求时会根据不同的高可用负载均衡策略选择一个可用的Server发起远程调用。</li>
-</ul>
-<h4 id="Tars"><a href="#Tars" class="headerlink" title="Tars"></a>Tars</h4><div align="center"><br>      <img src="/images/backend/rpc/tars_architecture.png" width="500" height="500"><br></div>
-
-<p><a href="https://github.com/TarsCloud/Tars" target="_blank" rel="noopener">Tars(https://github.com/TarsCloud/Tars)</a>目前支持C++/Java/Nodejs/PHP/Go。架构交互主要包括以下几个流程:  </p>
-<ul>
-<li><p>服务发布流程:在web系统上传server的发布包到patch上传成功后在web上提交发布server请求，由registry服务传达到node，然后node拉取server的发布包到本地，拉起 server服务。</p>
-</li>
-<li><p>管理命令流程:web系统上的可以提交管理server服务命令请求，由registry服务传达到 node服务，然后由node向server发送管理命令。</p>
-</li>
-<li><p>心跳上报流程:server服务运行后，会定期上报心跳到node，node然后把服务心跳信息上报到registry服务，由registry进行统一管理。</p>
-</li>
-<li><p>信息上报流程:server服务运行后，会定期上报统计信息到stat，打印远程日志到log，定期上报属性信息到prop、上报异常信息到notify、从config 拉取服务配置信息。</p>
-</li>
-<li><p>client 访问server 流程:client可以通过server的对象名Obj间接访问server，client会从registry上拉取server的路由信息（如IP、Port信息），然后根据具体的业务特性（同步或者异步，TCP或者UDP方式）访问server（当然client也可以通过IP/Port 直接访问server）。  </p>
-</li>
-</ul>
-<h4 id="Spring-Cloud"><a href="#Spring-Cloud" class="headerlink" title="Spring Cloud"></a>Spring Cloud</h4><p><a href="https://spring.io/" target="_blank" rel="noopener">Spring Cloud(https://spring.io/)</a>利用Spring Boot特性整合了开源行业中优秀的组件，整体对外提供了一套在微服务架构中服务治理的解决方案。</p>
-<p><div align="center"><br>      <img src="/images/backend/rpc/springcloud_architecture.png" width="500" height="500"><br></div><br>Spring Cloud微服务架构是由多个组件一起组成的，各组件交互流程如下:  </p>
-<ol>
-<li>请求统一通过API网管Zuul来访问内部服务，先经过Token进行安全验证。</li>
-<li>通过安全认证后，网管Zuul从注册中心Eureka获取可用服务节点列表。</li>
-<li>从可用服务节点中选取一个可用节点，然后把请求分发到这个节点。</li>
-<li>整个请求过程中，Hystrix组件负责处理服务超时熔断，Turbine组件负责监控服务间的调用和熔断相关指标，Sleuth组件负责调用链监控，ELK负责日志分析。</li>
-</ol>
-<h4 id="gRPC"><a href="#gRPC" class="headerlink" title="gRPC"></a>gRPC</h4><p><div align="center"><br>      <img src="/images/backend/rpc/grpc_architecture.png" width="500" height="500"><br></div><br><a href="https://grpc.io/" target="_blank" rel="noopener">gRPC(https://grpc.io/)</a>通过IDL(Interface Definition Language)文件定义服务接口的参数和返回值类型，然后通过代码生成程序生成服务端和客户端的具体实现代码，这样在gRPC中客户端应用可以像调用本地对象一样调用另一台服务器上对应的方法。<br>主要特性包括:</p>
-<ol>
-<li>通信协议采用HTTP/2。因为HTTP/2提供了连接复用、双向流、服务器推送、请求优先级、首部压缩等机制。</li>
-<li>IDL使用ProtoBuf。ProtoBuf是Google开发的一种数据序列化协议，它的压缩和传输效率极高，语法也简单。</li>
-<li>多语言支持。能基于多种语言自动生成对应语言的客户端和服务端的代码。</li>
-</ol>
-<h4 id="Thrift"><a href="#Thrift" class="headerlink" title="Thrift"></a>Thrift</h4><p><div align="center"><br>      <img src="/images/backend/rpc/thrift_architecture.png" width="500" height="500"><br></div><br><a href="http://thrift.apache.org/" target="_blank" rel="noopener">Thrift(http://thrift.apache.org/)</a>是一种轻量级跨语言RPC框架。它也有一套自己的接口定义语言IDL，可以通过代码生成器生成各种编程语言的Client端和Server端的SDK代码，这样就保证了不同语言之间可以相互通信。Thrift支持C++/Java/Python/PHP/Ruby/Erlang/Perl/Haskell/C#/Cocoa/JavaScript/Node.js/Smalltalk/OCaml/Delphi等多种语言。</p>
-
+        <h2 id="1-Synchronized"><a href="#1-Synchronized" class="headerlink" title="1. Synchronized"></a>1. Synchronized</h2><h2 id="2-volatile"><a href="#2-volatile" class="headerlink" title="2. volatile"></a>2. volatile</h2>
       
     </div>
 
@@ -540,9 +462,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/RPC/" rel="tag"># RPC</a>
-          
-            <a href="/tags/Thrift/" rel="tag"># Thrift</a>
+            <a href="/tags/Java并发/" rel="tag"># Java并发</a>
           
         </div>
       
@@ -555,8 +475,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/04/17/通信/OAI系统安装流程/" rel="next" title="OAI系统安装流程">
-                <i class="fa fa-chevron-left"></i> OAI系统安装流程
+              <a href="/2019/06/02/java/并发/Java并发02 基本概念/" rel="next" title="Java并发02 基本概念">
+                <i class="fa fa-chevron-left"></i> Java并发02 基本概念
               </a>
             
           </div>
@@ -564,10 +484,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/04/18/backends/rpc/Thrift学习之路(一) Thrift简介/" rel="prev" title="Thrift学习之路(一) Thrift简介">
-                Thrift学习之路(一) Thrift简介 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -786,7 +702,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#开源RPC框架简介"><span class="nav-text">开源RPC框架简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#框架架构"><span class="nav-text">框架架构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Dubbo"><span class="nav-text">Dubbo</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Motan"><span class="nav-text">Motan</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Tars"><span class="nav-text">Tars</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Spring-Cloud"><span class="nav-text">Spring Cloud</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#gRPC"><span class="nav-text">gRPC</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Thrift"><span class="nav-text">Thrift</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Synchronized"><span class="nav-text">1. Synchronized</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-volatile"><span class="nav-text">2. volatile</span></a></li></ol></div>
             
 
           </div>

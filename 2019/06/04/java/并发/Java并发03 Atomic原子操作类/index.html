@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next mist" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/favicon-128x128-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-01.ico?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/uploads/favicon-128x128-01.ico?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="java.util.concurrent.atomic包是一个支持在单个变量上的lock-free和thread-safe编程的工具包。本质上，这个包中的类将volatile值、字段和数组元素的概念应用到到提供如下形式的原子条件更新操作：1boolean compareAndSet(expectedValue, updateValue); 根据修改的数据类型，可以将java.util.concur">
+<meta name="keywords" content="Java并发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java并发03 Atomic原子操作类">
+<meta property="og:url" content="javior.wang/2019/06/04/java/并发/Java并发03 Atomic原子操作类/index.html">
+<meta property="og:site_name" content="Javior&#39;s Blog">
+<meta property="og:description" content="java.util.concurrent.atomic包是一个支持在单个变量上的lock-free和thread-safe编程的工具包。本质上，这个包中的类将volatile值、字段和数组元素的概念应用到到提供如下形式的原子条件更新操作：1boolean compareAndSet(expectedValue, updateValue); 根据修改的数据类型，可以将java.util.concur">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-06-05T06:32:17.877Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java并发03 Atomic原子操作类">
+<meta name="twitter:description" content="java.util.concurrent.atomic包是一个支持在单个变量上的lock-free和thread-safe编程的工具包。本质上，这个包中的类将volatile值、字段和数组元素的概念应用到到提供如下形式的原子条件更新操作：1boolean compareAndSet(expectedValue, updateValue); 根据修改的数据类型，可以将java.util.concur">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="javior.wang/2019/06/04/java/并发/Java并发03 Atomic原子操作类/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Java并发03 Atomic原子操作类 | Javior's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Javior's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/06/04/java/并发/Java并发03 Atomic原子操作类/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Javior Wang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Javior's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java并发03 Atomic原子操作类
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-06-04 14:51:23" itemprop="dateCreated datePublished" datetime="2019-06-04T14:51:23+08:00">2019-06-04</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-06-05 14:32:17" itemprop="dateModified" datetime="2019-06-05T14:32:17+08:00">2019-06-05</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Java并发/" itemprop="url" rel="index"><span itemprop="name">Java并发</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><code>java.util.concurrent.atomic</code>包是一个支持在单个变量上的lock-free和thread-safe编程的工具包。本质上，这个包中的类将<code>volatile</code>值、字段和数组元素的概念应用到到提供如下形式的原子条件更新操作：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">compareAndSet</span><span class="params">(expectedValue, updateValue)</span></span>;</span><br></pre></td></tr></table></figure></p>
+<p>根据修改的数据类型，可以将<code>java.util.concurrent.atomic</code>包中的原子操作类可以分为4类。</p>
+<ol>
+<li>基本类型: <code>AtomicInteger</code>, <code>AtomicLong</code>, <code>AtomicBoolean</code> ;</li>
+<li>数组类型: <code>AtomicIntegerArray</code>, <code>AtomicLongArray</code>, <code>AtomicReferenceArray</code> ;</li>
+<li>引用类型: <code>AtomicReference</code>, <code>AtomicStampedRerence</code>, <code>AtomicMarkableReference</code> ;</li>
+<li>对象的属性修改类型: <code>AtomicIntegerFieldUpdater</code>, <code>AtomicLongFieldUpdater</code>, <code>AtomicReferenceFieldUpdater</code>。  </li>
+</ol>
+<p>另外，java8还新增了以下类:<code>Striped64</code>、<code>LongAdder</code>、<code>LongAccumulator</code>、<code>DoubleAdder</code>、<code>DoubleAccumulator</code>。</p>
+<h2 id="1-AtomicLong"><a href="#1-AtomicLong" class="headerlink" title="1. AtomicLong"></a>1. AtomicLong</h2><p><code>AtomicInteger</code>、<code>AtomicLong</code>和<code>AtomicBoolean</code>这3个基本类型的原子类的原理和用法相似。<code>AtomicBoolean</code>是将布尔类型参数转化为1(true)和0(false)，然后将其视为<code>int</code>来操作的。<br><code>AtomicLong</code>是作用是对长整形进行原子操作。在32位操作系统中，64位的<code>long</code>和<code>double</code>变量由于会被JVM当作两个分离的32位来进行操作，所以不具有原子性。而使用<code>AtomicLong</code>能让<code>long</code>的操作保持原子性。  </p>
+<h3 id="A-继承结构"><a href="#A-继承结构" class="headerlink" title="A. 继承结构"></a>A. 继承结构</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> java.util.concurrent.atomic;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AtomicLong</span> <span class="keyword">extends</span> <span class="title">Number</span> <span class="keyword">implements</span> <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span> </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="B-构造函数"><a href="#B-构造函数" class="headerlink" title="B. 构造函数"></a>B. 构造函数</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 参数是初始值</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">AtomicLong</span><span class="params">(<span class="keyword">long</span> initialValue)</span> </span>&#123;</span><br><span class="line">    value = initialValue;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 初始值为0</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">AtomicLong</span><span class="params">()</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="C-主要的域"><a href="#C-主要的域" class="headerlink" title="C. 主要的域"></a>C. 主要的域</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用 Unsafe.compareAndSwapLong 进行更新操作</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Unsafe unsafe = Unsafe.getUnsafe();</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> valueOffset;</span><br><span class="line"><span class="keyword">static</span> &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        valueOffset = unsafe.objectFieldOffset(AtomicLong.class.getDeclaredField(<span class="string">"value"</span>));</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception ex) &#123; <span class="keyword">throw</span> <span class="keyword">new</span> Error(ex); &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">long</span> value;</span><br></pre></td></tr></table></figure>
+<h3 id="D-API"><a href="#D-API" class="headerlink" title="D. API"></a>D. API</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取当前值</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">long</span> <span class="title">get</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> value;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 设置value</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">set</span><span class="params">(<span class="keyword">long</span> newValue)</span> </span>&#123;</span><br><span class="line">    value = newValue;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Eventually sets to the given value.</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">lazySet</span><span class="params">(<span class="keyword">long</span> newValue)</span> </span>&#123;</span><br><span class="line">    unsafe.putOrderedLong(<span class="keyword">this</span>, valueOffset, newValue);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 原子地设置为指定的值，并返回原来的值</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">long</span> <span class="title">getAndSet</span><span class="params">(<span class="keyword">long</span> newValue)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> unsafe.getAndSetLong(<span class="keyword">this</span>, valueOffset, newValue);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 当前值是期望的值时，才原子地设置为指定的值。expect是期望的值，update是指定的值</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">compareAndSet</span><span class="params">(<span class="keyword">long</span> expect, <span class="keyword">long</span> update)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> unsafe.compareAndSwapLong(<span class="keyword">this</span>, valueOffset, expect, update);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 当前值是期望的值时，才原子地设置为指定的值。可能会失败，也不提供顺序保证</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">weakCompareAndSet</span><span class="params">(<span class="keyword">long</span> expect, <span class="keyword">long</span> update)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> unsafe.compareAndSwapLong(<span class="keyword">this</span>, valueOffset, expect, update);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 原子地将当前值增1</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">long</span> <span class="title">getAndIncrement</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> unsafe.getAndAddLong(<span class="keyword">this</span>, valueOffset, <span class="number">1L</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 原子地将当前值减1</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">long</span> <span class="title">getAndDecrement</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> unsafe.getAndAddLong(<span class="keyword">this</span>, valueOffset, -<span class="number">1L</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 原子地将当前值增加指定的值</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">long</span> <span class="title">getAndAdd</span><span class="params">(<span class="keyword">long</span> delta)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> unsafe.getAndAddLong(<span class="keyword">this</span>, valueOffset, delta);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 原子地将当前值增1，返回增加后的值</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">long</span> <span class="title">incrementAndGet</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> unsafe.getAndAddLong(<span class="keyword">this</span>, valueOffset, <span class="number">1L</span>) + <span class="number">1L</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 原子地将当前值减1，返回减少后的值</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">long</span> <span class="title">decrementAndGet</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> unsafe.getAndAddLong(<span class="keyword">this</span>, valueOffset, -<span class="number">1L</span>) - <span class="number">1L</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 原子地将当前值增加指定的值，返回更新后的值</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">long</span> <span class="title">addAndGet</span><span class="params">(<span class="keyword">long</span> delta)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> unsafe.getAndAddLong(<span class="keyword">this</span>, valueOffset, delta) + delta;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 原子地将当前值更新为给定函数的结果，返回之前的值。函数应该是side-effect-free，因为可能会有多次尝试</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">long</span> <span class="title">getAndUpdate</span><span class="params">(LongUnaryOperator updateFunction)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">long</span> prev, next;</span><br><span class="line">    <span class="keyword">do</span> &#123;</span><br><span class="line">        prev = get();</span><br><span class="line">        next = updateFunction.applyAsLong(prev);</span><br><span class="line">    &#125; <span class="keyword">while</span> (!compareAndSet(prev, next));</span><br><span class="line">    <span class="keyword">return</span> prev;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 同getAndUpdate()相同，只是返回更新后的值</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">long</span> <span class="title">updateAndGet</span><span class="params">(LongUnaryOperator updateFunction)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">long</span> prev, next;</span><br><span class="line">    <span class="keyword">do</span> &#123;</span><br><span class="line">        prev = get();</span><br><span class="line">        next = updateFunction.applyAsLong(prev);</span><br><span class="line">    &#125; <span class="keyword">while</span> (!compareAndSet(prev, next));</span><br><span class="line">    <span class="keyword">return</span> next;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 原子地将当前值更新为给定函数的结果,函数的参数为当前值和给定的值x。</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">long</span> <span class="title">getAndAccumulate</span><span class="params">(<span class="keyword">long</span> x, LongBinaryOperator accumulatorFunction)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">long</span> prev, next;</span><br><span class="line">    <span class="keyword">do</span> &#123;</span><br><span class="line">        prev = get();</span><br><span class="line">        next = accumulatorFunction.applyAsLong(prev, x);</span><br><span class="line">    &#125; <span class="keyword">while</span> (!compareAndSet(prev, next));</span><br><span class="line">    <span class="keyword">return</span> prev;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">long</span> <span class="title">accumulateAndGet</span><span class="params">(<span class="keyword">long</span> x, LongBinaryOperator accumulatorFunction)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">long</span> prev, next;</span><br><span class="line">    <span class="keyword">do</span> &#123;</span><br><span class="line">        prev = get();</span><br><span class="line">        next = accumulatorFunction.applyAsLong(prev, x);</span><br><span class="line">    &#125; <span class="keyword">while</span> (!compareAndSet(prev, next));</span><br><span class="line">    <span class="keyword">return</span> next;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;<span class="keyword">return</span> Long.toString(get());&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">intValue</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> (<span class="keyword">int</span>)get();&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">longValue</span><span class="params">()</span> </span>&#123;<span class="keyword">return</span> get();&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">float</span> <span class="title">floatValue</span><span class="params">()</span> </span>&#123;<span class="keyword">return</span> (<span class="keyword">float</span>)get();&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">doubleValue</span><span class="params">()</span> </span>&#123;<span class="keyword">return</span> (<span class="keyword">double</span>)get();&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="E-JDK8的增强"><a href="#E-JDK8的增强" class="headerlink" title="E. JDK8的增强"></a>E. JDK8的增强</h3><p>jdk7中，<code>getAndIncrement()</code>是这样的：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">long</span> <span class="title">getAndIncrement</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">          <span class="keyword">long</span> current = get();</span><br><span class="line">          <span class="keyword">long</span> next = current + <span class="number">1</span>;</span><br><span class="line">          <span class="keyword">if</span> (compareAndSet(current, next))</span><br><span class="line">               <span class="keyword">return</span> current;</span><br><span class="line">      &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>jdk8中<code>getAndIncrement()</code>是这样的：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">long</span> <span class="title">getAndIncrement</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> unsafe.getAndAddLong(<span class="keyword">this</span>, valueOffset, <span class="number">1L</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在openjdk8的<a href="http://hg.openjdk.java.net/jdk8u/hs-dev/jdk/file/a006fa0a9e8f/src/share/classes/sun/misc/Unsafe.java" target="_blank" rel="noopener"><code>Unsafe</code></a>源码中，<code>getAndAddLong()</code>是这样实现的：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">long</span> <span class="title">getAndAddLong</span><span class="params">(Object o, <span class="keyword">long</span> offset, <span class="keyword">long</span> delta)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">long</span> v;</span><br><span class="line">    <span class="keyword">do</span> &#123;</span><br><span class="line">        v = getLongVolatile(o, offset);</span><br><span class="line">    &#125; <span class="keyword">while</span> (!compareAndSwapLong(o, offset, v, v + delta));</span><br><span class="line">    <span class="keyword">return</span> v;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>另外，<code>CompareAndSwap</code>是类似下面的操作：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">UNSAFE_ENTRY(jboolean, Unsafe_CompareAndSwapInt(JNIEnv *env, jobject unsafe, jobject obj, jlong offset, jint e, jint x))</span><br><span class="line">  UnsafeWrapper(<span class="string">"Unsafe_CompareAndSwapInt"</span>);</span><br><span class="line">  oop p = JNIHandles::resolve(obj);</span><br><span class="line">  jint* addr = (jint *) index_oop_from_field_offset_long(p, offset);</span><br><span class="line">  <span class="keyword">return</span> (jint)(Atomic::cmpxchg(x, addr, e)) == e;</span><br><span class="line">UNSAFE_END</span><br></pre></td></tr></table></figure></p>
+<p>根据<a href="http://ifeve.com/enhanced-cas-in-jdk8/" target="_blank" rel="noopener">网上博客</a>推断，代码更改带来的性能提升应该来自于：<br><code>Unsafe</code>是经过特殊处理的，不能理解成常规的java代码，区别在于：</p>
+<ul>
+<li>1.8在调用<code>getAndAddLong()</code>的时候，如果系统底层支持fetch-and-add，那么它执行的就是native方法，使用的是fetch-and-add；</li>
+<li>如果不支持，就按照上面的所看到的<code>getAndAddLong()</code>方法体那样，以java代码的方式去执行，使用的是compare-and-swap。</li>
+</ul>
+<p>关于fetch-and-add与compare-and-swap的比较，Oracle官网有篇文章：<a href="https://blogs.oracle.com/dave/atomic-fetch-and-add-vs-compare-and-swap" target="_blank" rel="noopener">atomic fetch-and-add vs compare-and-swap</a>。fetch-and-add使用的cpu x86的<code>LOCK:XADD</code>指令，区别为：</p>
+<ul>
+<li>CAS是乐观锁实现，可能失败；而XADD不是。使用XADD，没有针对远程干扰的显式漏洞窗口，因此不需要重试循环。</li>
+<li>如果使用典型的<code>Load;Φ;CAS</code>，假设正常的基于snoop的缓存一致性，则Load可能会导致读取共享总线事务使底层缓存行进入S(Share)或E(Exclude)状态。遵守缓存一致性协议的CAS可以引起另一总线事务以线路升级到M状态。因此,在最坏的情况下,CAS可能会导致两个总线事务。但<code>XADD</code>通常会将线路直接驱动到M(Modified)状态，只需要一个总线事务。当然，可以通过推测值方法，在没有任何先前加载的情况下，直接进行CAS的操作。此外，复杂的CPU可以执行相关推测并积极地将目标线设置为M(Modified)状态。最后，在某些情况下，您可以在加载之前执行prefetch-for-write(PREFETCHW)指令，以避免升级事务。但是这种方法必须谨慎应用，因为在某些情况下它可能弊大于利。鉴于此，XADD在可用情况下具有优势。</li>
+<li>假设尝试使用通常的<code>Load;INC;CAS</code>循环来增加一个变量，当CAS失败的频率很大时候，可以发现退出循环的分支指令(通常在无竞争或轻度竞争下)开始预测我们停留在循环中的故障路径。因此，当CAS最终成功时，在尝试退出循环时会导致分支错误预测。对于具有深度管道和大量无序处理信息机制的处理器而言，这可能会非常痛苦。通常情况下，执行一段代码并不希望长时间停顿。相关地，当CAS开始频繁失败，分支指令预测将保持控制在循环中，这可以让循环运行得更快，就更快地循环到CAS。通常，我们希望循环执行中有一些回退。在轻负载且不经常发生故障的情况下，再次循环的错误预测可能是一种有用的隐含回退。但在较高的负荷下，我们失去了由于错误预测而产生的隐式回退的好处。由于<code>XADD</code>没有循环，自然也没有以上的问题。<br>尽管CAS具有更高(无限)的<a href="https://dl.acm.org/citation.cfm?doid=114005.102808" target="_blank" rel="noopener">consensus number</a>，但有时候<code>fetch-and-add</code>(consensus number仅为2)更可取。</li>
+</ul>
+<h2 id="2-AtomicLongArray"><a href="#2-AtomicLongArray" class="headerlink" title="2. AtomicLongArray"></a>2. AtomicLongArray</h2><p><code>AtomicIntegerArray</code>、<code>AtomicLongArray</code>、<code>AtomicReferenceArray</code>这3个数组类型的原子类的原理和用法相似。<code>AtomicReferenceArray</code>的域是一个<code>Object</code>数组。</p>
+<h3 id="A-继承结构-1"><a href="#A-继承结构-1" class="headerlink" title="A. 继承结构"></a>A. 继承结构</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> java.util.concurrent.atomic;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AtomicLongArray</span> <span class="keyword">implements</span> <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span> </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="B-构造方法"><a href="#B-构造方法" class="headerlink" title="B. 构造方法"></a>B. 构造方法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">AtomicLongArray</span><span class="params">(<span class="keyword">int</span> length)</span> </span>&#123;</span><br><span class="line">    array = <span class="keyword">new</span> <span class="keyword">long</span>[length];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">AtomicLongArray</span><span class="params">(<span class="keyword">long</span>[] array)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Visibility guaranteed by final field guarantees</span></span><br><span class="line">    <span class="keyword">this</span>.array = array.clone();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="C-关键的域"><a href="#C-关键的域" class="headerlink" title="C. 关键的域"></a>C. 关键的域</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">long</span>[] array;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Unsafe unsafe = Unsafe.getUnsafe();</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> base = unsafe.arrayBaseOffset(<span class="keyword">long</span>[].class);</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> shift;</span><br><span class="line"><span class="keyword">static</span> &#123;</span><br><span class="line">    <span class="keyword">int</span> scale = unsafe.arrayIndexScale(<span class="keyword">long</span>[].class);</span><br><span class="line">    <span class="keyword">if</span> ((scale &amp; (scale - <span class="number">1</span>)) != <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> Error(<span class="string">"data type scale not a power of two"</span>);</span><br><span class="line">    shift = <span class="number">31</span> - Integer.numberOfLeadingZeros(scale);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="D-API-1"><a href="#D-API-1" class="headerlink" title="D. API"></a>D. API</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">略。</span><br></pre></td></tr></table></figure>
+<h3 id="E-JDK8的增强-1"><a href="#E-JDK8的增强-1" class="headerlink" title="E. JDK8的增强"></a>E. JDK8的增强</h3><p>之前，<code>getAndAdd()</code>方法是：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">long</span> <span class="title">getAndAdd</span><span class="params">(<span class="keyword">int</span> i, <span class="keyword">long</span> delta)</span> </span>&#123;</span><br><span class="line">   <span class="keyword">long</span> offset = checkedByteOffset(i);</span><br><span class="line">   <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">       <span class="keyword">long</span> current = getRaw(offset);</span><br><span class="line">       <span class="keyword">if</span> (compareAndSetRaw(offset, current, current + delta))</span><br><span class="line">           <span class="keyword">return</span> current;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>jdk8中，<code>getAndAdd()</code>方法是这样的：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">long</span> <span class="title">getAndAdd</span><span class="params">(<span class="keyword">int</span> i, <span class="keyword">long</span> delta)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> unsafe.getAndAddLong(array, checkedByteOffset(i), delta);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="3-AtomicReference"><a href="#3-AtomicReference" class="headerlink" title="3. AtomicReference"></a>3. AtomicReference</h2><p><code>AtomicReference</code>是作用是对”对象”进行原子操作。<code>AtomicStampedReference&lt;V&gt;</code>是用来解决CAS-ABA问题的方案，它通过包装[V,int]的<code>Pair&lt;T&gt;</code>来对对象标记版本戳stamp，从而避免ABA问题。<code>AtomicStampedReference</code>可以知道，引用变量中途被更改了几次。有时候，我们并不关心引用变量更改了几次，只是单纯的关心是否更改过，所以就有了<code>AtomicMarkableReference</code>，它包装的是[V, boolean]的元组。</p>
+<h3 id="A-继承结构-2"><a href="#A-继承结构-2" class="headerlink" title="A. 继承结构"></a>A. 继承结构</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> java.util.concurrent.atomic;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AtomicReference</span>&lt;<span class="title">V</span>&gt; <span class="keyword">implements</span> <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span> </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="B-构造函数-1"><a href="#B-构造函数-1" class="headerlink" title="B. 构造函数"></a>B. 构造函数</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">AtomicReference</span><span class="params">(V initialValue)</span> </span>&#123;</span><br><span class="line">    value = initialValue;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 初始值是null</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">AtomicReference</span><span class="params">()</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="C-重要的域"><a href="#C-重要的域" class="headerlink" title="C. 重要的域"></a>C. 重要的域</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">volatile</span> V value;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Unsafe unsafe = Unsafe.getUnsafe();</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> valueOffset;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        valueOffset = unsafe.objectFieldOffset(AtomicReference.class.getDeclaredField(<span class="string">"value"</span>));</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception ex) &#123; <span class="keyword">throw</span> <span class="keyword">new</span> Error(ex); &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="D-API-2"><a href="#D-API-2" class="headerlink" title="D. API"></a>D. API</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">略。</span><br></pre></td></tr></table></figure>
+<h3 id="E-JDK8的增强-2"><a href="#E-JDK8的增强-2" class="headerlink" title="E. JDK8的增强"></a>E. JDK8的增强</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> V <span class="title">getAndSet</span><span class="params">(V newValue)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (V)unsafe.getAndSetObject(<span class="keyword">this</span>, valueOffset, newValue);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="4-FieldUpdater"><a href="#4-FieldUpdater" class="headerlink" title="4. FieldUpdater"></a>4. FieldUpdater</h2><p><code>AtomicIntegerFieldUpdater</code>、<code>AtomicLongFieldUpdater</code>和<code>AtomicReferenceFieldUpdater</code>这3个修改类的成员的原子类型的原理和用法相似，它们是三个抽象类，基于反射原理实现对类的对应类型的<code>volatile</code>成员进行原子更新。</p>
+<h2 id="5-JDK8新增的类"><a href="#5-JDK8新增的类" class="headerlink" title="5. JDK8新增的类"></a>5. JDK8新增的类</h2><p>jdk8的<code>java.util.concurrent.atomic</code>包新增了以下类：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Striped64</span> <span class="keyword">extends</span> <span class="title">Number</span></span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LongAdder</span> <span class="keyword">extends</span> <span class="title">Striped64</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LongAccumulator</span> <span class="keyword">extends</span> <span class="title">Striped64</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DoubleAdder</span> <span class="keyword">extends</span> <span class="title">Striped64</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DoubleAccumulator</span> <span class="keyword">extends</span> <span class="title">Striped64</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>唯一会制约<code>AtomicLong</code>高效的原因是高并发，高并发意味着CAS的失败几率更高，重试次数更多，越多线程重试，CAS失败几率又越高，变成恶性循环，<code>AtomicLong</code>效率降低。<code>LongAdder</code>给了我们一个非常直接的解决方案: 减少并发，将单一value的更新压力分担到多个value中去，降低单个value的 “热度”，分段更新。这样，线程数再多也会分担到多个value上去更新，只需要增加value就可以降低 value的 “热度”，<code>AtomicLong</code>中的恶性循环就解决了。cells就是这个 “段” ，cell中的value就是存放更新值的，这样当需要总数时，把cells中的value都累加一下就可以了。 即<code>LongAdder</code>类在高并发时会将对单一变量的CAS操作分散为对数组cells中多个元素的CAS操作，取值时进行求和。<br><code>casBase</code>操作保证了在低并发时，不会立即进入分支做分段更新操作，因为低并发时，<code>casBase</code>操作基本都会成功，只有并发高到一定程度了，才会进入分支，所以，Doug Lead对该类的说明是：低并发时<code>LongAdder</code>和<code>AtomicLong</code>性能差不多，高并发时<code>LongAdder</code>更高效！<br>关于性能评估，可以参见：<a href="http://blog.palominolabs.com/2014/02/10/java-8-performance-improvements-longadder-vs-atomiclong/" target="_blank" rel="noopener">Java 8 Performance Improvements: LongAdder vs AtomicLong</a>。    </p>
+<p><code>LongAdder</code>类是<code>LongAccumulator</code>的一个特例，<code>LongAccumulator</code>提供了比<code>LongAdder</code>更强大的功能。<code>LongAccumulator</code>相比于<code>LongAdder</code>可以提供累加器初始非0值，后者只能默认为0，另外前者还可以指定累加规则(比如不是累加而是相乘，只需要构造<code>LongAccumulator</code>时候传入自定义运算器就OK)，后者则内置累加的规则。  </p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java并发/" rel="tag"># Java并发</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/06/02/java/并发/Java并发02 基本概念/" rel="next" title="Java并发02 基本概念">
+                <i class="fa fa-chevron-left"></i> Java并发02 基本概念
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/06/05/java/并发/Java并发04 synchronized & volatile/" rel="prev" title="Java并发04 synchronized & volatile">
+                Java并发04 synchronized & volatile <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/uploads/avatar.gif" alt="Javior Wang">
+            
+              <p class="site-author-name" itemprop="name">Javior Wang</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">29</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">15</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/scorego" title="GitHub &rarr; https://github.com/scorego" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://www.zhihu.com/people/scorego-6" title="Zhihu &rarr; https://www.zhihu.com/people/scorego-6" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>Zhihu</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-AtomicLong"><span class="nav-text">1. AtomicLong</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-继承结构"><span class="nav-text">A. 继承结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-构造函数"><span class="nav-text">B. 构造函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C-主要的域"><span class="nav-text">C. 主要的域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#D-API"><span class="nav-text">D. API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#E-JDK8的增强"><span class="nav-text">E. JDK8的增强</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-AtomicLongArray"><span class="nav-text">2. AtomicLongArray</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-继承结构-1"><span class="nav-text">A. 继承结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-构造方法"><span class="nav-text">B. 构造方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C-关键的域"><span class="nav-text">C. 关键的域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#D-API-1"><span class="nav-text">D. API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#E-JDK8的增强-1"><span class="nav-text">E. JDK8的增强</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-AtomicReference"><span class="nav-text">3. AtomicReference</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-继承结构-2"><span class="nav-text">A. 继承结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-构造函数-1"><span class="nav-text">B. 构造函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C-重要的域"><span class="nav-text">C. 重要的域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#D-API-2"><span class="nav-text">D. API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#E-JDK8的增强-2"><span class="nav-text">E. JDK8的增强</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-FieldUpdater"><span class="nav-text">4. FieldUpdater</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-JDK8新增的类"><span class="nav-text">5. JDK8新增的类</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Javior Wang</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -335,7 +335,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="javior.wang/2019/06/04/java/并发/Java并发03 Synchronized和volatile/">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/06/05/java/并发/Java并发04 synchronized & volatile/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Javior Wang">
@@ -355,7 +355,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/06/04/java/并发/Java并发03 Synchronized和volatile/" class="post-title-link" itemprop="url">Java并发03 Synchronized和volatile</a>
+                <a href="/2019/06/05/java/并发/Java并发04 synchronized & volatile/" class="post-title-link" itemprop="url">Java并发04 synchronized & volatile</a>
               
             
           </h1>
@@ -380,7 +380,7 @@
                 
               
 
-              <time title="创建时间：2019-06-04 14:51:23 / 修改时间：14:52:23" itemprop="dateCreated datePublished" datetime="2019-06-04T14:51:23+08:00">2019-06-04</time>
+              <time title="创建时间：2019-06-05 14:23:41 / 修改时间：14:33:34" itemprop="dateCreated datePublished" datetime="2019-06-05T14:23:41+08:00">2019-06-05</time>
             
 
             
@@ -440,13 +440,201 @@
         
           
             <p>
-              1. Synchronized2. volatile
-              
+              1. synchronizedJava每个对象都有一个内部锁。将实例方法声明为synchronized，获得的是实例对象的锁；将静态方法声明为synchronized，获得的是类对象的内部锁；将代码块声明为synchronized，获得的是指定对象的锁。  
+当一个线程访问“某对象”的“synchronized方法”或者“synchronized代码块”时，其他线程对“该对象”的该“synchronized方法”或者“synchronized代码块”的访问将被阻塞。当一个线程访问“某对象”的“synchronized方法”或者“synchronized代码块”时，其他线程仍然可以访问“该对象”
+              ...
             </p>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2019/06/04/java/并发/Java并发03 Synchronized和volatile/#more" rel="contents">
+              <a class="btn" href="/2019/06/05/java/并发/Java并发04 synchronized & volatile/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/06/04/java/并发/Java并发03 Atomic原子操作类/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Javior Wang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Javior's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/06/04/java/并发/Java并发03 Atomic原子操作类/" class="post-title-link" itemprop="url">Java并发03 Atomic原子操作类</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-06-04 14:51:23" itemprop="dateCreated datePublished" datetime="2019-06-04T14:51:23+08:00">2019-06-04</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-06-05 14:32:17" itemprop="dateModified" datetime="2019-06-05T14:32:17+08:00">2019-06-05</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Java并发/" itemprop="url" rel="index"><span itemprop="name">Java并发</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>
+              java.util.concurrent.atomic包是一个支持在单个变量上的lock-free和thread-safe编程的工具包。本质上，这个包中的类将volatile值、字段和数组元素的概念应用到到提供如下形式的原子条件更新操作：boolean compareAndSet(expectedValue, updateValue);
+根据修改的数据类型，可以将java.util.concurrent.atomic包中的原子操作类可以分为4类。
+
+基本类型: AtomicInteger, AtomicLong, AtomicBoolean ;
+数组类型: AtomicIntegerArray
+              ...
+            </p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/06/04/java/并发/Java并发03 Atomic原子操作类/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -2004,198 +2192,6 @@ ArrayList实现了
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="javior.wang/2019/05/28/java/集合/Java集合(一) 综述/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Javior Wang">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Javior's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/05/28/java/集合/Java集合(一) 综述/" class="post-title-link" itemprop="url">Java集合(一) 综述</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-05-28 20:34:44" itemprop="dateCreated datePublished" datetime="2019-05-28T20:34:44+08:00">2019-05-28</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-06-03 19:45:56" itemprop="dateModified" datetime="2019-06-03T19:45:56+08:00">2019-06-03</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Java集合/" itemprop="url" rel="index"><span itemprop="name">Java集合</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>
-              
-根据jdk1.8整理一下Java的集合类。
-
-一、 Java集合结构图      
-
-
-java.util.*包提供了一些集合类，包含了常用的数据结构：集合、链表、队列、栈、数组、映射等，这些集合类又被称为容器。集合类与数组的不同是：数组的长度是固定的，集合的长度是可变的；数组用来存放基本类型的数据，集合用来存放对象的引用。Java集合的主干可以划分为4部分：List(列表)、Set(集合)、Map(映射)、工具类(Iterator迭代器、Enumeration枚举类、Arrays和Collections)。  
-对于框架图，先抓主干：Collection和Map。
-
-Collection是
-              ...
-            </p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/05/28/java/集合/Java集合(一) 综述/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2244,7 +2240,7 @@ Collection是
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">28</span>
+                    <span class="site-state-item-count">29</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

@@ -94,18 +94,18 @@
 
 
 
-  <meta name="description" content="1. Synchronized2. volatile">
+  <meta name="description" content="1. synchronizedJava每个对象都有一个内部锁。将实例方法声明为synchronized，获得的是实例对象的锁；将静态方法声明为synchronized，获得的是类对象的内部锁；将代码块声明为synchronized，获得的是指定对象的锁。   当一个线程访问“某对象”的“synchronized方法”或者“synchronized代码块”时，其他线程对“该对象”的该“synchro">
 <meta name="keywords" content="Java并发">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java并发03 Synchronized和volatile">
-<meta property="og:url" content="javior.wang/2019/06/04/java/并发/Java并发03 Synchronized和volatile/index.html">
+<meta property="og:title" content="Java并发04 synchronized &amp; volatile">
+<meta property="og:url" content="javior.wang/2019/06/05/java/并发/Java并发04 synchronized & volatile/index.html">
 <meta property="og:site_name" content="Javior&#39;s Blog">
-<meta property="og:description" content="1. Synchronized2. volatile">
+<meta property="og:description" content="1. synchronizedJava每个对象都有一个内部锁。将实例方法声明为synchronized，获得的是实例对象的锁；将静态方法声明为synchronized，获得的是类对象的内部锁；将代码块声明为synchronized，获得的是指定对象的锁。   当一个线程访问“某对象”的“synchronized方法”或者“synchronized代码块”时，其他线程对“该对象”的该“synchro">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-06-04T06:52:23.550Z">
+<meta property="og:updated_time" content="2019-06-05T06:33:34.927Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java并发03 Synchronized和volatile">
-<meta name="twitter:description" content="1. Synchronized2. volatile">
+<meta name="twitter:title" content="Java并发04 synchronized &amp; volatile">
+<meta name="twitter:description" content="1. synchronizedJava每个对象都有一个内部锁。将实例方法声明为synchronized，获得的是实例对象的锁；将静态方法声明为synchronized，获得的是类对象的内部锁；将代码块声明为synchronized，获得的是指定对象的锁。   当一个线程访问“某对象”的“synchronized方法”或者“synchronized代码块”时，其他线程对“该对象”的该“synchro">
 
 
 
@@ -113,7 +113,7 @@
 
   
   
-  <link rel="canonical" href="javior.wang/2019/06/04/java/并发/Java并发03 Synchronized和volatile/">
+  <link rel="canonical" href="javior.wang/2019/06/05/java/并发/Java并发04 synchronized & volatile/">
 
 
 
@@ -123,7 +123,7 @@
   };
 </script>
 
-  <title>Java并发03 Synchronized和volatile | Javior's Blog</title>
+  <title>Java并发04 synchronized & volatile | Javior's Blog</title>
   
 
 
@@ -339,7 +339,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="javior.wang/2019/06/04/java/并发/Java并发03 Synchronized和volatile/">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/06/05/java/并发/Java并发04 synchronized & volatile/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Javior Wang">
@@ -356,7 +356,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Java并发03 Synchronized和volatile
+          <h1 class="post-title" itemprop="name headline">Java并发04 synchronized & volatile
 
               
             
@@ -382,7 +382,7 @@
                 
               
 
-              <time title="创建时间：2019-06-04 14:51:23 / 修改时间：14:52:23" itemprop="dateCreated datePublished" datetime="2019-06-04T14:51:23+08:00">2019-06-04</time>
+              <time title="创建时间：2019-06-05 14:23:41 / 修改时间：14:33:34" itemprop="dateCreated datePublished" datetime="2019-06-05T14:23:41+08:00">2019-06-05</time>
             
 
             
@@ -439,7 +439,16 @@
       
 
       
-        <h2 id="1-Synchronized"><a href="#1-Synchronized" class="headerlink" title="1. Synchronized"></a>1. Synchronized</h2><h2 id="2-volatile"><a href="#2-volatile" class="headerlink" title="2. volatile"></a>2. volatile</h2>
+        <h2 id="1-synchronized"><a href="#1-synchronized" class="headerlink" title="1. synchronized"></a>1. synchronized</h2><p>Java每个对象都有一个内部锁。<br>将实例方法声明为<code>synchronized</code>，获得的是实例对象的锁；<br>将静态方法声明为<code>synchronized</code>，获得的是类对象的内部锁；<br>将代码块声明为<code>synchronized</code>，获得的是指定对象的锁。  </p>
+<p>当一个线程访问“某对象”的“synchronized方法”或者“synchronized代码块”时，其他线程对“该对象”的该“synchronized方法”或者“synchronized代码块”的访问将被阻塞。<br>当一个线程访问“某对象”的“synchronized方法”或者“synchronized代码块”时，其他线程仍然可以访问“该对象”的非同步代码块。<br>当一个线程访问“某对象”的“synchronized方法”或者“synchronized代码块”时，其他线程对“该对象”的其他的“synchronized方法”或者“synchronized代码块”的访问将被阻塞。  </p>
+<blockquote>
+<p>Each object is associated with a monitor. A monitor is locked if and only if it has an owner. The thread that executes monitorenter attempts to gain ownership of the monitor associated with objectref, as follows:<br>• If the entry count of the monitor associated with objectref is zero, the thread enters the monitor and sets its entry count to one. The thread is then the owner of the monitor.<br>• If the thread already owns the monitor associated with objectref, it reenters the monitor, incrementing its entry count.<br>• If another thread already owns the monitor associated with objectref, the thread blocks until the monitor’s entry count is zero, then tries again to gain ownership.</p>
+</blockquote>
+<blockquote>
+<p>The thread that executes monitorexit must be the owner of the monitor associated with the instance referenced by objectref.<br>The thread decrements the entry count of the monitor associated with objectref. If as a result the value of the entry count is zero, the thread exits the monitor and is no longer its owner. Other threads that are blocking to enter the monitor are allowed to attempt to do so.</p>
+</blockquote>
+<p><code>synchronized</code>是通过对象的监视器(monitor)来实现的，监视器本质又是依赖于底层的操作系统的Mutex Lock来实现的，操作系统的实现需要从用户态转换到核心态，这个成本非常高，状态之间的转换需要相对比较长的时间，这就是为什么<code>synchronized</code>效率低的原因。因此，这种依赖于操作系统Mutex Lock所实现的锁我们称之为“重量级锁”。JDK中对<code>synchronized</code>做的种种优化，其核心都是为了减少这种重量级锁的使用。JDK1.6以后，为了减少获得锁和释放锁所带来的性能消耗，提高性能，引入了“轻量级锁”和“偏向锁”。</p>
+<h3 id="A-偏向锁"><a href="#A-偏向锁" class="headerlink" title="A. 偏向锁"></a>A. 偏向锁</h3>
       
     </div>
 
@@ -475,8 +484,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/06/02/java/并发/Java并发02 基本概念/" rel="next" title="Java并发02 基本概念">
-                <i class="fa fa-chevron-left"></i> Java并发02 基本概念
+              <a href="/2019/06/04/java/并发/Java并发03 Atomic原子操作类/" rel="next" title="Java并发03 Atomic原子操作类">
+                <i class="fa fa-chevron-left"></i> Java并发03 Atomic原子操作类
               </a>
             
           </div>
@@ -554,7 +563,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">28</span>
+                    <span class="site-state-item-count">29</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -702,7 +711,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Synchronized"><span class="nav-text">1. Synchronized</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-volatile"><span class="nav-text">2. volatile</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-synchronized"><span class="nav-text">1. synchronized</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-偏向锁"><span class="nav-text">A. 偏向锁</span></a></li></ol></li></ol></div>
             
 
           </div>

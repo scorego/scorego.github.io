@@ -108,7 +108,7 @@
 <meta property="og:image" content="/images/java/concurrent/04_04javamemorymodel.jpg">
 <meta property="og:image" content="/images/java/concurrent/04_05jmm&hardware.jpg">
 <meta property="og:image" content="/images/java/concurrent/04_06volatile.png">
-<meta property="og:updated_time" content="2019-06-05T11:20:15.204Z">
+<meta property="og:updated_time" content="2019-06-05T11:22:51.083Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java并发04 synchronized &amp; volatile">
 <meta name="twitter:description" content="Synchronization - OpenJDK WiKiEliminating Synchronization-Related Atomic Operations with Biased Locking and Bulk RebiasingMemory Model - Java Language Specification    1. synchronized Each object is">
@@ -389,7 +389,7 @@
                 
               
 
-              <time title="创建时间：2019-06-05 14:23:41 / 修改时间：19:20:15" itemprop="dateCreated datePublished" datetime="2019-06-05T14:23:41+08:00">2019-06-05</time>
+              <time title="创建时间：2019-06-05 14:23:41 / 修改时间：19:22:51" itemprop="dateCreated datePublished" datetime="2019-06-05T14:23:41+08:00">2019-06-05</time>
             
 
             
@@ -630,7 +630,7 @@
 <div align="center"><br>      <img src="/images/java/concurrent/04_06volatile.png" width="800" height="800"><br></div>
 
 <p>从编译器重排序规则和处理器内存屏障插入策略来看，只要<code>volatile</code>变量与普通变量之间的重排序可能会破坏<code>volatile</code>的内存语义(内存可见性)，这种重排序就会被编译器重排序规则和处理器内存屏障插入策略禁止。  </p>
-<p><code>volatile</code>不能保证原子性。对任意单个<code>volatile</code>变量的读/写具有原子性，但类似于<code>volatile++</code>这种复合操作不具有原子性，因为本质上<code>volatile++</code>是读、写两次操作，此时可以使用锁以及JUC包。</p>
+<h3 id="C-无法保证原子性"><a href="#C-无法保证原子性" class="headerlink" title="C. 无法保证原子性"></a>C. 无法保证原子性</h3><p><code>volatile</code>不能保证原子性。对任意单个<code>volatile</code>变量的读/写具有原子性，但类似于<code>volatile++</code>这种复合操作不具有原子性，因为本质上<code>volatile++</code>是读、写两次操作，此时可以使用锁以及JUC包。</p>
 <hr>
 <p>Reference  </p>
 <p><a href="https://blog.dreamtobe.cn/2015/11/13/java_synchronized/" target="_blank" rel="noopener">Java Synchronised机制</a><br><a href="https://mp.weixin.qq.com/s?__biz=MzI3NzM2OTQ5Mg==&amp;mid=2247484289&amp;idx=1&amp;sn=bdf6721e01c613bfb1458a8584e80800&amp;chksm=eb66047adc118d6c395c14e5b953686bfdfac93fd6fa8c0731bb89aadd7437bba800d034659d&amp;scene=21#wechat_redirect" target="_blank" rel="noopener">volatile原理总结</a></p>
@@ -897,7 +897,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-synchronized"><span class="nav-text">1. synchronized</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-锁对象"><span class="nav-text">A. 锁对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-偏向锁"><span class="nav-text">B. 偏向锁</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#锁膨胀"><span class="nav-text">锁膨胀</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#锁撤销"><span class="nav-text">锁撤销</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C-轻量级锁"><span class="nav-text">C. 轻量级锁</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#自旋锁"><span class="nav-text">自旋锁</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#自适应自旋锁"><span class="nav-text">自适应自旋锁</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#D-重量级锁"><span class="nav-text">D. 重量级锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#E-一些其他优化机制"><span class="nav-text">E. 一些其他优化机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#锁消除"><span class="nav-text">锁消除</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#锁粗化"><span class="nav-text">锁粗化</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-volatile"><span class="nav-text">2. volatile</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-Java内存模型"><span class="nav-text">A. Java内存模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-volatile语义"><span class="nav-text">B. volatile语义</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#语义一：可见性"><span class="nav-text">语义一：可见性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#语义二：禁止指令重排序"><span class="nav-text">语义二：禁止指令重排序</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-synchronized"><span class="nav-text">1. synchronized</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-锁对象"><span class="nav-text">A. 锁对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-偏向锁"><span class="nav-text">B. 偏向锁</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#锁膨胀"><span class="nav-text">锁膨胀</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#锁撤销"><span class="nav-text">锁撤销</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C-轻量级锁"><span class="nav-text">C. 轻量级锁</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#自旋锁"><span class="nav-text">自旋锁</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#自适应自旋锁"><span class="nav-text">自适应自旋锁</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#D-重量级锁"><span class="nav-text">D. 重量级锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#E-一些其他优化机制"><span class="nav-text">E. 一些其他优化机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#锁消除"><span class="nav-text">锁消除</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#锁粗化"><span class="nav-text">锁粗化</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-volatile"><span class="nav-text">2. volatile</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-Java内存模型"><span class="nav-text">A. Java内存模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-volatile语义"><span class="nav-text">B. volatile语义</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#语义一：可见性"><span class="nav-text">语义一：可见性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#语义二：禁止指令重排序"><span class="nav-text">语义二：禁止指令重排序</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C-无法保证原子性"><span class="nav-text">C. 无法保证原子性</span></a></li></ol></li></ol></div>
             
 
           </div>

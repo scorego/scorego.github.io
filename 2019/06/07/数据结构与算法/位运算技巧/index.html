@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next mist" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/favicon-128x128-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-01.ico?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/uploads/favicon-128x128-01.ico?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="由于位运算直接对内存数据进行操作，因此非常高效。另外一些位运算也十分赏心悦目，因此总结了一些常用的位运算技巧笔记。 位运算基础 与运算 &amp;amp;与运算符&amp;amp;是双目运算符。只有对应的两个二进制位都是1时，结果位才是1,；否则是0.    或运算 |或运算符是双目运算符。只要对应的两个二进制位有一个为1时，结果位就是1；否则是0。    非运算 ~非运算符~是单目运算符。功能是按位取反。">
+<meta name="keywords" content="位运算">
+<meta property="og:type" content="article">
+<meta property="og:title" content="位运算技巧">
+<meta property="og:url" content="javior.wang/2019/06/07/数据结构与算法/位运算技巧/index.html">
+<meta property="og:site_name" content="Javior&#39;s Blog">
+<meta property="og:description" content="由于位运算直接对内存数据进行操作，因此非常高效。另外一些位运算也十分赏心悦目，因此总结了一些常用的位运算技巧笔记。 位运算基础 与运算 &amp;amp;与运算符&amp;amp;是双目运算符。只有对应的两个二进制位都是1时，结果位才是1,；否则是0.    或运算 |或运算符是双目运算符。只要对应的两个二进制位有一个为1时，结果位就是1；否则是0。    非运算 ~非运算符~是单目运算符。功能是按位取反。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-06-07T14:59:42.835Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="位运算技巧">
+<meta name="twitter:description" content="由于位运算直接对内存数据进行操作，因此非常高效。另外一些位运算也十分赏心悦目，因此总结了一些常用的位运算技巧笔记。 位运算基础 与运算 &amp;amp;与运算符&amp;amp;是双目运算符。只有对应的两个二进制位都是1时，结果位才是1,；否则是0.    或运算 |或运算符是双目运算符。只要对应的两个二进制位有一个为1时，结果位就是1；否则是0。    非运算 ~非运算符~是单目运算符。功能是按位取反。">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="javior.wang/2019/06/07/数据结构与算法/位运算技巧/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>位运算技巧 | Javior's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Javior's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/06/07/数据结构与算法/位运算技巧/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Javior Wang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Javior's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">位运算技巧
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-06-07 22:58:41 / 修改时间：22:59:42" itemprop="dateCreated datePublished" datetime="2019-06-07T22:58:41+08:00">2019-06-07</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/数据结构与算法/" itemprop="url" rel="index"><span itemprop="name">数据结构与算法</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>由于位运算直接对内存数据进行操作，因此非常高效。另外一些位运算也十分赏心悦目，因此总结了一些常用的位运算技巧笔记。</p>
+<h2 id="位运算基础"><a href="#位运算基础" class="headerlink" title="位运算基础"></a>位运算基础</h2><ul>
+<li><p>与运算 <code>&amp;</code><br>与运算符&amp;是双目运算符。只有对应的两个二进制位都是1时，结果位才是1,；否则是0.  </p>
+</li>
+<li><p>或运算 <code>|</code><br>或运算符是双目运算符。只要对应的两个二进制位有一个为1时，结果位就是1；否则是0。  </p>
+</li>
+<li><p>非运算 <code>~</code><br>非运算符<code>~</code>是单目运算符。功能是按位取反。  </p>
+</li>
+<li><p>异或 <code>^</code><br>异或运算符^是双目运算符。对应的两个二进制位相同为0，相异为1。  </p>
+</li>
+<li><p>左移<code>&lt;&lt;</code>、右移<code>&gt;&gt;</code>(一些语言包括无符号右移<code>&gt;&gt;&gt;</code>)<br>左移就是向左移动k位，丢弃掉最高的k位，并在右端补0。也就是当前值乘以2的k次方。<br>右移分逻辑右移和算术右移。逻辑右移补0，算术右移补符号位。  </p>
+</li>
+</ul>
+<h2 id="1-消去x的二进制中最后一个1"><a href="#1-消去x的二进制中最后一个1" class="headerlink" title="1. 消去x的二进制中最后一个1"></a>1. 消去x的二进制中最后一个1</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x &amp;= (x - <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<p>e.x. 10的二进制是1010， <code>1010 &amp; 1001 = 1000</code>.</p>
+<ul>
+<li><p>a. 可以用来检测一个数是不是2的幂<br>如果一个数是2的幂，那么<code>x &gt; 0</code>且<code>x</code>的二进制数中只有一个1，所以<code>x &amp; (x - 1)</code>应该返回0.  </p>
+</li>
+<li><p>b. 用来计算一个整数的二进制中1的个数<br>因为1可以不断的通过<code>x &amp; (x - 1)</code>消去，所以当最后的值变成0的时候，也就求出了二进制中1的个数.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> cnt = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">while</span> (n)&#123;</span><br><span class="line">    cnt++;</span><br><span class="line">    n &amp;= (n - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> cnt;</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line">- c. 如果将整数A转换成整数B，需要改变多少个比特位   </span><br><span class="line">也就是计算`A ^ B`中的二进制数中共有多少个<span class="number">1.</span></span><br><span class="line"></span><br><span class="line">## <span class="number">2.</span> 其他常用操作</span><br><span class="line"></span><br><span class="line">|         功能          |        位运算         |           示例           |</span><br><span class="line">|:---------------------:|:---------------------:|:------------------------:|</span><br><span class="line">|      最后加一位<span class="number">0</span>      |       `x &lt;&lt; <span class="number">1</span>`        |                          |</span><br><span class="line">|      最后加一位<span class="number">1</span>      |    `(x &lt;&lt; <span class="number">1</span>) + <span class="number">1</span>`     |                          |</span><br><span class="line">|    把最后一位变成<span class="number">1</span>    |       ` x <span class="keyword">or</span> <span class="number">1</span>`       |                          |</span><br><span class="line">|    把最后一位变成<span class="number">0</span>    |     `x <span class="keyword">or</span> <span class="number">1</span> - <span class="number">1</span>`      |                          |</span><br><span class="line">|    把最后一位取反     |        `x ^ <span class="number">1</span>`        |                          |</span><br><span class="line">|   把右数第k位变为1    | `x or (1 &lt;&lt; (k - 1))` |                          |</span><br><span class="line">|        取末k位        | `x &amp; ((<span class="number">1</span> &lt;&lt; k) - <span class="number">1</span>))` |                          |</span><br><span class="line">|  把右边连续的<span class="number">1</span>变为<span class="number">0</span>   |     `x &amp; (x + <span class="number">1</span>)`     | `(<span class="number">100101111</span>-&gt;<span class="number">100100000</span>)` |</span><br><span class="line">|  把右起第一个0变为1   |    `x or (x + 1)`     | `(100101111-&gt;100111111)` |</span><br><span class="line">|  把右边连续的0变为1   |    `x or (x - 1)`     |                          |</span><br><span class="line">|     取右边连续的<span class="number">1</span>     | `(x ^ (x + <span class="number">1</span>) &gt;&gt; <span class="number">1</span>)`  |                          |</span><br><span class="line">| 去掉右起第一个<span class="number">1</span>的左边 |  `x &amp; (x ^ (x - <span class="number">1</span>))`  |          &amp;nbsp;          |</span><br><span class="line"></span><br><span class="line">## <span class="number">3.</span> 利用二进制来枚举子集</span><br><span class="line"></span><br><span class="line">子集的概念： 如果集合A的任意一个元素都是集合B的元素，那么集合A称为集合B的子集。   </span><br><span class="line">在写程序的时候，有时候我们可能需要暴力枚举出所有的情况，这时可以考虑通过二进制来枚举子集来尝试解决问题。  </span><br><span class="line">示例：  </span><br><span class="line">假设我们现在有<span class="number">5</span>个小球，上面分别标号了<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>代表这些小球的权值,求出这些小球的权值可以组成的所有情况。  </span><br><span class="line">我们可以用<span class="number">5</span>个比特位来表示这种情况，如果小球全部选择的话那么二进制表示就是`<span class="number">11111</span>`，二进制的`<span class="number">11111</span>`转化为十进制数字就是<span class="number">31</span>，这个数字正好就是`<span class="number">2</span> ^ <span class="number">5</span> - <span class="number">1</span>`，那么我们可以用从`<span class="number">0</span> ~ (<span class="number">2</span> ^ <span class="number">5</span>−<span class="number">1</span>)`这些数表示完所有的选取状态(因为这个范围内的二进制数情况正好包括了这些选取状况)。  </span><br><span class="line">```c++</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n = <span class="number">5</span>;  <span class="comment">//5个小球</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; (<span class="number">1</span> &lt;&lt; n); i++)  <span class="comment">//从0 ～ 2 ^ 5-1个状态</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; j++)     <span class="comment">//遍历二进制的每一位</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (i &amp; (<span class="number">1</span> &lt;&lt; j))   <span class="comment">//判断二进制第j位是否存在</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">"%d "</span>,j);    <span class="comment">//如果存在输出第j个元素</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="4-一些经典应用"><a href="#4-一些经典应用" class="headerlink" title="4. 一些经典应用"></a>4. 一些经典应用</h2><ul>
+<li><p><code>i + (~i) = -1</code><br><code>i</code>取反再与<code>i</code>相加，相当于把所有二进制位设为1，其十进制结果为-1。  </p>
+</li>
+<li><p>计算<code>n + 1</code> 和 <code>n - 1</code><br><code>-~n == n + 1</code>，<code>~n</code>为其取反，负号<code>-</code>再对其取反并加1。<br><code>~-n == n - 1</code>，思路就是找到最低位的第一个1，对其取反并把该位后的所有位也取反，即<code>01001000</code>变为<code>01000111</code>。</p>
+</li>
+<li><p>取相反数<br>思路就是取反并加1，也即 <code>~n + 1</code>或者<code>(n ^ -1) + 1</code>。  </p>
+</li>
+<li><p><code>if(x == a) x = b; if(x == b) x = a</code><br>利用<code>^</code>运算符的性质，即得<code>x = a ^ b ^ x</code>。  </p>
+</li>
+<li><p>n倍数补全<br>当n为2的幂时，<code>(x + n - 1) &amp; ~(n - 1)</code>会找到第一个大于x的数，且它正好是n的整数倍。  </p>
+</li>
+<li><p>判断二进制中1的奇偶性   </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">x = x ^ (x &gt;&gt; <span class="number">1</span>);</span><br><span class="line">x = x ^ (x &gt;&gt; <span class="number">2</span>);</span><br><span class="line">x = x ^ (x &gt;&gt; <span class="number">4</span>);</span><br><span class="line">x = x ^ (x &gt;&gt; <span class="number">8</span>);</span><br><span class="line">x = x ^ (x &gt;&gt; <span class="number">16</span>);  </span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; (x &amp; <span class="number">1</span>) &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// 输出 1 为奇数</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>判断奇偶性  </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 判断是否是奇数 */</span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">is_odd</span><span class="params">(<span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (n &amp; <span class="number">1</span> == <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>不用临时变量交换两个数  </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 此方法对 a 和 b 相等的情况不适用 */</span></span><br><span class="line">a ^= b;  </span><br><span class="line">b ^= a;  <span class="comment">// 相当于 b = b ^ ( a ^ b );</span></span><br><span class="line">a ^= b;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>取绝对值  </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 注意：以下的数字 31 是针对 int 大小为 32 而言 */</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">abs</span><span class="params">(<span class="keyword">int</span> n)</span></span>&#123;  </span><br><span class="line">    <span class="keyword">return</span> (n ^ (n &gt;&gt; <span class="number">31</span>)) - (n &gt;&gt; <span class="number">31</span>);  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>其中<code>n &gt;&gt; 31</code>取得n的正负号。<br>若n为正数，<code>n &gt;&gt; 31</code>的所有位等于0，其值等于0。表达式转化为<code>n ^ 0 - 0</code>，等于n；<br>若n为负数，<code>n &gt;&gt; 31</code>的所有位等于1，其值等于-1。表达式转化为<code>(n ^ -1) + 1</code>，这很好理解，负数的相反数就是对其补码取反再加1，<code>(n ^ -1) + 1</code>就是在做这样的事。  </p>
+<ul>
+<li><p>取两数的较大值  </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 注意：数字 31 是针对 int 大小为 32 而言 */</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">max</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (b &amp; ((a - b) &gt;&gt; <span class="number">31</span>)) | (a &amp; (~(a - b) &gt;&gt; <span class="number">31</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>判断符号是否相同  </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 若 x，y 都为 0，输出真；若只有一个为 0，不会报错但运行结果是错的，因为 0 没有正负之分 */</span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">is_same_sign</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (x ^ y) &gt;= <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>判断一个数是否是2的幂  </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">is_power_of_two</span><span class="params">(<span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (n &gt; <span class="number">0</span>) ? (n &amp; (n - <span class="number">1</span>)) == <span class="number">0</span> : <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>取余2的幂次方  </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 其中 m 为 2 的幂次方，并对 m 取余 */</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">mod</span><span class="params">(<span class="keyword">int</span> n, <span class="keyword">int</span> m)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> n &amp; (m - <span class="number">1</span>);  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/位运算/" rel="tag"># 位运算</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/06/05/java/并发/Java并发05 JUC包中的锁/" rel="next" title="Java并发05 JUC包中的锁">
+                <i class="fa fa-chevron-left"></i> Java并发05 JUC包中的锁
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/uploads/avatar.gif" alt="Javior Wang">
+            
+              <p class="site-author-name" itemprop="name">Javior Wang</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">31</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">16</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/scorego" title="GitHub &rarr; https://github.com/scorego" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://www.zhihu.com/people/scorego-6" title="Zhihu &rarr; https://www.zhihu.com/people/scorego-6" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>Zhihu</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#位运算基础"><span class="nav-text">位运算基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-消去x的二进制中最后一个1"><span class="nav-text">1. 消去x的二进制中最后一个1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-一些经典应用"><span class="nav-text">4. 一些经典应用</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Javior Wang</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

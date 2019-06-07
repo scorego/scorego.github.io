@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="Javior&#39;s Blog">
 <meta property="og:description" content="由于位运算直接对内存数据进行操作，因此非常高效。另外一些位运算也十分赏心悦目，因此总结了一些常用的位运算技巧笔记。 位运算基础 与运算 &amp;amp;与运算符&amp;amp;是双目运算符。只有对应的两个二进制位都是1时，结果位才是1,；否则是0.    或运算 |或运算符是双目运算符。只要对应的两个二进制位有一个为1时，结果位就是1；否则是0。    非运算 ~非运算符~是单目运算符。功能是按位取反。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-06-07T14:59:42.835Z">
+<meta property="og:updated_time" content="2019-06-07T15:04:31.660Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="位运算技巧">
 <meta name="twitter:description" content="由于位运算直接对内存数据进行操作，因此非常高效。另外一些位运算也十分赏心悦目，因此总结了一些常用的位运算技巧笔记。 位运算基础 与运算 &amp;amp;与运算符&amp;amp;是双目运算符。只有对应的两个二进制位都是1时，结果位才是1,；否则是0.    或运算 |或运算符是双目运算符。只要对应的两个二进制位有一个为1时，结果位就是1；否则是0。    非运算 ~非运算符~是单目运算符。功能是按位取反。">
@@ -382,7 +382,7 @@
                 
               
 
-              <time title="创建时间：2019-06-07 22:58:41 / 修改时间：22:59:42" itemprop="dateCreated datePublished" datetime="2019-06-07T22:58:41+08:00">2019-06-07</time>
+              <time title="创建时间：2019-06-07 22:58:41 / 修改时间：23:04:31" itemprop="dateCreated datePublished" datetime="2019-06-07T22:58:41+08:00">2019-06-07</time>
             
 
             
@@ -458,9 +458,83 @@
 <li><p>a. 可以用来检测一个数是不是2的幂<br>如果一个数是2的幂，那么<code>x &gt; 0</code>且<code>x</code>的二进制数中只有一个1，所以<code>x &amp; (x - 1)</code>应该返回0.  </p>
 </li>
 <li><p>b. 用来计算一个整数的二进制中1的个数<br>因为1可以不断的通过<code>x &amp; (x - 1)</code>消去，所以当最后的值变成0的时候，也就求出了二进制中1的个数.</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> cnt = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">while</span> (n)&#123;</span><br><span class="line">    cnt++;</span><br><span class="line">    n &amp;= (n - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> cnt;</span><br><span class="line">```  </span><br><span class="line"></span><br><span class="line">- c. 如果将整数A转换成整数B，需要改变多少个比特位   </span><br><span class="line">也就是计算`A ^ B`中的二进制数中共有多少个<span class="number">1.</span></span><br><span class="line"></span><br><span class="line">## <span class="number">2.</span> 其他常用操作</span><br><span class="line"></span><br><span class="line">|         功能          |        位运算         |           示例           |</span><br><span class="line">|:---------------------:|:---------------------:|:------------------------:|</span><br><span class="line">|      最后加一位<span class="number">0</span>      |       `x &lt;&lt; <span class="number">1</span>`        |                          |</span><br><span class="line">|      最后加一位<span class="number">1</span>      |    `(x &lt;&lt; <span class="number">1</span>) + <span class="number">1</span>`     |                          |</span><br><span class="line">|    把最后一位变成<span class="number">1</span>    |       ` x <span class="keyword">or</span> <span class="number">1</span>`       |                          |</span><br><span class="line">|    把最后一位变成<span class="number">0</span>    |     `x <span class="keyword">or</span> <span class="number">1</span> - <span class="number">1</span>`      |                          |</span><br><span class="line">|    把最后一位取反     |        `x ^ <span class="number">1</span>`        |                          |</span><br><span class="line">|   把右数第k位变为1    | `x or (1 &lt;&lt; (k - 1))` |                          |</span><br><span class="line">|        取末k位        | `x &amp; ((<span class="number">1</span> &lt;&lt; k) - <span class="number">1</span>))` |                          |</span><br><span class="line">|  把右边连续的<span class="number">1</span>变为<span class="number">0</span>   |     `x &amp; (x + <span class="number">1</span>)`     | `(<span class="number">100101111</span>-&gt;<span class="number">100100000</span>)` |</span><br><span class="line">|  把右起第一个0变为1   |    `x or (x + 1)`     | `(100101111-&gt;100111111)` |</span><br><span class="line">|  把右边连续的0变为1   |    `x or (x - 1)`     |                          |</span><br><span class="line">|     取右边连续的<span class="number">1</span>     | `(x ^ (x + <span class="number">1</span>) &gt;&gt; <span class="number">1</span>)`  |                          |</span><br><span class="line">| 去掉右起第一个<span class="number">1</span>的左边 |  `x &amp; (x ^ (x - <span class="number">1</span>))`  |          &amp;nbsp;          |</span><br><span class="line"></span><br><span class="line">## <span class="number">3.</span> 利用二进制来枚举子集</span><br><span class="line"></span><br><span class="line">子集的概念： 如果集合A的任意一个元素都是集合B的元素，那么集合A称为集合B的子集。   </span><br><span class="line">在写程序的时候，有时候我们可能需要暴力枚举出所有的情况，这时可以考虑通过二进制来枚举子集来尝试解决问题。  </span><br><span class="line">示例：  </span><br><span class="line">假设我们现在有<span class="number">5</span>个小球，上面分别标号了<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>代表这些小球的权值,求出这些小球的权值可以组成的所有情况。  </span><br><span class="line">我们可以用<span class="number">5</span>个比特位来表示这种情况，如果小球全部选择的话那么二进制表示就是`<span class="number">11111</span>`，二进制的`<span class="number">11111</span>`转化为十进制数字就是<span class="number">31</span>，这个数字正好就是`<span class="number">2</span> ^ <span class="number">5</span> - <span class="number">1</span>`，那么我们可以用从`<span class="number">0</span> ~ (<span class="number">2</span> ^ <span class="number">5</span>−<span class="number">1</span>)`这些数表示完所有的选取状态(因为这个范围内的二进制数情况正好包括了这些选取状况)。  </span><br><span class="line">```c++</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n = <span class="number">5</span>;  <span class="comment">//5个小球</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; (<span class="number">1</span> &lt;&lt; n); i++)  <span class="comment">//从0 ～ 2 ^ 5-1个状态</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; j++)     <span class="comment">//遍历二进制的每一位</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (i &amp; (<span class="number">1</span> &lt;&lt; j))   <span class="comment">//判断二进制第j位是否存在</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">"%d "</span>,j);    <span class="comment">//如果存在输出第j个元素</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> cnt = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">while</span> (n)&#123;</span><br><span class="line">    cnt++;</span><br><span class="line">    n &amp;= (n - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> cnt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>c. 如果将整数A转换成整数B，需要改变多少个比特位<br>也就是计算<code>A ^ B</code>中的二进制数中共有多少个1.</p>
 </li>
 </ul>
+<h2 id="2-其他常用操作"><a href="#2-其他常用操作" class="headerlink" title="2. 其他常用操作"></a>2. 其他常用操作</h2><table>
+<thead>
+<tr>
+<th style="text-align:center">功能</th>
+<th style="text-align:center">位运算</th>
+<th style="text-align:center">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">最后加一位0</td>
+<td style="text-align:center"><code>x &lt;&lt; 1</code></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">最后加一位1</td>
+<td style="text-align:center"><code>(x &lt;&lt; 1) + 1</code></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">把最后一位变成1</td>
+<td style="text-align:center"><code>x or 1</code></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">把最后一位变成0</td>
+<td style="text-align:center"><code>x or 1 - 1</code></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">把最后一位取反</td>
+<td style="text-align:center"><code>x ^ 1</code></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">把右数第k位变为1</td>
+<td style="text-align:center"><code>x or (1 &lt;&lt; (k - 1))</code></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">取末k位</td>
+<td style="text-align:center"><code>x &amp; ((1 &lt;&lt; k) - 1))</code></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">把右边连续的1变为0</td>
+<td style="text-align:center"><code>x &amp; (x + 1)</code></td>
+<td style="text-align:center"><code>(100101111-&gt;100100000)</code></td>
+</tr>
+<tr>
+<td style="text-align:center">把右起第一个0变为1</td>
+<td style="text-align:center"><code>x or (x + 1)</code></td>
+<td style="text-align:center"><code>(100101111-&gt;100111111)</code></td>
+</tr>
+<tr>
+<td style="text-align:center">把右边连续的0变为1</td>
+<td style="text-align:center"><code>x or (x - 1)</code></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">取右边连续的1</td>
+<td style="text-align:center"><code>(x ^ (x + 1) &gt;&gt; 1)</code></td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">去掉右起第一个1的左边</td>
+<td style="text-align:center"><code>x &amp; (x ^ (x - 1))</code></td>
+<td style="text-align:center">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-利用二进制来枚举子集"><a href="#3-利用二进制来枚举子集" class="headerlink" title="3. 利用二进制来枚举子集"></a>3. 利用二进制来枚举子集</h2><p>子集的概念： 如果集合A的任意一个元素都是集合B的元素，那么集合A称为集合B的子集。<br>在写程序的时候，有时候我们可能需要暴力枚举出所有的情况，这时可以考虑通过二进制来枚举子集来尝试解决问题。<br>示例：<br>假设我们现在有5个小球，上面分别标号了0,1,2,3,4代表这些小球的权值,求出这些小球的权值可以组成的所有情况。<br>我们可以用5个比特位来表示这种情况，如果小球全部选择的话那么二进制表示就是<code>11111</code>，二进制的<code>11111</code>转化为十进制数字就是31，这个数字正好就是<code>2 ^ 5 - 1</code>，那么我们可以用从<code>0 ~ (2 ^ 5−1)</code>这些数表示完所有的选取状态(因为这个范围内的二进制数情况正好包括了这些选取状况)。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n = <span class="number">5</span>;  <span class="comment">//5个小球</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; (<span class="number">1</span> &lt;&lt; n); i++)  <span class="comment">//从0 ～ 2 ^ 5-1个状态</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; j++)     <span class="comment">//遍历二进制的每一位</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (i &amp; (<span class="number">1</span> &lt;&lt; j))   <span class="comment">//判断二进制第j位是否存在</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">"%d "</span>,j);    <span class="comment">//如果存在输出第j个元素</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <h2 id="4-一些经典应用"><a href="#4-一些经典应用" class="headerlink" title="4. 一些经典应用"></a>4. 一些经典应用</h2><ul>
 <li><p><code>i + (~i) = -1</code><br><code>i</code>取反再与<code>i</code>相加，相当于把所有二进制位设为1，其十进制结果为-1。  </p>
 </li>
@@ -767,7 +841,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#位运算基础"><span class="nav-text">位运算基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-消去x的二进制中最后一个1"><span class="nav-text">1. 消去x的二进制中最后一个1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-一些经典应用"><span class="nav-text">4. 一些经典应用</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#位运算基础"><span class="nav-text">位运算基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-消去x的二进制中最后一个1"><span class="nav-text">1. 消去x的二进制中最后一个1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-其他常用操作"><span class="nav-text">2. 其他常用操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-利用二进制来枚举子集"><span class="nav-text">3. 利用二进制来枚举子集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-一些经典应用"><span class="nav-text">4. 一些经典应用</span></a></li></ol></div>
             
 
           </div>

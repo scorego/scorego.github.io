@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next mist" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/favicon-128x128-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-01.ico?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/uploads/favicon-128x128-01.ico?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="JUC锁位于java.util.concurrent.locks包下，为锁和等待条件提供一个框架，它不同于内置同步和监视器。CountDownLatch、CyclicBarrier和Semaphore不在此包中，但也是通过AQS来实现的，因此也将它们归纳到JUC锁这一大栏中。 1. Lock接口源码：1234567891011121314151617181920212223242">
+<meta name="keywords" content="Java并发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java并发05 JUC包中的锁">
+<meta property="og:url" content="javior.wang/2019/06/05/java/并发/Java并发05 JUC包中的锁/index.html">
+<meta property="og:site_name" content="Javior&#39;s Blog">
+<meta property="og:description" content="JUC锁位于java.util.concurrent.locks包下，为锁和等待条件提供一个框架，它不同于内置同步和监视器。CountDownLatch、CyclicBarrier和Semaphore不在此包中，但也是通过AQS来实现的，因此也将它们归纳到JUC锁这一大栏中。 1. Lock接口源码：1234567891011121314151617181920212223242">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="/images/java/concurrent/05_01juclock.png">
+<meta property="og:updated_time" content="2019-06-07T04:44:01.783Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java并发05 JUC包中的锁">
+<meta name="twitter:description" content="JUC锁位于java.util.concurrent.locks包下，为锁和等待条件提供一个框架，它不同于内置同步和监视器。CountDownLatch、CyclicBarrier和Semaphore不在此包中，但也是通过AQS来实现的，因此也将它们归纳到JUC锁这一大栏中。 1. Lock接口源码：1234567891011121314151617181920212223242">
+<meta name="twitter:image" content="/images/java/concurrent/05_01juclock.png">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="javior.wang/2019/06/05/java/并发/Java并发05 JUC包中的锁/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Java并发05 JUC包中的锁 | Javior's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Javior's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/06/05/java/并发/Java并发05 JUC包中的锁/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Javior Wang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Javior's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java并发05 JUC包中的锁
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-06-05 20:24:35" itemprop="dateCreated datePublished" datetime="2019-06-05T20:24:35+08:00">2019-06-05</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-06-07 12:44:01" itemprop="dateModified" datetime="2019-06-07T12:44:01+08:00">2019-06-07</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Java并发/" itemprop="url" rel="index"><span itemprop="name">Java并发</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <div align="center"><br>      <img src="/images/java/concurrent/05_01juclock.png" width="2000" height="2000"><br></div>
+
+
+<p>JUC锁位于<code>java.util.concurrent.locks</code>包下，为锁和等待条件提供一个框架，它不同于内置同步和监视器。<code>CountDownLatch</code>、<code>CyclicBarrier</code>和<code>Semaphore</code>不在此包中，但也是通过AQS来实现的，因此也将它们归纳到JUC锁这一大栏中。</p>
+<h2 id="1-Lock接口"><a href="#1-Lock接口" class="headerlink" title="1. Lock接口"></a>1. <code>Lock</code>接口</h2><p>源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> java.util.concurrent.locks;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Lock</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取锁。</span></span><br><span class="line">    <span class="comment">// 如果当前锁不可用，那么线程将对线程调度变得不可用，并处于休眠直到获得锁</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">lock</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取锁，除非当前线程中断。</span></span><br><span class="line">    <span class="comment">// 锁可用时，将获取锁并立即返回；</span></span><br><span class="line">    <span class="comment">// 锁不可用时，那么线程将对线程调度变得不可用，并处于休眠直到：</span></span><br><span class="line">    <span class="comment">//      - 当前线程获得了锁</span></span><br><span class="line">    <span class="comment">//      - 其他线程中断(Thread.interrupt())了当前线程，且当前锁支持可中断的获取锁</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">lockInterruptibly</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 仅当锁在调用时处于空闲状态时才获取锁</span></span><br><span class="line">    <span class="comment">// 如果锁可用，获取当前锁并立即返回true；如果锁不可用，立即返回false</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">tryLock</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果锁在给定的等待时间内是空闲的，并且当前线程没有被中断，则获取该锁</span></span><br><span class="line">    <span class="comment">// 如果锁可用，获取当前锁并立即返回true；如果锁不可用，那么当前线程对线程调度不可用，并休眠直到下述之一发生：</span></span><br><span class="line">    <span class="comment">//      1. 当前线程获取到锁</span></span><br><span class="line">    <span class="comment">//      2. 其他线程中断了当前线程，并且可中断的锁获取是支持的</span></span><br><span class="line">    <span class="comment">//      3. 指定的时间到期</span></span><br><span class="line">    <span class="comment">//    当前程序获得锁后会立即返回true。</span></span><br><span class="line">    <span class="comment">//    如果当前线程设置了中断状态或被其他线程中断(支持可中断的获取锁)，那么当前线程的中断状态会被清除，并抛InterruptedException。</span></span><br><span class="line">    <span class="comment">//    如果超时，会返回false、</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">tryLock</span><span class="params">(<span class="keyword">long</span> time, TimeUnit unit)</span> <span class="keyword">throws</span> InterruptedException</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 释放锁</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">unlock</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回一个绑定到此锁实例的新Condition实例</span></span><br><span class="line">    <span class="comment">// Before waiting on the condition the lock must be held by the current thread.</span></span><br><span class="line">    <span class="comment">//  A call to Condition.await() will atomically release the lock before waiting and re-acquire the lock before the wait returns.</span></span><br><span class="line">    <span class="function">Condition <span class="title">newCondition</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>Lock</code>接口的实现提供了比使用<code>synchronized</code>更广泛的锁操作。它允许更灵活的结构，并且可能支持多个关联的<code>Condition</code>对象。它支持那些语义不同(重入、公平等)的锁规则。所谓语义不同，是指锁可有”公平机制的锁”、”非公平机制的锁”、”可重入的锁”等等。<br>锁是控制多个线程对共享资源访问的工具，通常锁提供对共享资源的独占访问，每次只有一个线程可以获得锁，而对共享资源的所有访问都要求首先获得锁。(有些锁可能允许并发访问共享资源，比如<code>ReadWriteLock</code>的读锁。)<br>使用<code>synchronized</code>提供与每个对象关联的隐式监视器锁,但它强制所有锁获取与释放都是块结构的:获得的多个锁必须以相反的顺序释放，且所有的锁都必须在与获取锁的相同的词法作用域内释放。虽然<code>synchronized</code>的作用域机制使使用监视器锁进行编程变得容易得多，并有助于避免涉及锁的许多常见编程错误，但某些情况需要以更灵活的方式使用锁。例如，并发遍历一些数据结构的算法需要使用<code>hand-over-hand</code>或<code>chain lock</code>:先获取节点A的锁，然后是节点B，然后释放A并获取C，然后释放B并获取D，以此类推。这时可以使用<code>Lock</code>接口，<code>Lock</code>接口的实现允许在不同的范围内获取和释放锁，并允许以任何顺序获取和释放多个锁。<br>这种灵活性的增加带来了额外的责任。块结构的缺失导致其不会像<code>synchronized</code>锁那样自动释放。在大多数情况下，应该使用以下习语:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Lock l = ...;</span><br><span class="line">l.lock();</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  <span class="comment">// access the resource protected by this lock</span></span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">  l.unlock();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>当锁定和解锁发生在不同的范围时，必须注意确保锁被持有时执行的所有代码都受到<code>try-finally</code>或<code>try-catch</code>的保护，以确保锁在必要时被释放。<br><code>Lock</code>的实现通过提供一个非阻塞的尝试(<code>tryLock()</code>)、试图获得一个可<code>interrupt</code>的锁(<code>lockInterruptibly()</code>)，和试图获得可超时的锁(<code>tryLock(long,TimeUnit)</code>)来提供比<code>synchronized</code>更多的功能。<br><code>Lock</code>类还可以提供与隐式监视器锁截然不同的行为和语义，例如保证顺序、不可重入或死锁检测。如果一个实现提供了这种特殊的语义，那么实现必须记录这些语义。<br>注意，<code>Lock</code>的实例只是普通对象，它们本身可以用作<code>synchronized</code>的目标。获取<code>Lock</code>实例的监视器锁与调用该实例的<code>lock()</code>方法没有特殊的关系。为了避免混淆，建议永远不要以这种方式使用<code>Lock</code>的实例，除非在它们自己的实现中使用。<br>所有的锁<code>Lock</code>实现都必须执行与内置监视器锁提供的相同的内存同步语义，具体描述在<a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-17.html#jls-17.4" target="_blank" rel="noopener">The Java Language Specification (17.4 Memory Model)</a>：</p>
+<ul>
+<li>A successful lock operation has the same memory synchronization effects as a successful <code>Lock</code> action.</li>
+<li>A successful unlock operation has the same memory synchronization effects as a successful <code>Unlock</code> action.</li>
+</ul>
+<p>不成功的加锁和解锁操作以及可重入的锁定/和解锁操作不需要任何内存同步效果。   </p>
+<p>三种形式的锁获取(可中断、不可中断和超时)在性能特征、顺序保证或其他实现质量方面可能有所不同。此外，中断正在进行的获取锁的功能可能在给定的<code>Lock</code>类中不可用。因此，此接口的实现不需要为所有三种形式的锁获取定义完全相同的保证或语义，也不需要支持中断正在进行的锁获取。实现类需要清楚地记录每种锁定方法提供的语义和保证。如果要支持锁获取中断，它还必须遵守这个接口中定义的中断语义:要么完全支持，要么只在方法入口支持。<br>由于中断通常意味着取消，并且对中断的检查通常不频繁，因此实现类更倾向于响应中断而不是正常的方法返回。即使中断发生在可能已经解除了线程阻塞的另一个操作后，这也是正确的。实现类应该记录这种行为。<br>除非特别指出，为任何参数传递<code>null</code>值都会引发<code>NullPointerException</code>。  </p>
+<h2 id="2-ReadWriteLock接口"><a href="#2-ReadWriteLock接口" class="headerlink" title="2. ReadWriteLock接口"></a>2. <code>ReadWriteLock</code>接口</h2><p>源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> java.util.concurrent.locks;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ReadWriteLock</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回读锁</span></span><br><span class="line">    <span class="function">Lock <span class="title">readLock</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回写锁</span></span><br><span class="line">    <span class="function">Lock <span class="title">writeLock</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>ReadWriteLock</code>接口以和<code>Lock</code>类似的方式定义了一些读取者可以共享而写入者独占的锁。JUC包只有一个类实现了该接口，即<code>ReentrantReadWriteLock</code>。<br><code>ReadWriteLock</code>维护一对关联的锁，一个用于只读操作，另一个用于写操作。读锁可以由多个读线程同时持有，只要没有写线程。写锁是独占的。<br>所有<code>ReadWriteLock</code>的实现都必须保证<code>writeLock</code>操作的内存同步效果相对于关联的<code>readLock</code>也有效。也就是说，成功获取读锁的线程将看到在以前的写锁版本上所做的所有更新。<br>读写锁允许在访问共享数据时具有比互斥锁更高级别的并发性。它的依据是:虽然每次只有一个线程(写线程)可以修改共享数据，但在许多情况下，任何数量的线程都可以并发地读取数据(读取线程)。理论上，与使用互斥锁相比，使用读写锁所允许的并发性的增加将导致性能的改进。实际上，这种并发性的增加只有在多处理器系统上才能完全实现，而且只有在共享数据的访问模式合适时才能实现。<br>读写锁是否会相对于使用互斥锁提高性能取决于读和写的相对频率、读和写操作的持续时间以及对数据的争用——也就是说同一时刻尝试读或写数据的线程数量。例如，一个集合最初使用数据填充，之后很少修改，而且经常被检索，这是使用读写锁的理想选择。然而，如果更新变得频繁，那么数据的大部分时间都是完全锁定的，并发性几乎没有增加。此外，如果读操作太短，读写锁实现的开销(其本质上比互斥锁更复杂)可能会成为主要的开销，特别是因为许多读写锁实现仍然通过一小段代码序列化所有线程。总之，只有分析和度量才能确定读写锁的使用是否适合一个应用程序。<br>尽管读写锁的基本操作很简单，但是读写锁的实现必须做出许多策略决策，这可能会影响给定应用程序中读写锁的有效性。这些策略的例子包括:</p>
+<ul>
+<li>在读线程和写线程都在等待时，确定在释放写锁时授予读锁还是写锁。普遍会选择写线程，因为一般认为写线程耗时短且不频繁的。而偏好读线程则不那么常见，因为如果读线程如预期的那样频繁且耗时长，则会导致写作的长时间延迟。另外公平或“有序”的选择也是可以的。</li>
+<li>确定当读取器处于活动状态且写入器正在等待时，请求读锁的读取器是否被授予读锁。偏向读写器可能无限期地延迟写入器，而偏向写入器可能降低并发度。</li>
+<li>确定锁是否可重入:具有写锁的线程能否重新获得它?它能在持有写锁的同时获得读锁吗?读锁本身是可重入的吗?</li>
+<li>是否可以在不允许插入写入器时将写锁降级为读锁?相对于其他等待的读取器或写入器，读锁是否可以升级为写锁?</li>
+</ul>
+<p>在实际使用读写锁时，这些因素都要考虑在内。</p>
+<h2 id="3-Condition接口"><a href="#3-Condition接口" class="headerlink" title="3. Condition接口"></a>3. <code>Condition</code>接口</h2><p>源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> java.util.concurrent.locks;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Condition</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Causes the current thread to wait until it is signalled or interrupted.</span></span><br><span class="line">    <span class="comment">// 关联此Condition的锁会被原子释放，当前线程对调度不可用，并且休眠直到下述之一发生：</span></span><br><span class="line">    <span class="comment">//      - Some other thread invokes the signal() method for this Condition and the current thread happens to be chosen as the thread to be awakened</span></span><br><span class="line">    <span class="comment">//      - Some other thread invokes the signalAll() method for this Condition</span></span><br><span class="line">    <span class="comment">//      - Some other thread interrupts the current thread, and interruption of thread suspension is supported</span></span><br><span class="line">    <span class="comment">//      - A "spurious wakeup" occurs</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">await</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Causes the current thread to wait until it is signalled.</span></span><br><span class="line">    <span class="comment">// 关联此Condition的锁会被原子释放，当前线程对调度不可用，并且休眠直到下述之一发生：</span></span><br><span class="line">    <span class="comment">//      - Some other thread invokes the signal() method for this Condition and the current thread happens to be chosen as the thread to be awakened</span></span><br><span class="line">    <span class="comment">//      - Some other thread invokes the signalAll() method for this Condition</span></span><br><span class="line">    <span class="comment">//      - A "spurious wakeup" occurs</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">awaitUninterruptibly</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Causes the current thread to wait until it is signalled or interrupted, or the specified waiting time elapses.</span></span><br><span class="line">    <span class="function"><span class="keyword">long</span> <span class="title">awaitNanos</span><span class="params">(<span class="keyword">long</span> nanosTimeout)</span> <span class="keyword">throws</span> InterruptedException</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Causes the current thread to wait until it is signalled or interrupted, or the specified waiting time elapses. This method is behaviorally equivalent to:</span></span><br><span class="line">    <span class="comment">//          awaitNanos(unit.toNanos(time)) &gt; 0</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">await</span><span class="params">(<span class="keyword">long</span> time, TimeUnit unit)</span> <span class="keyword">throws</span> InterruptedException</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Causes the current thread to wait until it is signalled or interrupted, or the specified deadline elapses.</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">awaitUntil</span><span class="params">(Date deadline)</span> <span class="keyword">throws</span> InterruptedException</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Wakes up one waiting thread.</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">signal</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Wakes up all waiting threads.</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">signalAll</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>Condition</code>需要和<code>Lock</code>联合使用，它的作用是代替<code>Object</code>监视器方法，可以通过<code>await()</code>、<code>signal()</code>来休眠/唤醒线程。<code>Condition</code>接口描述了可能会与锁有关联的条件变量。这些变量在用法上与使用<code>Object.wait</code>访问的隐式监视器类似，但提供了更强大的功能。需要特别指出的是，单个<code>Lock</code>可能与多个<code>Condition</code>对象关联。为了避免兼容性问题，<code>Condition</code>方法的名称与对应的<code>Object</code>版本中的不同。<br><code>Condition</code>将<code>Object monitor methods</code>(wait、notify和notifyAll)分解为不同的对象，通过将它们与任意<code>Lock</code>实现相结合，从而实现每个对象具有多个等待集的效果。<code>Lock</code>替换<code>synchronized</code>的使用，<code>Condition</code>替换<code>Object monitor methods</code>的使用。<br><code>Condition</code>(也称为<code>condition queues</code>或<code>condition variables</code>)提供了一种方法，让一个线程暂停执行(<code>wait</code>)，直到被另一个线程通知某个状态条件现在可能为true。由于对共享状态信息的访问发生在不同的线程中，因此必须对其进行保护，因此某种形式的锁与<code>condition</code>相关联。wait for a condition提供的关键属性是它自动释放关联的锁并挂起当前线程，就像<code>Object.wait</code>一样。<br><code>Condition</code>实例本质上绑定到锁。要获取特定<code>Lock</code>实例的<code>Condition</code>实例，请使用它的<code>newCondition()</code>方法。<br>例如，假设我们有一个支持<code>put</code>和<code>take</code>方法的有界缓冲区。如果在空缓冲区上尝试<code>take</code>，则线程将阻塞，直到可用为止;如果在一个满缓冲区上尝试<code>put</code>，那么线程将阻塞，直到空间可用为止。我们希望将<code>put</code>线程和<code>take</code>线程放在单独的等待集中，这样我们就可以优化每次当缓冲区中的项或空间可用时只通知一个线程。这可以通过使用两个<code>Condition</code>实例来实现:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ArrayBlockingQueue类提供了此功能，因此没有理由实际这么操作</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BoundedBuffer</span> </span>&#123;</span><br><span class="line">   <span class="keyword">final</span> Lock lock = <span class="keyword">new</span> ReentrantLock();</span><br><span class="line">   <span class="keyword">final</span> Condition notFull  = lock.newCondition();</span><br><span class="line">   <span class="keyword">final</span> Condition notEmpty = lock.newCondition();</span><br><span class="line"></span><br><span class="line">   <span class="keyword">final</span> Object[] items = <span class="keyword">new</span> Object[<span class="number">100</span>];</span><br><span class="line">   <span class="keyword">int</span> putptr, takeptr, count;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">put</span><span class="params">(Object x)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">     lock.lock();</span><br><span class="line">     <span class="keyword">try</span> &#123;</span><br><span class="line">       <span class="keyword">while</span> (count == items.length)</span><br><span class="line">         notFull.await();</span><br><span class="line">       items[putptr] = x;</span><br><span class="line">       <span class="keyword">if</span> (++putptr == items.length) putptr = <span class="number">0</span>;</span><br><span class="line">       ++count;</span><br><span class="line">       notEmpty.signal();</span><br><span class="line">     &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">       lock.unlock();</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> Object <span class="title">take</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">     lock.lock();</span><br><span class="line">     <span class="keyword">try</span> &#123;</span><br><span class="line">       <span class="keyword">while</span> (count == <span class="number">0</span>)</span><br><span class="line">         notEmpty.await();</span><br><span class="line">       Object x = items[takeptr];</span><br><span class="line">       <span class="keyword">if</span> (++takeptr == items.length) takeptr = <span class="number">0</span>;</span><br><span class="line">       --count;</span><br><span class="line">       notFull.signal();</span><br><span class="line">       <span class="keyword">return</span> x;</span><br><span class="line">     &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">       lock.unlock();</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>Condition</code>的实现可以提供与<code>Object monitor methods</code>不同的行为和语义，比如保证通知的顺序，或者在执行通知时不需要持有锁。如果实现提供了这种特殊的语义，那么实现必须记录这些语义。<br>注意<code>Condition</code>的实现只是普通的类，也可以用作<code>synchronized</code>的目标。获取<code>Condition</code>实例的监视锁，或使用其监视方法，与获取与该<code>Condition</code>关联的<code>Lock</code>或使用其等待和发送信号的方法没有特殊的关系。为了避免混淆，建议永远不要以这种方式使用<code>Condition</code>实例，除非在它们自己的实现中使用。<br>除非特别指出，为任何参数传递<code>null</code>值都会引发<code>NullPointerException</code>。</p>
+<p>在等待条件时，作为对底层平台语义的让步,通常允许发生<code>spurious wakeup</code>。这对大多数应用程序几乎没有实际影响，因为应该始终在循环中等待一个条件，测试正在等待的状态。具体实现类可以自由地消除伪唤醒的可能性，但建议应用程序程序员始终假设它们可以发生，因此始终在循环中等待。<br>三种形式的条件等待(可中断的、不可中断的和定时的)在某些平台上的实现便利性和性能特征上可能有所不同。特别是，可能很难提供这些特性并维护特定的语义，比如顺序保证。此外，中断线程的实际挂起的能力可能并不总是能够在所有平台上实现。因此，实现不需要为所有三种形式的等待定义完全相同的保证或语义，也不需要支持中断线程的实际挂起。<br>需要一个实现清楚地记录每个等待方法提供的语义和保证，并且当一个实现支持线程暂停中断时，它必须遵守这个接口中定义的中断语义。<br>由于中断通常意味着取消，并且对中断的检查通常不频繁，因此实现更倾向于响应中断而不是正常的方法返回。即使中断发生在可能已经解除了线程阻塞的另一个操作后，也是如此。实现应该记录这种行为。</p>
+<h2 id="4-AbstractOwnableSynchronizer"><a href="#4-AbstractOwnableSynchronizer" class="headerlink" title="4. AbstractOwnableSynchronizer"></a>4. AbstractOwnableSynchronizer</h2><p><code>AbstractOwnableSynchronizer</code>是<code>AbstractQueuedSynchronizer</code>和<code>AbstractQueuedLongSynchronizer</code>的父类，是一个可由线程独占的同步器，为创建锁和相关同步器（伴随着所有权的概念）提供基础。<code>AbstractOwnableSynchronizer</code>类本身并不管理或使用这些信息，但是子类和工具可以使用适当维护value来帮助控制和监视访问并提供诊断。   </p>
+<p>源码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> java.util.concurrent.locks;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractOwnableSynchronizer</span> <span class="keyword">implements</span> <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Use serial ID even though all fields transient. */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = <span class="number">3737899427754241961L</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Empty constructor for use by subclasses.</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="title">AbstractOwnableSynchronizer</span><span class="params">()</span> </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// The current owner of exclusive mode synchronization.</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">transient</span> Thread exclusiveOwnerThread;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Sets the thread that currently owns exclusive access。 null表示没有线程拥有访问</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">setExclusiveOwnerThread</span><span class="params">(Thread thread)</span> </span>&#123;</span><br><span class="line">        exclusiveOwnerThread = thread;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Returns the thread last set by setExclusiveOwnerThread, or null if never set.</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">final</span> Thread <span class="title">getExclusiveOwnerThread</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> exclusiveOwnerThread;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="5-AbstractQueuedSynchronizer-AbstractQueuedLongSynchronizer"><a href="#5-AbstractQueuedSynchronizer-AbstractQueuedLongSynchronizer" class="headerlink" title="5. AbstractQueuedSynchronizer/AbstractQueuedLongSynchronizer"></a>5. AbstractQueuedSynchronizer/AbstractQueuedLongSynchronizer</h2><p>继承结构：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> java.util.concurrent.locks;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractQueuedSynchronizer</span> <span class="keyword">extends</span> <span class="title">AbstractOwnableSynchronizer</span></span></span><br><span class="line"><span class="class">    <span class="keyword">implements</span> <span class="title">java</span>.<span class="title">io</span>.<span class="title">Serializable</span> </span>&#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>构造方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="title">AbstractQueuedSynchronizer</span><span class="params">()</span> </span>&#123; &#125;</span><br></pre></td></tr></table></figure></p>
+<p>内部类：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span> </span>&#123;</span><br><span class="line">    <span class="comment">/** Marker to indicate a node is waiting in shared mode */</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> Node SHARED = <span class="keyword">new</span> Node();</span><br><span class="line">    <span class="comment">/** Marker to indicate a node is waiting in exclusive mode */</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> Node EXCLUSIVE = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** waitStatus value to indicate thread has cancelled */</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CANCELLED =  <span class="number">1</span>;</span><br><span class="line">    <span class="comment">/** waitStatus value to indicate successor's thread needs unparking */</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> SIGNAL    = -<span class="number">1</span>;</span><br><span class="line">    <span class="comment">/** waitStatus value to indicate thread is waiting on condition */</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CONDITION = -<span class="number">2</span>;</span><br><span class="line">    <span class="comment">/** waitStatus value to indicate the next acquireShared should unconditionally propagate */</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> PROPAGATE = -<span class="number">3</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 状态域，取值为：</span></span><br><span class="line">    <span class="comment">//          SIGNAL : 后继结点的线程对象已经(或即将)被阻塞(通过park)，所以当前结点在释放或取消时必须unpark后继结点。</span></span><br><span class="line">    <span class="comment">//                   为避免竞争，acquire方法必须表明它们需要一个信号，然后才进行原子地获取重试，失败会阻塞</span></span><br><span class="line">    <span class="comment">//          CANCELLED : 当前结点因为超过或中断而被取消(放弃获取锁)。结点不会离开这个状态，即cancelled结点的线程不会被再次阻塞</span></span><br><span class="line">    <span class="comment">//          CONDITION : 当前结点正在一个条件队列中。</span></span><br><span class="line">    <span class="comment">//          PROPAGATE : A releaseShared should be propagated to other  nodes.</span></span><br><span class="line">    <span class="comment">//                      This is set (for head node only) in doReleaseShared to ensure propagation continues, even if other operations have since intervened.</span></span><br><span class="line">    <span class="comment">//              0 : None of the above</span></span><br><span class="line">    <span class="keyword">volatile</span> <span class="keyword">int</span> waitStatus;</span><br><span class="line"></span><br><span class="line">     <span class="comment">// 前驱结点，当前结点用来检查waitStatus</span></span><br><span class="line">    <span class="keyword">volatile</span> Node prev;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 后继结点</span></span><br><span class="line">    <span class="keyword">volatile</span> Node next;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*The thread that enqueued this node.  Initialized on construction and nulled out after use. */</span></span><br><span class="line">    <span class="keyword">volatile</span> Thread thread;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*Link to next node waiting on condition, or the special value SHARED. */</span></span><br><span class="line">    Node nextWaiter;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Returns true if node is waiting in shared mode. */</span></span><br><span class="line">    <span class="function"><span class="keyword">final</span> <span class="keyword">boolean</span> <span class="title">isShared</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> nextWaiter == SHARED;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">final</span> Node <span class="title">predecessor</span><span class="params">()</span> <span class="keyword">throws</span> NullPointerException </span>&#123;</span><br><span class="line">        Node p = prev;</span><br><span class="line">        <span class="keyword">if</span> (p == <span class="keyword">null</span>)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">return</span> p;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Node() &#123;    <span class="comment">// Used to establish initial head or SHARED marker</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Node(Thread thread, Node mode) &#123;     <span class="comment">// Used by addWaiter</span></span><br><span class="line">        <span class="keyword">this</span>.nextWaiter = mode;</span><br><span class="line">        <span class="keyword">this</span>.thread = thread;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Node(Thread thread, <span class="keyword">int</span> waitStatus) &#123; <span class="comment">// Used by Condition</span></span><br><span class="line">        <span class="keyword">this</span>.waitStatus = waitStatus;</span><br><span class="line">        <span class="keyword">this</span>.thread = thread;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>AbstractQueuedSynchronizer</code>就是被称之为<code>AQS</code>的类，它是一个非常有用的超类，提供一个框架来实现依赖于先进先出(FIFO)等待队列的阻塞锁和相关同步器(信号量、事件等)。该类被设计为大多数依赖于单个原子int值来表示状态的同步器的基础。子类必须定义更改此状态的方法，并定义该状态对于正在获取或释放的对象的含义。鉴于此，该类中的其他方法执行所有排队和阻塞机制。子类可以维护其他状态字段，但是只有使用<code>getState()</code>、<code>setState(int)</code>和<code>compareAndSetState(int, int)</code>方法来原子更新的int值才能同步跟踪。<br><code>AbstractQueuedSynchronizer</code>的子类应该定义为非<code>public</code>的内部类，用于实现其封闭类的同步属性。<code>AbstractQueuedSynchronizer</code>类不实现任何同步接口。相反，它定义了像<code>acquireInterruptibly(int)</code>这样的方法，可以通过具体的锁和相关的同步器调用这些方法来实现它们的公共方法。<br>该类支持默认独占模式和共享模式中的一种或两种。当以独占模式获取时，其他线程尝试获取的操作无法成功。共享模式下多个线程获取可能(但不一定)成功。这个类并不“理解”这些差异，除非从机械意义上讲，当共享模式下成功获取时，下一个等待的线程(如果存在)也必须确定它是否也可以获取。在不同模式下等待的线程共享相同的FIFO队列。通常，实现子类只支持其中一种模式，但是这两种模式都可以发挥作用，例如在<code>ReadWriteLock</code>中。只支持独占模式或只支持共享模式的子类不需要定义不支持模式的方法。<br>这个类定义了一个嵌套的<code>AbstractQueuedSynchronizer.ConditionObject</code>类用作<code>Condition</code>的实现，这是通过由支持独占模式的子类实现的，子类的方法<code>isHeldExclusively()</code>报告是否当前线程独占同步，<code>release(int)</code>方法调用与<code>getState()</code>值完全释放该对象,<code>acquire(int)</code>,鉴于这个保存的状态值,最终使对象恢复到以前的状态。没有AbstractQueuedSynchronizer方法创建这样的<code>condition</code>，所以如果不能满足这个约束，就不要使用它。AbstractQueuedSynchronizer的行为。当然，<code>AbstractQueuedSynchronizer.ConditionObject</code>依赖于其同步器实现的语义。<br>该类提供内部队列的检查、检测和监视方法，以及<code>condition</code>对象的类似方法。可以根据需要将它们导出到使用<code>AbstractQueuedSynchronizer</code>的类中，以实现它们的同步机制。<br>该类的序列化只存储底层原子整整数的状态，因此反序列化对象具有空线程队列。需要序列化的子类需要定义一个<code>readObject</code>方法，该方法在反序列化时将其恢复到已知的初始状态。  </p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java并发/" rel="tag"># Java并发</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/06/05/java/并发/Java并发04 synchronized & volatile/" rel="next" title="Java并发04 synchronized & volatile">
+                <i class="fa fa-chevron-left"></i> Java并发04 synchronized & volatile
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/uploads/avatar.gif" alt="Javior Wang">
+            
+              <p class="site-author-name" itemprop="name">Javior Wang</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">30</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">15</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/scorego" title="GitHub &rarr; https://github.com/scorego" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://www.zhihu.com/people/scorego-6" title="Zhihu &rarr; https://www.zhihu.com/people/scorego-6" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>Zhihu</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Lock接口"><span class="nav-text">1. Lock接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-ReadWriteLock接口"><span class="nav-text">2. ReadWriteLock接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Condition接口"><span class="nav-text">3. Condition接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-AbstractOwnableSynchronizer"><span class="nav-text">4. AbstractOwnableSynchronizer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-AbstractQueuedSynchronizer-AbstractQueuedLongSynchronizer"><span class="nav-text">5. AbstractQueuedSynchronizer/AbstractQueuedLongSynchronizer</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Javior Wang</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

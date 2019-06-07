@@ -103,7 +103,7 @@
 <meta property="og:description" content="ZooKeeper HomepageZooKeeper Programmer’s Guide ZooKeeper Programmer’s GuideDeveloping Distributed Applications that use ZooKeeper   1. The ZooKeeper Data ModelZK有与文件系统类似的层次结构的命名空间，唯一的区别就是命名空间的每个节点也可以存">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="/images/backend/zookeeper/03state_dia.jpg">
-<meta property="og:updated_time" content="2019-05-16T05:42:13.716Z">
+<meta property="og:updated_time" content="2019-06-07T04:32:35.046Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ZooKeeper(三) ZooKeeper Programmer&#39;s Guide">
 <meta name="twitter:description" content="ZooKeeper HomepageZooKeeper Programmer’s Guide ZooKeeper Programmer’s GuideDeveloping Distributed Applications that use ZooKeeper   1. The ZooKeeper Data ModelZK有与文件系统类似的层次结构的命名空间，唯一的区别就是命名空间的每个节点也可以存">
@@ -401,7 +401,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-05-16 13:42:13" itemprop="dateModified" datetime="2019-05-16T13:42:13+08:00">2019-05-16</time>
+                <time title="修改时间：2019-06-07 12:32:35" itemprop="dateModified" datetime="2019-06-07T12:32:35+08:00">2019-06-07</time>
               
             
           </span>
@@ -512,7 +512,7 @@
 <li>The application calls an operation on a session that is no longer alive/valid</li>
 <li>The ZooKeeper client disconnects from a server when there are pending operations to that server, i.e., there is a pending asynchronous call.  </li>
 </ol>
-<p><strong>Added in 3.2.0 – SessionMovedException.</strong> 有一个通常户端不可见的内部异常<code>SessionMovedException</code>。当接收的会话的请求在另一台服务器上重建后会发生这个异常。一般情况下是客户端发送请求，但是数据报延误了，于是客户端超时并和另一台服务器重连了。当超时的数据报到达第一台服务器时，服务器探测到会话已经移动了，并管理看客户端连接。客户端通常看不到这个错误因为它们只从新服务器上毒数据。One situation in which this condition can be seen is when two clients try to reestablish the same connection using a saved session id and password. One of the clients will reestablish the connection and the second client will be disconnected (causing the pair to attempt to re-establish its connection/session indefinitely).  </p>
+<p><strong>Added in 3.2.0 – SessionMovedException.</strong> 有一个通常户端不可见的内部异常<code>SessionMovedException</code>。当接收的会话的请求在另一台服务器上重建后会发生这个异常。一般情况下是客户端发送请求，但是数据报延误了，于是客户端超时并和另一台服务器重连了。当超时的数据报到达第一台服务器时，服务器探测到会话已经移动了，并管理看客户端连接。客户端通常看不到这个错误因为它们只从新服务器上读数据。One situation in which this condition can be seen is when two clients try to reestablish the same connection using a saved session id and password. One of the clients will reestablish the connection and the second client will be disconnected (causing the pair to attempt to re-establish its connection/session indefinitely).  </p>
 <h2 id="3-Zookeeper-Watches"><a href="#3-Zookeeper-Watches" class="headerlink" title="3. Zookeeper Watches"></a>3. Zookeeper Watches</h2><p>所有ZK的读读操作(<code>getData()</code>、<code>getChildren()</code>、<code>exists()</code>)都可以设置一个watch。ZK对watch的定义是：<strong>a watch event is one-time trigger, sent to the client that set the watch, which occurs when the data for which the watch was set changes.</strong>   这个定义中有三个关键点：</p>
 <ul>
 <li>One-time trigger<br>当数据改变时一个watch event会发送给客户端，但只发送一次。</li>
@@ -727,7 +727,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">29</span>
+                    <span class="site-state-item-count">30</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="Javior&#39;s Blog">
 <meta property="og:description" content="LinkedList     LinkedList是一个继承于AbstractSequentialList的双向链表，也可以当作栈、队列或双端队列进行操作。    LinkedList实现了List接口，能对它进行列表操作。 LinkedList实现了Deque接口，能将它当做双端队列使用。 LinkedList实现了Cloneable接口，即覆盖了函数clone()，能克隆。 LinkedLi">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-06-02T05:48:47.003Z">
+<meta property="og:updated_time" content="2019-06-11T03:03:29.659Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java集合(四) LinkedList">
 <meta name="twitter:description" content="LinkedList     LinkedList是一个继承于AbstractSequentialList的双向链表，也可以当作栈、队列或双端队列进行操作。    LinkedList实现了List接口，能对它进行列表操作。 LinkedList实现了Deque接口，能将它当做双端队列使用。 LinkedList实现了Cloneable接口，即覆盖了函数clone()，能克隆。 LinkedLi">
@@ -399,7 +399,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-06-02 13:48:47" itemprop="dateModified" datetime="2019-06-02T13:48:47+08:00">2019-06-02</time>
+                <time title="修改时间：2019-06-11 11:03:29" itemprop="dateModified" datetime="2019-06-11T11:03:29+08:00">2019-06-11</time>
               
             
           </span>
@@ -504,6 +504,9 @@
 </li>
 </ol>
 <p>遍历<code>LinkedList</code>时，使用<code>removeFist()</code>或<code>removeLast()</code>效率很高，但它们会删除原始数据。<br>无论如何，千万不要通过随机访问去遍历<code>LinkedList</code>，从源码来看，使用随机访问遍历<code>LinkedList</code>，时间复杂度是O(n<sup>2</sup>)。</p>
+<h3 id="6-LinkedList用作队列"><a href="#6-LinkedList用作队列" class="headerlink" title="6. LinkedList用作队列"></a>6. LinkedList用作队列</h3><p><code>LinkedList</code>实现了<code>Deque</code>接口，即能将它当做双端队列使用。通过使用<code>LinkedList</code>的部分API，可以将其作为FIFO、FILO、双端队列来使用。  </p>
+<p>在队头操作：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span>  <span class="keyword">void</span>    <span class="title">addFirst</span><span class="params">(E e)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>  <span class="keyword">boolean</span> <span class="title">offerFirst</span><span class="params">(E e)</span>     <span class="comment">// addFirst()</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>  <span class="keyword">void</span>    <span class="title">push</span><span class="params">(E e)</span>           <span class="comment">// addFirst()</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>  E       <span class="title">getFirst</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>  E       <span class="title">peek</span><span class="params">()</span>              <span class="comment">// getFirst()</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>  E       <span class="title">peekFirst</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>  E       <span class="title">remove</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>  E       <span class="title">removeFirst</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>  E       <span class="title">pop</span><span class="params">()</span>               <span class="comment">// removeFirst()</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>  E       <span class="title">poll</span><span class="params">()</span>              <span class="comment">// getFirst() + removeFirst()</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span>  E       <span class="title">pollFirst</span><span class="params">()</span></span></span><br></pre></td></tr></table></figure></p>
+<p>在队尾操作：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span>  <span class="title">offer</span><span class="params">(E e)</span>          <span class="comment">// add()</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span>  <span class="title">offerLast</span><span class="params">(E e)</span>      <span class="comment">// addLast()</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span>  <span class="title">add</span><span class="params">(E e)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span>     <span class="title">addLast</span><span class="params">(E e)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> E        <span class="title">getLast</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> E        <span class="title">peekLast</span><span class="params">()</span>          <span class="comment">// getLast()</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> E        <span class="title">removeLast</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> E        <span class="title">pollLast</span><span class="params">()</span>          <span class="comment">// getLast() + removeLast()</span></span></span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -623,7 +626,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">33</span>
+                    <span class="site-state-item-count">36</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -711,7 +714,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">16</span>
+                      
+                    
+                    <span class="site-state-item-count">18</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -775,7 +780,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-LinkedList数据结构"><span class="nav-text">1. LinkedList数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#AbstractSequentialList类"><span class="nav-text">AbstractSequentialList类</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-构造函数"><span class="nav-text">2. 构造函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-LinkedList的API"><span class="nav-text">3. LinkedList的API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-部分函数源码"><span class="nav-text">4. 部分函数源码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-遍历方式"><span class="nav-text">5. 遍历方式</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-LinkedList数据结构"><span class="nav-text">1. LinkedList数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#AbstractSequentialList类"><span class="nav-text">AbstractSequentialList类</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-构造函数"><span class="nav-text">2. 构造函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-LinkedList的API"><span class="nav-text">3. LinkedList的API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-部分函数源码"><span class="nav-text">4. 部分函数源码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-遍历方式"><span class="nav-text">5. 遍历方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-LinkedList用作队列"><span class="nav-text">6. LinkedList用作队列</span></a></li></ol></div>
             
 
           </div>

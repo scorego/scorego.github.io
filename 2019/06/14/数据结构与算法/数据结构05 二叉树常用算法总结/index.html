@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next mist" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/favicon-128x128-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-01.ico?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/uploads/favicon-128x128-01.ico?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="前序遍历，中序遍历，后序遍历； 层次遍历； 求树的节点数； 求树的叶子数； 求树的深度； 求二叉树第k层的节点个数; 判断两棵二叉树是否结构相同； 求二叉树的镜像； 求两个节点的最低公共祖先节点； 求任意两节点距离； 找出二叉树中某个节点的所有祖先节点； 不使用递归和栈遍历二叉树； 二叉树前序中序推后序； 判断二叉树是不是完全二叉树; 判断是否是二叉查找树的后序遍历结果； 给定一个二叉">
+<meta name="keywords" content="数据结构,树">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构05 二叉树常用算法总结">
+<meta property="og:url" content="javior.wang/2019/06/14/数据结构与算法/数据结构05 二叉树常用算法总结/index.html">
+<meta property="og:site_name" content="Javior&#39;s Blog">
+<meta property="og:description" content="前序遍历，中序遍历，后序遍历； 层次遍历； 求树的节点数； 求树的叶子数； 求树的深度； 求二叉树第k层的节点个数; 判断两棵二叉树是否结构相同； 求二叉树的镜像； 求两个节点的最低公共祖先节点； 求任意两节点距离； 找出二叉树中某个节点的所有祖先节点； 不使用递归和栈遍历二叉树； 二叉树前序中序推后序； 判断二叉树是不是完全二叉树; 判断是否是二叉查找树的后序遍历结果； 给定一个二叉">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-06-16T08:06:11.674Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数据结构05 二叉树常用算法总结">
+<meta name="twitter:description" content="前序遍历，中序遍历，后序遍历； 层次遍历； 求树的节点数； 求树的叶子数； 求树的深度； 求二叉树第k层的节点个数; 判断两棵二叉树是否结构相同； 求二叉树的镜像； 求两个节点的最低公共祖先节点； 求任意两节点距离； 找出二叉树中某个节点的所有祖先节点； 不使用递归和栈遍历二叉树； 二叉树前序中序推后序； 判断二叉树是不是完全二叉树; 判断是否是二叉查找树的后序遍历结果； 给定一个二叉">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="javior.wang/2019/06/14/数据结构与算法/数据结构05 二叉树常用算法总结/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>数据结构05 二叉树常用算法总结 | Javior's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Javior's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/06/14/数据结构与算法/数据结构05 二叉树常用算法总结/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Javior Wang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Javior's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">数据结构05 二叉树常用算法总结
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-06-14 10:34:05" itemprop="dateCreated datePublished" datetime="2019-06-14T10:34:05+08:00">2019-06-14</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-06-16 16:06:11" itemprop="dateModified" datetime="2019-06-16T16:06:11+08:00">2019-06-16</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/数据结构与算法/" itemprop="url" rel="index"><span itemprop="name">数据结构与算法</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>   </p>
+<ol>
+<li>前序遍历，中序遍历，后序遍历；</li>
+<li>层次遍历；</li>
+<li>求树的节点数；</li>
+<li>求树的叶子数；</li>
+<li>求树的深度；</li>
+<li>求二叉树第k层的节点个数;</li>
+<li>判断两棵二叉树是否结构相同；</li>
+<li>求二叉树的镜像；</li>
+<li>求两个节点的最低公共祖先节点；</li>
+<li>求任意两节点距离；</li>
+<li>找出二叉树中某个节点的所有祖先节点；</li>
+<li>不使用递归和栈遍历二叉树；</li>
+<li>二叉树前序中序推后序；</li>
+<li>判断二叉树是不是完全二叉树;</li>
+<li>判断是否是二叉查找树的后序遍历结果；</li>
+<li>给定一个二叉查找树中的节点，找出在中序遍历下它的后继和前驱；</li>
+<li>二分查找树转化为排序的循环双链表；</li>
+<li>有序链表转化为平衡的二分查找树。</li>
+</ol>
+</blockquote>
+<p>定义树结点：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TreeNode</span> </span>&#123;</span><br><span class="line">    TreeNode left;</span><br><span class="line">    TreeNode right;</span><br><span class="line">    <span class="keyword">int</span> val;</span><br><span class="line">    TreeNode(<span class="keyword">int</span> x)&#123;val = x;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="1-4"><a href="#1-4" class="headerlink" title="1-4"></a>1-4</h2><p>  参见前文。</p>
+<h2 id="5-求树的深度"><a href="#5-求树的深度" class="headerlink" title="5 求树的深度"></a>5 求树的深度</h2><p>LC104<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getDepth</span><span class="params">(TreeNode root)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> root == <span class="keyword">null</span> ? <span class="number">0</span> : <span class="number">1</span> + Math.max(getDepth(root.left), getDepth(root.right));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="6-求二叉树第k层的节点个数"><a href="#6-求二叉树第k层的节点个数" class="headerlink" title="6 求二叉树第k层的节点个数"></a>6 求二叉树第k层的节点个数</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getLevel</span><span class="params">(TreeNode root, <span class="keyword">int</span> k)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (root == <span class="keyword">null</span> || k &lt; <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (k == <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> getLevel(node.left, k - <span class="number">1</span>) + getLevel(node.right, k - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="7-判断两棵二叉树是否结构相同"><a href="#7-判断两棵二叉树是否结构相同" class="headerlink" title="7 判断两棵二叉树是否结构相同"></a>7 判断两棵二叉树是否结构相同</h2><p>不考虑结点的值。结构相同意味着对应的左子树和对应的右子树在相同位置上的子树结构相同。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">cmpStruct</span><span class="params">(TreeNode root1, TreeNode root2)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (root1 == <span class="keyword">null</span> &amp;&amp; root2 == <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (root1 == <span class="keyword">null</span> || root2 == <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> cmpStruct(root1.left, root2.left) &amp;&amp; cmpStruct(root1.right, root2.right);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="8-求二叉树的镜像"><a href="#8-求二叉树的镜像" class="headerlink" title="8 求二叉树的镜像"></a>8 求二叉树的镜像</h2><p>LC226<br>对于每个节点，交换它的左右孩子即可。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> TreeNode <span class="title">invertTree</span><span class="params">(TreeNode root)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (root == <span class="keyword">null</span>) <span class="keyword">return</span> root;</span><br><span class="line">    TreeNode tmp = root.left;</span><br><span class="line">    root.left = root.right;</span><br><span class="line">    root.right = tmp;</span><br><span class="line">    invertTree(root.left);</span><br><span class="line">    invertTree(root.right);</span><br><span class="line">    <span class="keyword">return</span> root;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="9-求两个节点的最低公共祖先节点"><a href="#9-求两个节点的最低公共祖先节点" class="headerlink" title="9 求两个节点的最低公共祖先节点"></a>9 求两个节点的最低公共祖先节点</h2><p>最低公共祖先，即LCA(Lowest Common Ancestor)，对于有根树T的两个结点p、q，最低公共祖先表示为一个结点x，满足x是p、q的祖先且x的深度尽可能大(一个节点也可以是它自己的祖先)。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> TreeNode <span class="title">lowestCommonAncestor</span><span class="params">(TreeNode root, TreeNode p, TreeNode q)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root == <span class="keyword">null</span> || root == p || root == q)</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    TreeNode left = lowestCommonAncestor(root.left, p , q);</span><br><span class="line">    TreeNode right = lowestCommonAncestor(root.right, p , q);</span><br><span class="line">    <span class="comment">// 左右子树中都出现了，表明这就是LCA</span></span><br><span class="line">    <span class="keyword">if</span> (left != <span class="keyword">null</span> &amp;&amp; right != <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 可以这么写，也可以写成下面那一行</span></span><br><span class="line">    <span class="comment">// if (left != null)</span></span><br><span class="line">    <span class="comment">//     return left;</span></span><br><span class="line">    <span class="comment">// if (right != null)</span></span><br><span class="line">    <span class="comment">//     return right;</span></span><br><span class="line">    <span class="comment">// return null;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 否则就是在左/右子树中</span></span><br><span class="line">    <span class="keyword">return</span> (left != <span class="keyword">null</span>) ? left : right;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>p、q的公共祖先是后序遍历序列中p、q之后的第一个结点。</p>
+<h2 id="10-求任意两节点距离"><a href="#10-求任意两节点距离" class="headerlink" title="10 求任意两节点距离"></a>10 求任意两节点距离</h2><p>首先找到两个节点的LCA，然后分别计算LCA与它们的距离，最后相加即可。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">distance</span><span class="params">(TreeNode root, TreeNode node1, TreeNode node2)</span></span>&#123;</span><br><span class="line">    TreeNode lca = lowestCommonAncestor(root, node1, node2);</span><br><span class="line">    <span class="keyword">return</span> findLevel(lca, node1) + findLevel(lca, node2);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">findLevel</span><span class="params">(TreeNode node1, TreeNode node2)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (node1 == <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (node1 == node2)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> level = findLevel(node1.left, node2);</span><br><span class="line">    <span class="keyword">if</span> (level == -<span class="number">1</span>)</span><br><span class="line">        level = findLevel(node1.right, node2);</span><br><span class="line">    <span class="keyword">if</span> (level != -<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span> level + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="11-找出二叉树中某个节点的所有祖先节点"><a href="#11-找出二叉树中某个节点的所有祖先节点" class="headerlink" title="11 找出二叉树中某个节点的所有祖先节点"></a>11 找出二叉树中某个节点的所有祖先节点</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">findAllAncestors</span><span class="params">(List&lt;Integer&gt; list, TreeNode node, TreeNode target)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (node == <span class="keyword">null</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">if</span> (node == target)</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        <span class="keyword">if</span> (findAllAncestors(list, node.left, target) || findAllAncestors(list, node.right, target))&#123;</span><br><span class="line">            list.add(node.val);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="12-不使用递归和栈遍历二叉树"><a href="#12-不使用递归和栈遍历二叉树" class="headerlink" title="12 不使用递归和栈遍历二叉树"></a>12 不使用递归和栈遍历二叉树</h2><p>前序，中序，后序遍历，不管是递归版本还是非递归版本，都用到了一个数据结构–栈，为何要用栈？那是因为其它的方式没法记录当前节点的parent,而如果在每个节点的结构里面加个parent分量显然是不现实的，而线索化正好解决了这个问题，其含义就是利用节点的右孩子空指针，指向该节点在中序序列中的后继。下面具体来看看如何使用线索化来完成对二叉树的遍历。</p>
+<p>  先看前序遍历，步骤如下：<br>  （1）如果当前节点的左孩子为空，则输出当前节点并将其右孩子作为当前节点；<br>  （2）如果当前节点的左孩子不为空，在当前节点的左子树中找到当前节点在中序遍历下的前驱节点；<br>    （2.1）如果前驱节点的右孩子为空，将它的右孩子设置为当前节点，输出当前节点并把当前节点更新为当前节点的左孩子；<br>    （2.2）如果前驱节点的右孩子为当前节点，将它的右孩子重新设为空，当前节点更新为当前节点的右孩子；<br>  （3）重复以上（1）和（2），直到当前节点为空。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br></pre></td><td class="code"><pre><span class="line">/* 前序遍历 */</span><br><span class="line">void PreOrderMorris(Node * root)</span><br><span class="line">&#123;</span><br><span class="line">    Node * cur = root;</span><br><span class="line">    Node * pre = nullptr;</span><br><span class="line">    while (cur)</span><br><span class="line">    &#123;</span><br><span class="line">        if (cur-&gt;left == nullptr)  //(1)</span><br><span class="line">        &#123;</span><br><span class="line">            cout &lt;&lt; cur-&gt;data &lt;&lt; &quot; &quot;;</span><br><span class="line">            cur = cur-&gt;right;</span><br><span class="line">        &#125;</span><br><span class="line">        else</span><br><span class="line">        &#123;</span><br><span class="line">            pre = cur-&gt;left;</span><br><span class="line">            while (pre-&gt;right &amp;&amp; pre-&gt;right != cur)  //(2)，找到cur的前驱节点</span><br><span class="line">                pre = pre-&gt;right;</span><br><span class="line"></span><br><span class="line">            if (pre-&gt;right == nullptr)  //(2.1)，cur未被访问，将cur节点作为其前驱节点的右孩子</span><br><span class="line">            &#123;</span><br><span class="line">                cout &lt;&lt; cur-&gt;data &lt;&lt; &quot; &quot;;</span><br><span class="line">                pre-&gt;right = cur;</span><br><span class="line">                cur = cur-&gt;left;</span><br><span class="line">            &#125;</span><br><span class="line">            else  //(2.2)，cur已被访问，恢复树的原有结构，更改right指针</span><br><span class="line">            &#123;</span><br><span class="line">                pre-&gt;right = nullptr;</span><br><span class="line">                cur = cur-&gt;right;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">  再来看中序遍历，和前序遍历相比只改动一句代码，步骤如下：</span><br><span class="line">  （1）如果当前节点的左孩子为空，则输出当前节点并将其右孩子作为当前节点；</span><br><span class="line">  （2）如果当前节点的左孩子不为空，在当前节点的左子树中找到当前节点在中序遍历下的前驱节点；</span><br><span class="line">    （2.1）如果前驱节点的右孩子为空，将它的右孩子设置为当前节点，当前节点更新为当前节点的左孩子；</span><br><span class="line">    （2.2）如果前驱节点的右孩子为当前节点，将它的右孩子重新设为空，输出当前节点，当前节点更新为当前节点的右孩子；</span><br><span class="line">  （3）重复以上（1）和（2），直到当前节点为空。</span><br><span class="line">/* 中序遍历 */</span><br><span class="line">void InOrderMorris(Node * root)</span><br><span class="line">&#123;</span><br><span class="line">    Node * cur = root;</span><br><span class="line">    Node * pre = nullptr;</span><br><span class="line">    while (cur)</span><br><span class="line">    &#123;</span><br><span class="line">        if (cur-&gt;left == nullptr)  //（1）</span><br><span class="line">        &#123;</span><br><span class="line">            cout &lt;&lt; cur-&gt;data &lt;&lt; &quot; &quot;;</span><br><span class="line">            cur = cur-&gt;right;</span><br><span class="line">        &#125;</span><br><span class="line">        else</span><br><span class="line">        &#123;</span><br><span class="line">            pre = cur-&gt;left;</span><br><span class="line">            while (pre-&gt;right &amp;&amp; pre-&gt;right != cur)  //（2），找到cur的前驱节点</span><br><span class="line">                pre = pre-&gt;right;</span><br><span class="line"></span><br><span class="line">            if (pre-&gt;right == nullptr)  //（2.1），cur未被访问，将cur节点作为其前驱节点的右孩子</span><br><span class="line">            &#123;</span><br><span class="line">                pre-&gt;right = cur;</span><br><span class="line">                cur = cur-&gt;left;</span><br><span class="line">            &#125;</span><br><span class="line">            else  //（2.2），cur已被访问，恢复树的原有结构，更改right指针</span><br><span class="line">            &#123;</span><br><span class="line">                cout &lt;&lt; cur-&gt;data &lt;&lt; &quot; &quot;;</span><br><span class="line">                pre-&gt;right = nullptr;</span><br><span class="line">                cur = cur-&gt;right;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">  最后看下后序遍历，后续遍历有点复杂，需要建立一个虚假根节点dummy，令其左孩子是root。并且还需要一个子过程，就是倒序输出某两个节点之间路径上的各个节点。</span><br><span class="line"></span><br><span class="line">  步骤如下：</span><br><span class="line">  （1）如果当前节点的左孩子为空，则将其右孩子作为当前节点。</span><br><span class="line">  （2）如果当前节点的左孩子不为空，在当前节点的左子树中找到当前节点在中序遍历下的前驱节点。</span><br><span class="line">    （2.1）如果前驱节点的右孩子为空，将它的右孩子设置为当前节点，当前节点更新为当前节点的左孩子；</span><br><span class="line">    （2.2）如果前驱节点的右孩子为当前节点，将它的右孩子重新设为空，倒序输出从当前节点的左孩子到该前驱节点这条路径上的所有节点，当前节点更新为当前节点的右孩子；</span><br><span class="line">  （3）重复以上（1）和（2），直到当前节点为空。</span><br><span class="line">struct Node</span><br><span class="line">&#123;</span><br><span class="line">    int data;</span><br><span class="line">    Node * left;</span><br><span class="line">    Node * right;</span><br><span class="line">    Node(int  data_, Node * left_, Node * right_)</span><br><span class="line">    &#123;</span><br><span class="line">        data = data_;</span><br><span class="line">        left = left_;</span><br><span class="line">        right = right_;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">void ReversePrint(Node * from, Node * to)</span><br><span class="line">&#123;</span><br><span class="line">    if (from == to)</span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; from-&gt;data &lt;&lt; &quot; &quot;;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    ReversePrint(from-&gt;right, to);</span><br><span class="line">    cout &lt;&lt; from-&gt;data &lt;&lt; &quot; &quot;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void  PostOrderMorris(Node * root)</span><br><span class="line">&#123;</span><br><span class="line">    Node * dummy = new Node(-1, root, nullptr);  //一个虚假根节点</span><br><span class="line">    Node * cur = dummy;</span><br><span class="line">    Node * pre = nullptr;</span><br><span class="line">    while (cur)</span><br><span class="line">    &#123;</span><br><span class="line">        if (cur-&gt;left == nullptr)  //（1）</span><br><span class="line">            cur = cur-&gt;right;</span><br><span class="line">        else</span><br><span class="line">        &#123;</span><br><span class="line">            pre = cur-&gt;left;</span><br><span class="line">            while (pre-&gt;right &amp;&amp; pre-&gt;right != cur)  //（2），找到cur的前驱节点</span><br><span class="line">                pre = pre-&gt;right;</span><br><span class="line"></span><br><span class="line">            if (pre-&gt;right == nullptr)  //（2.1），cur未被访问，将cur节点作为其前驱节点的右孩子</span><br><span class="line">            &#123;</span><br><span class="line">                pre-&gt;right = cur;</span><br><span class="line">                cur = cur-&gt;left;</span><br><span class="line">            &#125;</span><br><span class="line">            else  //（2.2），cur已被访问，恢复树的原有结构，更改right指针</span><br><span class="line">            &#123;</span><br><span class="line">                pre-&gt;right = nullptr;</span><br><span class="line">                ReversePrint(cur-&gt;left, pre);</span><br><span class="line">                cur = cur-&gt;right;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>dummy用的非常巧妙，建议读者配合上面的图模拟下算法流程。</p>
+<h2 id="13-二叉树前序中序推后序"><a href="#13-二叉树前序中序推后序" class="headerlink" title="13 二叉树前序中序推后序"></a>13 二叉树前序中序推后序</h2><p> 前序：[1 2 4 7 3 5 8 9 6]<br> 中序：[4 7 2 1 8 5 9 3 6]<br> 后序：[7 4 2 8 9 5 6 3 1]<br> 以上式为例，步骤如下：<br> 第一步：根据前序可知根节点为1；<br> 第二步：根据中序可知4 7 2为根节点1的左子树和8 5 9 3 6为根节点1的右子树；<br> 第三步：递归实现，把4 7 2当做新的一棵树和8 5 9 3 6也当做新的一棵树；<br> 第四步：在递归的过程中输出后序。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> List&lt;Integer&gt; <span class="title">getPostOrder</span><span class="params">(<span class="keyword">int</span>[] preorder, <span class="keyword">int</span>[] inorder)</span></span>&#123;</span><br><span class="line">    List&lt;Integer&gt; res = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">    getPost(preorder, inorder,)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 前序遍历和中序遍历结果以长度为n的数组存储，pos1为前序数组下标，pos2为后序下标 */</span></span><br><span class="line"><span class="keyword">int</span> pre_order_arry[n];</span><br><span class="line"><span class="keyword">int</span> in_order_arry[n];</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PrintPostOrder</span><span class="params">(<span class="keyword">int</span> pos1, <span class="keyword">int</span> pos2, <span class="keyword">int</span> n)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (n == <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; pre_order_arry[pos1];</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (n == <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (; pre_order_arry[pos1] != in_order_arry[pos2 + i]; i++);</span><br><span class="line">    PrintPostOrder(pos1 + <span class="number">1</span>, pos2, i);</span><br><span class="line">    PrintPostOrder(pos1 + i + <span class="number">1</span>, pos2 + i + <span class="number">1</span>, n - i - <span class="number">1</span>);</span><br><span class="line">    cout &lt;&lt; pre_order_arry[pos1];</span><br><span class="line">&#125;</span><br><span class="line">  当然我们也可以根据前序和中序构造出二叉树，进而求出后序。</span><br><span class="line"><span class="comment">/* 该函数返回二叉树的根节点 */</span></span><br><span class="line">Node * Create(<span class="keyword">int</span> pos1, <span class="keyword">int</span> pos2, <span class="keyword">int</span> n)</span><br><span class="line">&#123;</span><br><span class="line">    Node * p = nullptr;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (pre_order_arry[pos1] == in_order_arry[pos2])</span><br><span class="line">        &#123;</span><br><span class="line">            p = <span class="keyword">new</span> Node(pre_order_arry[pos1]);</span><br><span class="line">            p-&gt;left = Create(pos1 + <span class="number">1</span>, pos2, i);</span><br><span class="line">            p-&gt;right = Create(pos1 + i + <span class="number">1</span>, pos2 + i + <span class="number">1</span>, n - i - <span class="number">1</span>);</span><br><span class="line">            <span class="keyword">return</span> p;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> p;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>14 判断二叉树是不是完全二叉树<br>  若设二叉树的深度为h，除第 h 层外，其它各层 (1～h-1) 的结点数都达到最大个数，第 h 层所有的结点都连续集中在最左边，这就是完全二叉树（Complete Binary Tree）。如下图：</p>
+<p>首先若一个节点只有右孩子，肯定不是完全二叉树；其次若只有左孩子或没有孩子，那么对于一个高度为h的完全二叉树，当前节点的高度肯定是h-1，也就是高度h的所有节点都没有孩子，否则不是完全二叉树，因此设置flag标记当前节点是不是到了h-1高度。<br>bool IsCBT(Node <em> node)<br>{<br>    bool flag = false;<br>    queue&lt;Node</em>&gt; Q;<br>    Q.push(node);<br>    while (!Q.empty())<br>    {<br>        Node <em> p = Q.front();<br>        Q.pop();<br>        if (flag)<br>        {<br>            if (p-&gt;left || p-&gt;right)<br>                return false;<br>        }<br>        else<br>        {<br>            if (p-&gt;left &amp;&amp; p-&gt;right)<br>            {<br>                Q.push(p-&gt;left);<br>                Q.push(p-&gt;right);<br>            }<br>            else if (p-&gt;right)  //只有右节点<br>                return false;<br>            else if (p-&gt;left)  //只有左节点<br>            {<br>                Q.push(p-&gt;left);<br>                flag = true;<br>            }<br>            else  //没有节点<br>                flag = true;<br>        }<br>    }<br>    return true;<br>}<br>15 判断是否是二叉查找树的后序遍历结果<br>  在后续遍历得到的序列中，最后一个元素为树的根结点。从头开始扫描这个序列，比根结点小的元素都应该位于序列的左半部分；从第一个大于跟结点开始到跟结点前面的一个元素为止，所有元素都应该大于跟结点，因为这部分元素对应的是树的右子树。根据这样的划分，把序列划分为左右两部分，我们递归地确认序列的左、右两部分是不是都是二元查找树。<br>int array[n];  //长度为n的序列，begin和end遵循的是左闭右闭原则<br>bool IsSequenceOfBST(int begin, int end)<br>{<br>    if (end - begin &lt;= 0)<br>        return true;<br>    int root_data = array[end];  //数组尾元素为根节点<br>    int i = begin;<br>    for (; array[i] &lt; root_data; i++);  //取得左子树<br>    int j = i;<br>    for (; j &lt; end; j++)<br>        if (array[j] &lt; root_data)  //此时右子树应该都大于根节点；若存在小于的，<br>            return false;<br>    return IsSequenceOfBST(begin, i - 1) &amp;&amp; IsSequenceOfBST(i, end - 1);  //左右子树是否都满足<br>}<br>16 给定一个二叉查找树中的节点，找出在中序遍历下它的后继和前驱<br>  一棵二叉查找树的中序遍历序列，正好是升序序列。<br>  如果节点中有指向父亲节点的指针（假如根节点的父节点为nullptr），则：<br>  （1）如果当前节点有右孩子，则后继节点为这个右孩子的最左孩子；<br>  （2）如果当前节点没有右孩子；<br>    （2.1）当前节点为根节点，返回nullptr；<br>    （2.2）当前节点只是个普通节点，也就是存在父节点；<br>      （2.2.1）当前节点是父亲节点的左孩子，则父亲节点就是后继节点；<br>      （2.2.2）当前节点是父亲节点的右孩子，沿着父亲节点往上走，直到n-1代祖先是n代祖先的左孩子，则后继为n代祖先）或遍历到根节点也没找到符合的，则当前节点就是中序遍历的最后一个节点，返回nullptr。<br>/</em> 求后继节点 <em>/<br>Node </em> Increment(Node <em> node)<br>{<br>    if (node-&gt;right)  //(1)<br>    {<br>        node = node-&gt;right;<br>        while (node-&gt;left)<br>            node = node-&gt;left;<br>        return node;<br>    }<br>    else  //(2)<br>    {<br>        if (node-&gt;parent == nullptr)  //(2.1)<br>            return nullptr;<br>        Node </em> p = node-&gt;parent;  //(2.2)<br>        if (p-&gt;left == node)  //(2.2.1)<br>            return p;<br>        else  //(2.2.2)<br>        {<br>            while (p-&gt;right == node)<br>            {<br>                node = p;<br>                p = p-&gt;parent;<br>                if (p == nullptr)<br>                    return nullptr;<br>            }<br>            return p;<br>        }<br>    }<br>}<br>  仔细观察上述代码，总觉得有点啰嗦。比如，过多的return，（2）的层次太多。综合考虑所有情况，改进代码如下：<br>Node <em> Increment(Node </em> node)<br>{<br>    if (node-&gt;right)<br>    {<br>        node = node-&gt;right;<br>        while (node-&gt;left)<br>            node = node-&gt;left;<br>    }<br>    else<br>    {<br>        Node <em> p = node-&gt;parent;<br>        while (p &amp;&amp; p-&gt;right == node)<br>        {<br>            node = p;<br>            p = p-&gt;parent;<br>        }<br>        node = p;<br>    }<br>    return node;<br>}<br>  上述的代码是基于节点有parent指针的，若题意要求没有parent呢？网上也有人给出了答案，个人觉得没有什么价值，有兴趣的朋友可以到这里查看。<br>  而求前驱节点的话，只需把上述代码的left与right互调即可，很简单。<br>17 二分查找树转化为排序的循环双链表<br>  二分查找树的中序遍历即为升序排列，问题就在于如何在遍历的时候更改指针的指向。一种简单的方法时，遍历二分查找树，将遍历的结果放在一个数组中，之后再把该数组转化为双链表。如果题目要求只能使用O(1)内存，则只能在遍历的同时构建双链表，即进行指针的替换。<br>  我们需要用递归的方法来解决，假定每个递归调用都会返回构建好的双链表，可把问题分解为左右两个子树。由于左右子树都已经是有序的，当前节点作为中间的一个节点，把左右子树得到的链表连接起来即可。<br>/</em> 合并两个a,b两个循环双向链表 <em>/<br>Node </em> Append(Node <em> a, Node </em> b)<br>{<br>    if (a == nullptr) return b;<br>    if (b == nullptr) return a;</p>
+<pre><code>//分别得到两个链表的最后一个元素
+Node * a_last = a-&gt;left;
+Node * b_last = b-&gt;left;
+
+//将两个链表头尾相连  
+a_last-&gt;right = b;
+b-&gt;left = a_last;
+
+a-&gt;left = b_last;
+b_last-&gt;right = a;
+
+return a;
+</code></pre><p>}</p>
+<p>/<em> 递归的解决二叉树转换为双链表 </em>/<br>Node <em> TreeToList(Node </em> node)<br>{<br>    if (node == nullptr) return nullptr;</p>
+<pre><code>//递归解决子树
+Node * left_list = TreeToList(node-&gt;left);
+Node * right_list = TreeToList(node-&gt;right);
+
+//把根节点转换为一个节点的双链表。方便后面的链表合并  
+node-&gt;left = node;
+node-&gt;right = node;
+
+//合并之后即为升序排列
+left_list = Append(left_list, node);
+left_list = Append(left_list, right_list);
+
+return left_list;
+</code></pre><p>}<br>18 有序链表转化为平衡的二分查找树（Binary Search Tree）<br>  我们可以采用自顶向下的方法。先找到中间节点作为根节点，然后递归左右两部分。所有我们需要先找到中间节点，对于单链表来说，必须要遍历一边，可以使用快慢指针加快查找速度。<br>struct TreeNode<br>{<br>    int data;<br>    TreeNode<em> left;<br>    TreeNode</em> right;<br>    TreeNode(int data_) { data = data_; left = right = nullptr; }<br>};</p>
+<p>struct ListNode<br>{<br>    int data;<br>    ListNode* next;<br>    ListNode(int data_) { data = data_; next = nullptr; }<br>};</p>
+<p>TreeNode <em> SortedListToBST(ListNode </em>  list_node)<br>{<br>    if (!list_node) return nullptr;<br>    if (!list_node-&gt;next) return (new TreeNode(list_node-&gt;data));</p>
+<pre><code>//用快慢指针找到中间节点  
+ListNode * pre_slow = nullptr;  //记录慢指针的前一个节点
+ListNode * slow = list_node;    //慢指针
+ListNode * fast = list_node;    //快指针
+while (fast &amp;&amp; fast-&gt;next)
+{
+    pre_slow = slow;
+    slow = slow-&gt;next;
+    fast = fast-&gt;next-&gt;next;
+}
+TreeNode * mid = new TreeNode(slow-&gt;data);
+
+//分别递归左右两部分  
+if (pre_slow)
+{
+    pre_slow-&gt;next = nullptr;
+    mid-&gt;left = SortedListToBST(list_node);
+}
+mid-&gt;right = SortedListToBST(slow-&gt;next);
+
+return mid;
+</code></pre><p>}<br>  由f(n)=2f(n2)+n2得，所以上述算法的时间复杂度为O(nlogn)。<br>  不妨换个思路，采用自底向上的方法：<br>TreeNode <em> SortedListToBST(ListNode </em>&amp; list, int start, int end)<br>{<br>    if (start &gt; end) return nullptr;</p>
+<pre><code>int mid = start + (end - start) / 2;
+TreeNode * left_child = SortedListToBST(list, start, mid - 1);  //注意此处传入的是引用
+TreeNode * parent = new TreeNode(list-&gt;data);
+parent-&gt;left = left_child;
+list = list-&gt;next;
+parent-&gt;right = SortedListToBST(list, mid + 1, end);
+return parent;
+</code></pre><p>}</p>
+<p>TreeNode <em> sortedListToBST(ListNode </em> node)<br>{<br>    int n = 0;<br>    ListNode * p = node;<br>    while (p)<br>    {<br>        n++;<br>        p = p-&gt;next;<br>    }<br>    return SortedListToBST(node, 0, n - 1);<br>}<br>  如此，时间复杂度降为O(n)。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据结构/" rel="tag"># 数据结构</a>
+          
+            <a href="/tags/树/" rel="tag"># 树</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/06/13/java/并发/Java并发09 ThreadPoolExecutor/" rel="next" title="Java并发09 ThreadPoolExecutor">
+                <i class="fa fa-chevron-left"></i> Java并发09 ThreadPoolExecutor
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/uploads/avatar.gif" alt="Javior Wang">
+            
+              <p class="site-author-name" itemprop="name">Javior Wang</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">40</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/scorego" title="GitHub &rarr; https://github.com/scorego" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://www.zhihu.com/people/scorego-6" title="Zhihu &rarr; https://www.zhihu.com/people/scorego-6" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>Zhihu</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-4"><span class="nav-text">1-4</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-求树的深度"><span class="nav-text">5 求树的深度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-求二叉树第k层的节点个数"><span class="nav-text">6 求二叉树第k层的节点个数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-判断两棵二叉树是否结构相同"><span class="nav-text">7 判断两棵二叉树是否结构相同</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-求二叉树的镜像"><span class="nav-text">8 求二叉树的镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-求两个节点的最低公共祖先节点"><span class="nav-text">9 求两个节点的最低公共祖先节点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-求任意两节点距离"><span class="nav-text">10 求任意两节点距离</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-找出二叉树中某个节点的所有祖先节点"><span class="nav-text">11 找出二叉树中某个节点的所有祖先节点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#12-不使用递归和栈遍历二叉树"><span class="nav-text">12 不使用递归和栈遍历二叉树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13-二叉树前序中序推后序"><span class="nav-text">13 二叉树前序中序推后序</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Javior Wang</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next mist" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/favicon-128x128-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-01.ico?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/uploads/favicon-128x128-01.ico?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Java IO TutorialJava Networking API   Java IO API位于Java IO包java.io中，包中有大量的类。java.io包实际上并不涉及所有类型的输入和输出，比如不包含对GUI或Web页面的输入和输出(这些类型的输入在其他地方有所涉及，例如Swing项目中的JFC类，或Java Enterprise Edition中的Servlet和HTTP包)。Ja">
+<meta name="keywords" content="IO">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java IO Tutorial 01 Overview">
+<meta property="og:url" content="javior.wang/2019/06/30/java/IO系统/Java IO Tutorial/Java IO Tutorial 01 Overview/index.html">
+<meta property="og:site_name" content="Javior&#39;s Blog">
+<meta property="og:description" content="Java IO TutorialJava Networking API   Java IO API位于Java IO包java.io中，包中有大量的类。java.io包实际上并不涉及所有类型的输入和输出，比如不包含对GUI或Web页面的输入和输出(这些类型的输入在其他地方有所涉及，例如Swing项目中的JFC类，或Java Enterprise Edition中的Servlet和HTTP包)。Ja">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-07-10T09:21:18.027Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java IO Tutorial 01 Overview">
+<meta name="twitter:description" content="Java IO TutorialJava Networking API   Java IO API位于Java IO包java.io中，包中有大量的类。java.io包实际上并不涉及所有类型的输入和输出，比如不包含对GUI或Web页面的输入和输出(这些类型的输入在其他地方有所涉及，例如Swing项目中的JFC类，或Java Enterprise Edition中的Servlet和HTTP包)。Ja">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="javior.wang/2019/06/30/java/IO系统/Java IO Tutorial/Java IO Tutorial 01 Overview/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Java IO Tutorial 01 Overview | Javior's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Javior's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/index.html" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/06/30/java/IO系统/Java IO Tutorial/Java IO Tutorial 01 Overview/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Javior Wang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Javior's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java IO Tutorial 01 Overview
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-06-30 06:35:34" itemprop="dateCreated datePublished" datetime="2019-06-30T06:35:34+08:00">2019-06-30</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-07-10 17:21:18" itemprop="dateModified" datetime="2019-07-10T17:21:18+08:00">2019-07-10</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Java-IO/" itemprop="url" rel="index"><span itemprop="name">Java IO</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="http://tutorials.jenkov.com/java-io/index.html" target="_blank" rel="noopener">Java IO Tutorial</a><br><a href="http://tutorials.jenkov.com/java-networking/index.html" target="_blank" rel="noopener">Java Networking API</a>  </p>
+<p>Java IO API位于Java IO包<code>java.io</code>中，包中有大量的类。<code>java.io</code>包实际上并不涉及所有类型的输入和输出，比如不包含对GUI或Web页面的输入和输出(这些类型的输入在其他地方有所涉及，例如Swing项目中的JFC类，或Java Enterprise Edition中的Servlet和HTTP包)。<br>Java IO包主要关注文件、网络流、内部存储器缓冲区等的输入和输出。但是，Java IO包不包含用于打开网络通信所必需的网络套接字的类。为此需要使用<a href="http://tutorials.jenkov.com/java-networking/index.html" target="_blank" rel="noopener">Java Networking API</a>。一旦建立了一个socket连接(网络连接)，就可以通过Java IO InputStream和OutputStream类来读取和写入数据。  </p>
+<h2 id="1-Overview"><a href="#1-Overview" class="headerlink" title="1. Overview"></a>1. Overview</h2><h3 id="A-信源和信宿"><a href="#A-信源和信宿" class="headerlink" title="A. 信源和信宿"></a>A. 信源和信宿</h3><p>Java的IO包主要关注从信源读取原始数据和将原始数据写入信宿。最典型的信源和信宿是：</p>
+<ul>
+<li>文件</li>
+<li>管道</li>
+<li>网络连接</li>
+<li>内存缓冲区(如数组)</li>
+<li><code>System.in</code>, <code>System.out</code>, <code>System.error</code></li>
+</ul>
+<p><strong>Source &gt;&gt;&gt; Program &gt;&gt;&gt; Destination</strong>  </p>
+<p>流(stream)是Java IO的核心概念。概念上流是无穷无尽的数据流，可以从流中读取数据或写数据到流中。流连接到数据源或数据目的地。Java IO中的流可以是基于字节(byte)的(读取和写入字节)，也可以是基于字符(character)的(读取和写入字符)。<br>从某个源读取数据的程序需要一个<code>InputStream</code>或一个<code>Reader</code>。将数据写入某个目的地的程序需要<code>OutputStream</code>或<code>Writer</code>。<code>InputStream</code>或<code>Reader</code>链接到数据源，<code>OutputStream</code>或<code>Writer</code>链接到数据目的地。  </p>
+<p><strong>Source &gt;&gt;&gt; InputStream/Reader &gt;&gt;&gt; Program</strong><br><strong>Program &gt;&gt;&gt; OutputStream/Writer &gt;&gt;&gt; Destination</strong>   </p>
+<h3 id="B-Java-IO目的和功能"><a href="#B-Java-IO目的和功能" class="headerlink" title="B. Java IO目的和功能"></a>B. Java IO目的和功能</h3><p>Java IO有很多<code>InputStream</code>/<code>OutputStream</code>/<code>Reader</code>/<code>Writer</code>的子类，不同的子类解决不同的问题，包括：</p>
+<ul>
+<li>Files</li>
+<li>Network</li>
+<li>访问内置存储</li>
+<li>线程间通信(管道)</li>
+<li>Buffering</li>
+<li>Filtering</li>
+<li>Parsing</li>
+<li>Reading and Writing Text (Readers / Writers)</li>
+<li>Reading and Writing Primitive Data (long, int etc.)</li>
+<li>Reading and Writing Objects</li>
+</ul>
+<h3 id="C-Java-IO类概述"><a href="#C-Java-IO类概述" class="headerlink" title="C. Java IO类概述"></a>C. Java IO类概述</h3><table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">Byte Based Input</th>
+<th style="text-align:center">Byte Based Output</th>
+<th style="text-align:center">Character Based Input</th>
+<th>Character BasedOutput</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Basic</td>
+<td style="text-align:center">InputStream</td>
+<td style="text-align:center">OutputStream</td>
+<td style="text-align:center">Reader InputStreamReader</td>
+<td>Writer OutputStreamWriter</td>
+</tr>
+<tr>
+<td style="text-align:center">Arrays</td>
+<td style="text-align:center">ByteArrayInputStream</td>
+<td style="text-align:center">ByteArrayOutputStream</td>
+<td style="text-align:center">CharArrayReader</td>
+<td>CharArrayWriter</td>
+</tr>
+<tr>
+<td style="text-align:center">Files</td>
+<td style="text-align:center">FileInputStream RandomAccessFile</td>
+<td style="text-align:center">FileOutputStream RandomAccessFile</td>
+<td style="text-align:center">FileReader</td>
+<td>FileWriter</td>
+</tr>
+<tr>
+<td style="text-align:center">Pipes</td>
+<td style="text-align:center">PipedInputStream</td>
+<td style="text-align:center">PipedOutputStream</td>
+<td style="text-align:center">PipedReader</td>
+<td>PipedWriter</td>
+</tr>
+<tr>
+<td style="text-align:center">Buffering</td>
+<td style="text-align:center">BufferedInputStream</td>
+<td style="text-align:center">BufferedOutputStream</td>
+<td style="text-align:center">BufferedReader</td>
+<td>BufferedWriter</td>
+</tr>
+<tr>
+<td style="text-align:center">Filtering</td>
+<td style="text-align:center">FilterInputStream</td>
+<td style="text-align:center">FilterOutputStream</td>
+<td style="text-align:center">FilterReader</td>
+<td>FilterWriter</td>
+</tr>
+<tr>
+<td style="text-align:center">Parsing</td>
+<td style="text-align:center">PushbackInputStream StreamTokenizer</td>
+<td style="text-align:center"></td>
+<td style="text-align:center">PushbackReader LineNumberReader</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">Strings</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center">StringReader</td>
+<td>StringWriter</td>
+</tr>
+<tr>
+<td style="text-align:center">Data</td>
+<td style="text-align:center">DataInputStream</td>
+<td style="text-align:center">DataOutputStream</td>
+<td style="text-align:center"></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">Data - Formatted</td>
+<td style="text-align:center"></td>
+<td style="text-align:center">PrintStream</td>
+<td style="text-align:center"></td>
+<td>PrintWriter</td>
+</tr>
+<tr>
+<td style="text-align:center">Objects</td>
+<td style="text-align:center">ObjectInputStream</td>
+<td style="text-align:center">ObjectOutputStream</td>
+<td style="text-align:center"></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align:center">Utilities</td>
+<td style="text-align:center">SequenceInputStream</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-Files-文件"><a href="#2-Files-文件" class="headerlink" title="2. Files / 文件"></a>2. Files / 文件</h2><h3 id="A-读取文件"><a href="#A-读取文件" class="headerlink" title="A. 读取文件"></a>A. 读取文件</h3><p>从文件中读取内容时可以使用<code>FileInputStream</code>/<code>FileReader</code>，它们每次读取一个字节或字符，或读入一个字节和字符数组。不必每次读取文件的全部内容，但必须按顺序读取。如果需要不按顺序读取，可以使用<code>RandomAccessFile</code>。  </p>
+<h3 id="B-编写文件"><a href="#B-编写文件" class="headerlink" title="B. 编写文件"></a>B. 编写文件</h3><p>向文件写入内容可以使用<code>FileOutputStream</code>/<code>FileWriter</code>，必须按顺序写入。如果需要不按顺序写入，比如追加内容到文件末尾，可以使用<code>RandomAccessFile</code>。   </p>
+<h3 id="C-随机访问文件"><a href="#C-随机访问文件" class="headerlink" title="C. 随机访问文件"></a>C. 随机访问文件</h3><p>可以通过<code>RandomAccessFile</code>类随机访问文件。随机访问并不意味着从真正随机的地方读取或写入，而是意味着可以以任何方式跳过文件并同时读取或写入文件。没有强制执行特定的访问顺序。这样就可以覆写现有文件的一部分、追加内容到末尾、从中删除、从需要的地方读取。  </p>
+<h3 id="D-文件和目录信息访问"><a href="#D-文件和目录信息访问" class="headerlink" title="D. 文件和目录信息访问"></a>D. 文件和目录信息访问</h3><p>有时可能需要访问有关文件的属性而非其内容，如有时需要知道文件的大小或其他属性。对于目录也是如此，如可能希望获取给定目录中所有文件的列表。文件和目录信息都可以通过<code>File</code>类获得。  </p>
+<h2 id="3-Pipes-管道"><a href="#3-Pipes-管道" class="headerlink" title="3. Pipes / 管道"></a>3. Pipes / 管道</h2><p>Java IO的管道提供了在同一JVM中运行的两个线程通信的能力。所以管道既是信源，又是信宿。<br>不能使用管道向不同JVM的线程通信。Java中的管道的概念和UNIX/Linux中管道的概念是不同的。UNIX/Linux中，在不同地址空间中运行的两个进程都可以通过管道进行通信。在Java中，通信方必须在同一进程中运行，并且应该是不同的线程。<br>Java中通过<code>PipedOutputStream</code>/<code>PipedInputStream</code>类来创建管道。一个<code>PipedInputStream</code>应该连接到一个<code>PipedOutputStream</code>。一个线程写入<code>PipedOutputStream</code>的数据可以被另一个线程从<code>PipedOutputStream</code>读取。下面是一个示例：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.PipedInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.PipedOutputStream;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PipeExample</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> PipedOutputStream output = <span class="keyword">new</span> PipedOutputStream();</span><br><span class="line">        <span class="keyword">final</span> PipedInputStream  input  = <span class="keyword">new</span> PipedInputStream(output);</span><br><span class="line"></span><br><span class="line">        Thread thread1 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    output.write(<span class="string">"Hello world, pipe!"</span>.getBytes());</span><br><span class="line">                &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        Thread thread2 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    <span class="keyword">int</span> data = input.read();</span><br><span class="line">                    <span class="keyword">while</span>(data != -<span class="number">1</span>)&#123;</span><br><span class="line">                        System.out.print((<span class="keyword">char</span>) data);</span><br><span class="line">                        data = input.read();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        thread1.start();</span><br><span class="line">        thread2.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>还可以使用<code>connect()</code>方法连接两个管道流。<code>PipedInputStream</code>/<code>PipedOutputStream</code>都有一个<code>connect()</code>方法可以与另一个建立连接。<br>使用<code>PipedInputStream</code>/<code>PipedOutputStream</code>时一定要将两个流传递给两个不同的线程。因为它们的<code>read()</code>/<code>write()</code>方法是阻塞的，所以如果在同一个线程上同时<code>read()</code>和<code>write()</code>，将会形成死锁。<br>除了管道之外，还有许多其他方法可以在同一个JVM中进行通信。事实上，线程更经常交换完整的对象而不是原始的字节数据。但是如果需要在线程之间交换原始字节数据，Java IO的管道是可选的。  </p>
+<h2 id="4-Networking-网络"><a href="#4-Networking-网络" class="headerlink" title="4. Networking / 网络"></a>4. Networking / 网络</h2><p>一旦两个进程之间建立了网络连接，那么就可以像处理文件一样处理它们：使用<code>InputStream</code>来读取数据，使用<code>OutputStream</code>来写入数据。换句话说，Java Networking API建立了网络连接之后，Java IO来交换数据。也就是说，用来处理文件的IO代码一样可以用来处理网络IO，只是把<code>FileOutputStream</code>换成<code>OutputStream</code>、<code>FileInputStream</code>换成<code>InputStream</code>。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        InputStream inputStream = <span class="keyword">new</span> FileInputStream(<span class="string">"c:\\myfile.txt"</span>);</span><br><span class="line"></span><br><span class="line">        process(inputStream);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(InputStream input)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <span class="comment">//do something with the InputStream</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在上例中，<code>process()</code>函数无法看到参数<code>InputStream input</code>来自文件系统还是网络。  </p>
+<h2 id="5-Byte-amp-Char-Arrays-数组"><a href="#5-Byte-amp-Char-Arrays-数组" class="headerlink" title="5. Byte &amp; Char Arrays / 数组"></a>5. Byte &amp; Char Arrays / 数组</h2><p>字节数组和字符数组在Java中通常用来在应用程序内部临时存储数据。所以数组也是常用的信源和信宿。如果要经常从文件中读取数据，可以将文件加载到一个数组中。<br>可以在<code>ByteArrayInputStream</code>或<code>CharArrayReader</code>中包装字节/字符数组。之后可以利用这些类来读取数组中的数据。如：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">byte</span>[] bytes = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">//write data into byte array...</span></span><br><span class="line"></span><br><span class="line">InputStream input = <span class="keyword">new</span> ByteArrayInputStream(bytes);</span><br><span class="line"></span><br><span class="line"><span class="comment">//read first byte</span></span><br><span class="line"><span class="keyword">int</span> data = input.read();</span><br><span class="line"><span class="keyword">while</span>(data != -<span class="number">1</span>) &#123;</span><br><span class="line">    <span class="comment">//do something with data</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//read next byte</span></span><br><span class="line">    data = input.read();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以向<code>ByteArrayOutputStream</code>/<code>CharArrayWriter</code>中写数据。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ByteArrayOutputStream output = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line"></span><br><span class="line">output.write(<span class="string">"This text is converted to bytes"</span>.getBytes(<span class="string">"UTF-8"</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">byte</span>[] bytes = output.toByteArray();</span><br></pre></td></tr></table></figure></p>
+<h2 id="6-System-in-System-out-and-System-error"><a href="#6-System-in-System-out-and-System-error" class="headerlink" title="6. System.in, System.out, and System.error"></a>6. System.in, System.out, and System.error</h2><p><code>System.in</code>、<code>System.out</code>和<code>System.err</code>也是常见的信源和信宿。这三个流在JVM启动时初始化。<br><code>System.in</code>是一个<code>InputStream</code>，通常连接到控制台程序的键盘输入。由于数据通常通过命令行参数或配置文件传递到命令行Java程序，因此<code>System.in</code>使用并不频繁。在具有GUI的应用程序中，应用程序的输入是通过GUI给出的。这是Java IO的独立输入机制。<br><code>System.out</code>是一个<code>PrintStream</code>，通常向控制台写数据。这通常用于仅限控制台的程序，如命令行工具。有时也用于从程序中打印调试语句(尽管它可能不是从程序中获取调试信息的最佳方法)。<br><code>System.err</code>是一个<code>PrintStream</code>。除了它通常用于输出错误文本外，它和<code>System.out</code>相同。某些程序(如Eclipse)以红色文本显示<code>System.err</code>输出，以表明其是错误文本。<br>虽然3个System流是<code>java.lang.System</code>类的静态成员，并且在JVM启动时预先实例化，但依然可以更改每个流使用的流。只需为<code>System.in</code>设置一个新的<code>InputStream</code>或为<code>System.out</code>、<code>System.err</code>设置新的<code>OutputStream</code>，所有其他数据将被读/写到新流。要设置新System流，使用方法<code>System.setIn()</code>，<code>System.setOut()</code>或<code>System.setErr()</code>。如：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">OutputStream output = <span class="keyword">new</span> FileOutputStream(<span class="string">"c:\\data\\system.out.txt"</span>);</span><br><span class="line">PrintStream printOut = <span class="keyword">new</span> PrintStream(output);</span><br><span class="line"></span><br><span class="line">System.setOut(printOut);</span><br></pre></td></tr></table></figure></p>
+<p>现在写入的所有数据都System.out应该重定向到文件<code>c:\data\system.out.txt</code>。但注意，应该确保<code>System.out</code>在JVM关闭之前刷新并关闭文件，以确保写入的所有数据<code>System.out</code>实际上都刷新到文件中。  </p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/IO/" rel="tag"># IO</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/06/20/数据结构与算法/字符串搜索算法/" rel="next" title="字符串搜索算法">
+                <i class="fa fa-chevron-left"></i> 字符串搜索算法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/10/java/IO系统/Java IO Tutorial/Java IO Tutorial 02 Stream/" rel="prev" title="Java IO Tutorial 02 Stream">
+                Java IO Tutorial 02 Stream <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/uploads/avatar.gif" alt="Javior Wang">
+            
+              <p class="site-author-name" itemprop="name">Javior Wang</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">44</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/index.html">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">10</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">21</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/scorego" title="GitHub &rarr; https://github.com/scorego" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://www.zhihu.com/people/scorego-6" title="Zhihu &rarr; https://www.zhihu.com/people/scorego-6" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>Zhihu</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Overview"><span class="nav-text">1. Overview</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-信源和信宿"><span class="nav-text">A. 信源和信宿</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-Java-IO目的和功能"><span class="nav-text">B. Java IO目的和功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C-Java-IO类概述"><span class="nav-text">C. Java IO类概述</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Files-文件"><span class="nav-text">2. Files / 文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-读取文件"><span class="nav-text">A. 读取文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-编写文件"><span class="nav-text">B. 编写文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C-随机访问文件"><span class="nav-text">C. 随机访问文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#D-文件和目录信息访问"><span class="nav-text">D. 文件和目录信息访问</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Pipes-管道"><span class="nav-text">3. Pipes / 管道</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Networking-网络"><span class="nav-text">4. Networking / 网络</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-Byte-amp-Char-Arrays-数组"><span class="nav-text">5. Byte &amp; Char Arrays / 数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-System-in-System-out-and-System-error"><span class="nav-text">6. System.in, System.out, and System.error</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Javior Wang</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

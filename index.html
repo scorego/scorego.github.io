@@ -335,7 +335,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="javior.wang/2019/07/10/java/IO系统/Java IO Tutorial/Java IO Tutorial 02 Stream/">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/07/10/java/IO系统/Java IO Tutorial/Java IO Tutorial 02 InputStream & OutputStream/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Javior Wang">
@@ -355,7 +355,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/07/10/java/IO系统/Java IO Tutorial/Java IO Tutorial 02 Stream/" class="post-title-link" itemprop="url">Java IO Tutorial 02 Stream</a>
+                <a href="/2019/07/10/java/IO系统/Java IO Tutorial/Java IO Tutorial 02 InputStream & OutputStream/" class="post-title-link" itemprop="url">Java IO Tutorial 02 InputStream & OutputStream</a>
               
             
           </h1>
@@ -380,12 +380,24 @@
                 
               
 
-              <time title="创建时间：2019-07-10 17:20:12 / 修改时间：17:48:22" itemprop="dateCreated datePublished" datetime="2019-07-10T17:20:12+08:00">2019-07-10</time>
+              <time title="创建时间：2019-07-10 19:58:12" itemprop="dateCreated datePublished" datetime="2019-07-10T19:58:12+08:00">2019-07-10</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-07-11 18:36:33" itemprop="dateModified" datetime="2019-07-11T18:36:33+08:00">2019-07-11</time>
               
             
           </span>
@@ -440,13 +452,14 @@
         
           
             <p>
-              1. StreamJava IO流是可以读取或写入的数据流。流通常连接到数据源或数据目标，如文件，网络连接等。流的读取或写入没有数组那样索引的概念。通常也不能在流中前后移动，流只是一个连续的数据流。一些流实现如PushbackInputStream可以将数据推回到流中，以便稍后再次重新读取。但是只能推回有限数量的数据，并且不能随意遍历数据。数据只能按顺序访问。Java IO流通常要么基于字节，要么基于字符。基于字节的流通常被称为stream，如InputStream或OutputStream。这些流每次读取和写入的是原始字节，但是DataInputStream/DataOutputStream
+              1. InputStreamInputStream类表示有序的字节流。换句话说，可以把从InputStream中读取的数据作为有序的字节序列。这在从文件读取数据或通过网络接收数据时非常有用。InputStream类是Java IO API中所有输入流的基类。InputStream子类包括FileInputStream、BufferedInputStream和PushbackInputStream等。  
+A. 源码package java.io;public abstract class InputStream implements Closeable &#123;    // MAX_SKI
               ...
             </p>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2019/07/10/java/IO系统/Java IO Tutorial/Java IO Tutorial 02 Stream/#more" rel="contents">
+              <a class="btn" href="/2019/07/10/java/IO系统/Java IO Tutorial/Java IO Tutorial 02 InputStream & OutputStream/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -568,7 +581,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-07-10 17:21:18" itemprop="dateModified" datetime="2019-07-10T17:21:18+08:00">2019-07-10</time>
+                <time title="修改时间：2019-07-11 17:33:58" itemprop="dateModified" datetime="2019-07-11T17:33:58+08:00">2019-07-11</time>
               
             
           </span>

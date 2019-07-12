@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next mist" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/favicon-128x128-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-01.ico?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/uploads/favicon-128x128-01.ico?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="1. PipedInputStreamPipedInputStream类使得能够读取管道的内容作为字节流。管道是同一JVM内不同线程之间的通信通道。如果同一线程使用一对PipedInputStream和PipedOutputStream，则可能会造成死锁。 12345678910111213141516171819202122232425262728293031323334353637383940">
+<meta name="keywords" content="IO">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java IO Tutorial 04 更多InputStream &amp; OutputStream">
+<meta property="og:url" content="javior.wang/2019/07/12/java/IO系统/Java IO Tutorial/Java IO Tutorial 04 更多InputStream & OutputStream/index.html">
+<meta property="og:site_name" content="Javior&#39;s Blog">
+<meta property="og:description" content="1. PipedInputStreamPipedInputStream类使得能够读取管道的内容作为字节流。管道是同一JVM内不同线程之间的通信通道。如果同一线程使用一对PipedInputStream和PipedOutputStream，则可能会造成死锁。 12345678910111213141516171819202122232425262728293031323334353637383940">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-07-12T22:18:00.603Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java IO Tutorial 04 更多InputStream &amp; OutputStream">
+<meta name="twitter:description" content="1. PipedInputStreamPipedInputStream类使得能够读取管道的内容作为字节流。管道是同一JVM内不同线程之间的通信通道。如果同一线程使用一对PipedInputStream和PipedOutputStream，则可能会造成死锁。 12345678910111213141516171819202122232425262728293031323334353637383940">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="javior.wang/2019/07/12/java/IO系统/Java IO Tutorial/Java IO Tutorial 04 更多InputStream & OutputStream/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Java IO Tutorial 04 更多InputStream & OutputStream | Javior's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Javior's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/index.html" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/07/12/java/IO系统/Java IO Tutorial/Java IO Tutorial 04 更多InputStream & OutputStream/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Javior Wang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Javior's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java IO Tutorial 04 更多InputStream & OutputStream
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-07-12 11:55:12" itemprop="dateCreated datePublished" datetime="2019-07-12T11:55:12+08:00">2019-07-12</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-07-13 06:18:00" itemprop="dateModified" datetime="2019-07-13T06:18:00+08:00">2019-07-13</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Java-IO/" itemprop="url" rel="index"><span itemprop="name">Java IO</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="1-PipedInputStream"><a href="#1-PipedInputStream" class="headerlink" title="1. PipedInputStream"></a>1. PipedInputStream</h2><p><code>PipedInputStream</code>类使得能够读取管道的内容作为字节流。管道是同一JVM内不同线程之间的通信通道。如果同一线程使用一对<code>PipedInputStream</code>和<code>PipedOutputStream</code>，则可能会造成死锁。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> java.io;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PipedInputStream</span> <span class="keyword">extends</span> <span class="title">InputStream</span> </span>&#123;</span><br><span class="line">    <span class="keyword">boolean</span> closedByWriter = <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">volatile</span> <span class="keyword">boolean</span> closedByReader = <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">boolean</span> connected = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* REMIND: identification of the read and write sides needs to be</span></span><br><span class="line"><span class="comment">           more sophisticated.  Either using thread groups (but what about</span></span><br><span class="line"><span class="comment">           pipes within a thread?) or using finalization (but it may be a</span></span><br><span class="line"><span class="comment">           long time until the next GC). */</span></span><br><span class="line">    Thread readSide;</span><br><span class="line">    Thread writeSide;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> DEFAULT_PIPE_SIZE = <span class="number">1024</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> PIPE_SIZE = DEFAULT_PIPE_SIZE;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">byte</span> buffer[];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">int</span> in = -<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">int</span> out = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">PipedInputStream</span><span class="params">(PipedOutputStream src)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(src, DEFAULT_PIPE_SIZE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">PipedInputStream</span><span class="params">(PipedOutputStream src, <span class="keyword">int</span> pipeSize)</span></span></span><br><span class="line"><span class="function">            <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">         initPipe(pipeSize);</span><br><span class="line">         connect(src);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">PipedInputStream</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        initPipe(DEFAULT_PIPE_SIZE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">PipedInputStream</span><span class="params">(<span class="keyword">int</span> pipeSize)</span> </span>&#123;</span><br><span class="line">        initPipe(pipeSize);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initPipe</span><span class="params">(<span class="keyword">int</span> pipeSize)</span> </span>&#123;</span><br><span class="line">         <span class="keyword">if</span> (pipeSize &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Pipe Size &lt;= 0"</span>);</span><br><span class="line">         &#125;</span><br><span class="line">         buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[pipeSize];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">connect</span><span class="params">(PipedOutputStream src)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        src.connect(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">receive</span><span class="params">(<span class="keyword">int</span> b)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        checkStateForReceive();</span><br><span class="line">        writeSide = Thread.currentThread();</span><br><span class="line">        <span class="keyword">if</span> (in == out)</span><br><span class="line">            awaitSpace();</span><br><span class="line">        <span class="keyword">if</span> (in &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            in = <span class="number">0</span>;</span><br><span class="line">            out = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        buffer[in++] = (<span class="keyword">byte</span>)(b &amp; <span class="number">0xFF</span>);</span><br><span class="line">        <span class="keyword">if</span> (in &gt;= buffer.length) &#123;</span><br><span class="line">            in = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">receive</span><span class="params">(<span class="keyword">byte</span> b[], <span class="keyword">int</span> off, <span class="keyword">int</span> len)</span>  <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        checkStateForReceive();</span><br><span class="line">        writeSide = Thread.currentThread();</span><br><span class="line">        <span class="keyword">int</span> bytesToTransfer = len;</span><br><span class="line">        <span class="keyword">while</span> (bytesToTransfer &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (in == out)</span><br><span class="line">                awaitSpace();</span><br><span class="line">            <span class="keyword">int</span> nextTransferAmount = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">if</span> (out &lt; in) &#123;</span><br><span class="line">                nextTransferAmount = buffer.length - in;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (in &lt; out) &#123;</span><br><span class="line">                <span class="keyword">if</span> (in == -<span class="number">1</span>) &#123;</span><br><span class="line">                    in = out = <span class="number">0</span>;</span><br><span class="line">                    nextTransferAmount = buffer.length - in;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    nextTransferAmount = out - in;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (nextTransferAmount &gt; bytesToTransfer)</span><br><span class="line">                nextTransferAmount = bytesToTransfer;</span><br><span class="line">            <span class="keyword">assert</span>(nextTransferAmount &gt; <span class="number">0</span>);</span><br><span class="line">            System.arraycopy(b, off, buffer, in, nextTransferAmount);</span><br><span class="line">            bytesToTransfer -= nextTransferAmount;</span><br><span class="line">            off += nextTransferAmount;</span><br><span class="line">            in += nextTransferAmount;</span><br><span class="line">            <span class="keyword">if</span> (in &gt;= buffer.length) &#123;</span><br><span class="line">                in = <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">checkStateForReceive</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!connected) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IOException(<span class="string">"Pipe not connected"</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (closedByWriter || closedByReader) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IOException(<span class="string">"Pipe closed"</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (readSide != <span class="keyword">null</span> &amp;&amp; !readSide.isAlive()) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IOException(<span class="string">"Read end dead"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">awaitSpace</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <span class="keyword">while</span> (in == out) &#123;</span><br><span class="line">            checkStateForReceive();</span><br><span class="line"></span><br><span class="line">            <span class="comment">/* full: kick any waiting readers */</span></span><br><span class="line">            notifyAll();</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                wait(<span class="number">1000</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException ex) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> java.io.InterruptedIOException();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">receivedLast</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        closedByWriter = <span class="keyword">true</span>;</span><br><span class="line">        notifyAll();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">read</span><span class="params">()</span>  <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!connected) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IOException(<span class="string">"Pipe not connected"</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (closedByReader) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IOException(<span class="string">"Pipe closed"</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (writeSide != <span class="keyword">null</span> &amp;&amp; !writeSide.isAlive()</span><br><span class="line">                   &amp;&amp; !closedByWriter &amp;&amp; (in &lt; <span class="number">0</span>)) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IOException(<span class="string">"Write end dead"</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        readSide = Thread.currentThread();</span><br><span class="line">        <span class="keyword">int</span> trials = <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">while</span> (in &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (closedByWriter) &#123;</span><br><span class="line">                <span class="comment">/* closed by writer, return EOF */</span></span><br><span class="line">                <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> ((writeSide != <span class="keyword">null</span>) &amp;&amp; (!writeSide.isAlive()) &amp;&amp; (--trials &lt; <span class="number">0</span>)) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> IOException(<span class="string">"Pipe broken"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">/* might be a writer waiting */</span></span><br><span class="line">            notifyAll();</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                wait(<span class="number">1000</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException ex) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> java.io.InterruptedIOException();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> ret = buffer[out++] &amp; <span class="number">0xFF</span>;</span><br><span class="line">        <span class="keyword">if</span> (out &gt;= buffer.length) &#123;</span><br><span class="line">            out = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (in == out) &#123;</span><br><span class="line">            <span class="comment">/* now empty */</span></span><br><span class="line">            in = -<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> ret;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">read</span><span class="params">(<span class="keyword">byte</span> b[], <span class="keyword">int</span> off, <span class="keyword">int</span> len)</span>  <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (b == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (off &lt; <span class="number">0</span> || len &lt; <span class="number">0</span> || len &gt; b.length - off) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IndexOutOfBoundsException();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (len == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* possibly wait on the first character */</span></span><br><span class="line">        <span class="keyword">int</span> c = read();</span><br><span class="line">        <span class="keyword">if</span> (c &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        b[off] = (<span class="keyword">byte</span>) c;</span><br><span class="line">        <span class="keyword">int</span> rlen = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> ((in &gt;= <span class="number">0</span>) &amp;&amp; (len &gt; <span class="number">1</span>)) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">int</span> available;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (in &gt; out) &#123;</span><br><span class="line">                available = Math.min((buffer.length - out), (in - out));</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                available = buffer.length - out;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// A byte is read beforehand outside the loop</span></span><br><span class="line">            <span class="keyword">if</span> (available &gt; (len - <span class="number">1</span>)) &#123;</span><br><span class="line">                available = len - <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            System.arraycopy(buffer, out, b, off + rlen, available);</span><br><span class="line">            out += available;</span><br><span class="line">            rlen += available;</span><br><span class="line">            len -= available;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (out &gt;= buffer.length) &#123;</span><br><span class="line">                out = <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (in == out) &#123;</span><br><span class="line">                <span class="comment">/* now empty */</span></span><br><span class="line">                in = -<span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> rlen;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">available</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(in &lt; <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(in == out)</span><br><span class="line">            <span class="keyword">return</span> buffer.length;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (in &gt; out)</span><br><span class="line">            <span class="keyword">return</span> in - out;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">return</span> in + buffer.length - out;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span>  <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        closedByReader = <span class="keyword">true</span>;</span><br><span class="line">        <span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;</span><br><span class="line">            in = -<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="B-示例"><a href="#B-示例" class="headerlink" title="B. 示例"></a>B. 示例</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">InputStream input = <span class="keyword">new</span> PipedInputStream(pipedOutputStream);</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> data = input.read();</span><br><span class="line"><span class="keyword">while</span>(data != -<span class="number">1</span>) &#123;</span><br><span class="line">  <span class="comment">//do something with data...</span></span><br><span class="line">  doSomethingWithData(data);</span><br><span class="line"></span><br><span class="line">  data = input.read();</span><br><span class="line">&#125;</span><br><span class="line">input.close();</span><br></pre></td></tr></table></figure>
+<p><code>PipedInputStream</code>是<code>InputStream</code>的子类，具有和<code>InputStream</code>相同的基本方法和使用模式。</p>
+<h2 id="2-PipedOutputStream"><a href="#2-PipedOutputStream" class="headerlink" title="2. PipedOutputStream"></a>2. PipedOutputStream</h2><p><code>PipedOutputStream</code>能够向一个管道写入字节流。  </p>
+<h3 id="A-源码"><a href="#A-源码" class="headerlink" title="A. 源码"></a>A. 源码</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> java.io;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PipedOutputStream</span> <span class="keyword">extends</span> <span class="title">OutputStream</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* REMIND: identification of the read and write sides needs to be</span></span><br><span class="line"><span class="comment">           more sophisticated.  Either using thread groups (but what about</span></span><br><span class="line"><span class="comment">           pipes within a thread?) or using finalization (but it may be a</span></span><br><span class="line"><span class="comment">           long time until the next GC). */</span></span><br><span class="line">    <span class="keyword">private</span> PipedInputStream sink;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">PipedOutputStream</span><span class="params">(PipedInputStream snk)</span>  <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        connect(snk);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">PipedOutputStream</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">connect</span><span class="params">(PipedInputStream snk)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (snk == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (sink != <span class="keyword">null</span> || snk.connected) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IOException(<span class="string">"Already connected"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        sink = snk;</span><br><span class="line">        snk.in = -<span class="number">1</span>;</span><br><span class="line">        snk.out = <span class="number">0</span>;</span><br><span class="line">        snk.connected = <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(<span class="keyword">int</span> b)</span>  <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (sink == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IOException(<span class="string">"Pipe not connected"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        sink.receive(b);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(<span class="keyword">byte</span> b[], <span class="keyword">int</span> off, <span class="keyword">int</span> len)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (sink == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IOException(<span class="string">"Pipe not connected"</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (b == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> ((off &lt; <span class="number">0</span>) || (off &gt; b.length) || (len &lt; <span class="number">0</span>) ||</span><br><span class="line">                   ((off + len) &gt; b.length) || ((off + len) &lt; <span class="number">0</span>)) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IndexOutOfBoundsException();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (len == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        sink.receive(b, off, len);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">flush</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (sink != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (sink) &#123;</span><br><span class="line">                sink.notifyAll();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span>  <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (sink != <span class="keyword">null</span>) &#123;</span><br><span class="line">            sink.receivedLast();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="B-示例-1"><a href="#B-示例-1" class="headerlink" title="B. 示例"></a>B. 示例</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">OutputStream output = <span class="keyword">new</span> PipedOutputStream(pipedInputStream);</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span>(moreData) &#123;</span><br><span class="line">  <span class="keyword">int</span> data = getMoreData();</span><br><span class="line">  output.write(data);</span><br><span class="line">&#125;</span><br><span class="line">output.close();</span><br></pre></td></tr></table></figure>
+<h2 id="3-ByteArrayInputStream"><a href="#3-ByteArrayInputStream" class="headerlink" title="3. ByteArrayInputStream"></a>3. ByteArrayInputStream</h2><p>从数组中读取字节流。</p>
+<h3 id="A-源码-1"><a href="#A-源码-1" class="headerlink" title="A. 源码"></a>A. 源码</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> java.io;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ByteArrayInputStream</span> <span class="keyword">extends</span> <span class="title">InputStream</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">byte</span> buf[];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">int</span> pos;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">int</span> mark = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">int</span> count;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ByteArrayInputStream</span><span class="params">(<span class="keyword">byte</span> buf[])</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.buf = buf;</span><br><span class="line">        <span class="keyword">this</span>.pos = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">this</span>.count = buf.length;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ByteArrayInputStream</span><span class="params">(<span class="keyword">byte</span> buf[], <span class="keyword">int</span> offset, <span class="keyword">int</span> length)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.buf = buf;</span><br><span class="line">        <span class="keyword">this</span>.pos = offset;</span><br><span class="line">        <span class="keyword">this</span>.count = Math.min(offset + length, buf.length);</span><br><span class="line">        <span class="keyword">this</span>.mark = offset;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">read</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> (pos &lt; count) ? (buf[pos++] &amp; <span class="number">0xff</span>) : -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">read</span><span class="params">(<span class="keyword">byte</span> b[], <span class="keyword">int</span> off, <span class="keyword">int</span> len)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (b == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (off &lt; <span class="number">0</span> || len &lt; <span class="number">0</span> || len &gt; b.length - off) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IndexOutOfBoundsException();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (pos &gt;= count) &#123;</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> avail = count - pos;</span><br><span class="line">        <span class="keyword">if</span> (len &gt; avail) &#123;</span><br><span class="line">            len = avail;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (len &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        System.arraycopy(buf, pos, b, off, len);</span><br><span class="line">        pos += len;</span><br><span class="line">        <span class="keyword">return</span> len;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">long</span> <span class="title">skip</span><span class="params">(<span class="keyword">long</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">long</span> k = count - pos;</span><br><span class="line">        <span class="keyword">if</span> (n &lt; k) &#123;</span><br><span class="line">            k = n &lt; <span class="number">0</span> ? <span class="number">0</span> : n;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        pos += k;</span><br><span class="line">        <span class="keyword">return</span> k;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">available</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> count - pos;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">markSupported</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">mark</span><span class="params">(<span class="keyword">int</span> readAheadLimit)</span> </span>&#123;</span><br><span class="line">        mark = pos;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">reset</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        pos = mark;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="B-示例-2"><a href="#B-示例-2" class="headerlink" title="B. 示例"></a>B. 示例</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">byte</span>[] bytes = ... <span class="comment">//get byte array from somewhere.</span></span><br><span class="line"></span><br><span class="line">InputStream input = <span class="keyword">new</span> ByteArrayInputStream(bytes);</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> data = input.read();</span><br><span class="line"><span class="keyword">while</span>(data != -<span class="number">1</span>) &#123;</span><br><span class="line">  <span class="comment">//do something with data</span></span><br><span class="line"></span><br><span class="line">  data = input.read();</span><br><span class="line">&#125;</span><br><span class="line">input.close();</span><br></pre></td></tr></table></figure>
+<h2 id="4-ByteArrayOutputStream"><a href="#4-ByteArrayOutputStream" class="headerlink" title="4. ByteArrayOutputStream"></a>4. ByteArrayOutputStream</h2><p>将写入流的数据写入数组。</p>
+<h3 id="A-源码-2"><a href="#A-源码-2" class="headerlink" title="A. 源码"></a>A. 源码</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> java.io;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Arrays;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ByteArrayOutputStream</span> <span class="keyword">extends</span> <span class="title">OutputStream</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * The buffer where data is stored.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">byte</span> buf[];</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * The number of valid bytes in the buffer.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">int</span> count;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Creates a new byte array output stream. The buffer capacity is</span></span><br><span class="line"><span class="comment">     * initially 32 bytes, though its size increases if necessary.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ByteArrayOutputStream</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(<span class="number">32</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ByteArrayOutputStream</span><span class="params">(<span class="keyword">int</span> size)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (size &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Negative initial size: "</span></span><br><span class="line">                                               + size);</span><br><span class="line">        &#125;</span><br><span class="line">        buf = <span class="keyword">new</span> <span class="keyword">byte</span>[size];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ensureCapacity</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// overflow-conscious code</span></span><br><span class="line">        <span class="keyword">if</span> (minCapacity - buf.length &gt; <span class="number">0</span>)</span><br><span class="line">            grow(minCapacity);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAX_ARRAY_SIZE = Integer.MAX_VALUE - <span class="number">8</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">grow</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// overflow-conscious code</span></span><br><span class="line">        <span class="keyword">int</span> oldCapacity = buf.length;</span><br><span class="line">        <span class="keyword">int</span> newCapacity = oldCapacity &lt;&lt; <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (newCapacity - minCapacity &lt; <span class="number">0</span>)</span><br><span class="line">            newCapacity = minCapacity;</span><br><span class="line">        <span class="keyword">if</span> (newCapacity - MAX_ARRAY_SIZE &gt; <span class="number">0</span>)</span><br><span class="line">            newCapacity = hugeCapacity(minCapacity);</span><br><span class="line">        buf = Arrays.copyOf(buf, newCapacity);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">hugeCapacity</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (minCapacity &lt; <span class="number">0</span>) <span class="comment">// overflow</span></span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> OutOfMemoryError();</span><br><span class="line">        <span class="keyword">return</span> (minCapacity &gt; MAX_ARRAY_SIZE) ?</span><br><span class="line">            Integer.MAX_VALUE :</span><br><span class="line">            MAX_ARRAY_SIZE;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(<span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">        ensureCapacity(count + <span class="number">1</span>);</span><br><span class="line">        buf[count] = (<span class="keyword">byte</span>) b;</span><br><span class="line">        count += <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(<span class="keyword">byte</span> b[], <span class="keyword">int</span> off, <span class="keyword">int</span> len)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> ((off &lt; <span class="number">0</span>) || (off &gt; b.length) || (len &lt; <span class="number">0</span>) ||</span><br><span class="line">            ((off + len) - b.length &gt; <span class="number">0</span>)) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IndexOutOfBoundsException();</span><br><span class="line">        &#125;</span><br><span class="line">        ensureCapacity(count + len);</span><br><span class="line">        System.arraycopy(b, off, buf, count, len);</span><br><span class="line">        count += len;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">writeTo</span><span class="params">(OutputStream out)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        out.write(buf, <span class="number">0</span>, count);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">reset</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        count = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">byte</span> <span class="title">toByteArray</span><span class="params">()</span>[] </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Arrays.copyOf(buf, count);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">size</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> count;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> String(buf, <span class="number">0</span>, count);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> String <span class="title">toString</span><span class="params">(String charsetName)</span></span></span><br><span class="line"><span class="function">        <span class="keyword">throws</span> UnsupportedEncodingException</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> String(buf, <span class="number">0</span>, count, charsetName);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Deprecated</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> String <span class="title">toString</span><span class="params">(<span class="keyword">int</span> hibyte)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> String(buf, hibyte, <span class="number">0</span>, count);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="B-示例-3"><a href="#B-示例-3" class="headerlink" title="B. 示例"></a>B. 示例</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ByteArrayOutputStream output = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line"></span><br><span class="line"><span class="comment">//write data to output stream</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">byte</span>[] bytes = output.toByteArray();</span><br></pre></td></tr></table></figure>
+<p>作为<code>OutputStream</code>的子类，<code>ByteArrayOutputStream</code>也有一个<code>close()</code>方法。但调用<code>close()</code>方法对<code>ByteArrayOutputStream</code>没有影响。  </p>
+<h2 id="5-FilterInputStream"><a href="#5-FilterInputStream" class="headerlink" title="5. FilterInputStream"></a>5. FilterInputStream</h2><p><code>FilterInputStream</code>是实现自己的输入流过滤器的基类。基本上它只是覆盖<code>InputStream</code>的所有方法并将所有的方法调用传递给<code>FilterInputStream</code>包装的方法。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FilterInputStream inputStream = <span class="keyword">new</span> FilterInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"c:\\myfile.txt"</span>));</span><br></pre></td></tr></table></figure></p>
+<p><code>FilterInputStream</code>没有任何特殊的行为。它旨在成为自定义子类的基类，但一般直接继承<code>InputStream</code>就行。  </p>
+<h2 id="6-FilterOutputStream"><a href="#6-FilterOutputStream" class="headerlink" title="6. FilterOutputStream"></a>6. FilterOutputStream</h2><p><code>FilterOutputStream</code>是实现自己的输入流过滤器的基类。基本上它只是覆盖<code>OutputStream</code>的所有方法并将所有的方法调用传递给<code>FilterOutputStream</code>包装的方法。  </p>
+<h2 id="7-BufferedInputStream"><a href="#7-BufferedInputStream" class="headerlink" title="7. BufferedInputStream"></a>7. BufferedInputStream</h2><p><code>BufferedInputStream</code>类为输入流提供<code>buffering</code>。缓冲可以加快IO的速度。与一次从网络或磁盘中读取一个字节不同，<code>BufferedInputStream</code>一次将更大的块读入内部缓冲区。读取一个字节时，是从其内部缓冲区中读。当缓冲区完全读取时，<code>BufferedInputStream</code>再将另一个较大的数据块读入缓冲区。这通常比从<code>InputStream</code>一次读取单个字节快得多，特别是对于磁盘访问和大数据量而言。  </p>
+<h3 id="A-源码-3"><a href="#A-源码-3" class="headerlink" title="A. 源码"></a>A. 源码</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> java.io;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.atomic.AtomicReferenceFieldUpdater;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BufferedInputStream</span> <span class="keyword">extends</span> <span class="title">FilterInputStream</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> DEFAULT_BUFFER_SIZE = <span class="number">8192</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> MAX_BUFFER_SIZE = Integer.MAX_VALUE - <span class="number">8</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">volatile</span> <span class="keyword">byte</span> buf[];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> AtomicReferenceFieldUpdater&lt;BufferedInputStream, <span class="keyword">byte</span>[]&gt; bufUpdater =</span><br><span class="line">        AtomicReferenceFieldUpdater.newUpdater(BufferedInputStream.class,  <span class="keyword">byte</span>[].class, <span class="string">"buf"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">int</span> count;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">int</span> pos;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">int</span> markpos = -<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">int</span> marklimit;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> InputStream <span class="title">getInIfOpen</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        InputStream input = in;</span><br><span class="line">        <span class="keyword">if</span> (input == <span class="keyword">null</span>)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IOException(<span class="string">"Stream closed"</span>);</span><br><span class="line">        <span class="keyword">return</span> input;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">byte</span>[] getBufIfOpen() <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        <span class="keyword">byte</span>[] buffer = buf;</span><br><span class="line">        <span class="keyword">if</span> (buffer == <span class="keyword">null</span>)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IOException(<span class="string">"Stream closed"</span>);</span><br><span class="line">        <span class="keyword">return</span> buffer;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">BufferedInputStream</span><span class="params">(InputStream in)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(in, DEFAULT_BUFFER_SIZE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">BufferedInputStream</span><span class="params">(InputStream in, <span class="keyword">int</span> size)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(in);</span><br><span class="line">        <span class="keyword">if</span> (size &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Buffer size &lt;= 0"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        buf = <span class="keyword">new</span> <span class="keyword">byte</span>[size];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">fill</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] buffer = getBufIfOpen();</span><br><span class="line">        <span class="keyword">if</span> (markpos &lt; <span class="number">0</span>)</span><br><span class="line">            pos = <span class="number">0</span>;            <span class="comment">/* no mark: throw away the buffer */</span></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (pos &gt;= buffer.length)  <span class="comment">/* no room left in buffer */</span></span><br><span class="line">            <span class="keyword">if</span> (markpos &gt; <span class="number">0</span>) &#123;  <span class="comment">/* can throw away early part of the buffer */</span></span><br><span class="line">                <span class="keyword">int</span> sz = pos - markpos;</span><br><span class="line">                System.arraycopy(buffer, markpos, buffer, <span class="number">0</span>, sz);</span><br><span class="line">                pos = sz;</span><br><span class="line">                markpos = <span class="number">0</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (buffer.length &gt;= marklimit) &#123;</span><br><span class="line">                markpos = -<span class="number">1</span>;   <span class="comment">/* buffer got too big, invalidate mark */</span></span><br><span class="line">                pos = <span class="number">0</span>;        <span class="comment">/* drop buffer contents */</span></span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (buffer.length &gt;= MAX_BUFFER_SIZE) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> OutOfMemoryError(<span class="string">"Required array size too large"</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;            <span class="comment">/* grow buffer */</span></span><br><span class="line">                <span class="keyword">int</span> nsz = (pos &lt;= MAX_BUFFER_SIZE - pos) ?</span><br><span class="line">                        pos * <span class="number">2</span> : MAX_BUFFER_SIZE;</span><br><span class="line">                <span class="keyword">if</span> (nsz &gt; marklimit)</span><br><span class="line">                    nsz = marklimit;</span><br><span class="line">                <span class="keyword">byte</span> nbuf[] = <span class="keyword">new</span> <span class="keyword">byte</span>[nsz];</span><br><span class="line">                System.arraycopy(buffer, <span class="number">0</span>, nbuf, <span class="number">0</span>, pos);</span><br><span class="line">                <span class="keyword">if</span> (!bufUpdater.compareAndSet(<span class="keyword">this</span>, buffer, nbuf)) &#123;</span><br><span class="line">                    <span class="comment">// Can't replace buf if there was an async close.</span></span><br><span class="line">                    <span class="comment">// Note: This would need to be changed if fill()</span></span><br><span class="line">                    <span class="comment">// is ever made accessible to multiple threads.</span></span><br><span class="line">                    <span class="comment">// But for now, the only way CAS can fail is via close.</span></span><br><span class="line">                    <span class="comment">// assert buf == null;</span></span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> IOException(<span class="string">"Stream closed"</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                buffer = nbuf;</span><br><span class="line">            &#125;</span><br><span class="line">        count = pos;</span><br><span class="line">        <span class="keyword">int</span> n = getInIfOpen().read(buffer, pos, buffer.length - pos);</span><br><span class="line">        <span class="keyword">if</span> (n &gt; <span class="number">0</span>)</span><br><span class="line">            count = n + pos;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">read</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (pos &gt;= count) &#123;</span><br><span class="line">            fill();</span><br><span class="line">            <span class="keyword">if</span> (pos &gt;= count)</span><br><span class="line">                <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> getBufIfOpen()[pos++] &amp; <span class="number">0xff</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">read1</span><span class="params">(<span class="keyword">byte</span>[] b, <span class="keyword">int</span> off, <span class="keyword">int</span> len)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> avail = count - pos;</span><br><span class="line">        <span class="keyword">if</span> (avail &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="comment">/* If the requested length is at least as large as the buffer, and</span></span><br><span class="line"><span class="comment">               if there is no mark/reset activity, do not bother to copy the</span></span><br><span class="line"><span class="comment">               bytes into the local buffer.  In this way buffered streams will</span></span><br><span class="line"><span class="comment">               cascade harmlessly. */</span></span><br><span class="line">            <span class="keyword">if</span> (len &gt;= getBufIfOpen().length &amp;&amp; markpos &lt; <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> getInIfOpen().read(b, off, len);</span><br><span class="line">            &#125;</span><br><span class="line">            fill();</span><br><span class="line">            avail = count - pos;</span><br><span class="line">            <span class="keyword">if</span> (avail &lt;= <span class="number">0</span>) <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> cnt = (avail &lt; len) ? avail : len;</span><br><span class="line">        System.arraycopy(getBufIfOpen(), pos, b, off, cnt);</span><br><span class="line">        pos += cnt;</span><br><span class="line">        <span class="keyword">return</span> cnt;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">read</span><span class="params">(<span class="keyword">byte</span> b[], <span class="keyword">int</span> off, <span class="keyword">int</span> len)</span></span></span><br><span class="line"><span class="function">        <span class="keyword">throws</span> IOException</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        getBufIfOpen(); <span class="comment">// Check for closed stream</span></span><br><span class="line">        <span class="keyword">if</span> ((off | len | (off + len) | (b.length - (off + len))) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IndexOutOfBoundsException();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (len == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> n = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">            <span class="keyword">int</span> nread = read1(b, off + n, len - n);</span><br><span class="line">            <span class="keyword">if</span> (nread &lt;= <span class="number">0</span>)</span><br><span class="line">                <span class="keyword">return</span> (n == <span class="number">0</span>) ? nread : n;</span><br><span class="line">            n += nread;</span><br><span class="line">            <span class="keyword">if</span> (n &gt;= len)</span><br><span class="line">                <span class="keyword">return</span> n;</span><br><span class="line">            <span class="comment">// if not closed but no bytes available, return</span></span><br><span class="line">            InputStream input = in;</span><br><span class="line">            <span class="keyword">if</span> (input != <span class="keyword">null</span> &amp;&amp; input.available() &lt;= <span class="number">0</span>)</span><br><span class="line">                <span class="keyword">return</span> n;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">long</span> <span class="title">skip</span><span class="params">(<span class="keyword">long</span> n)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        getBufIfOpen(); <span class="comment">// Check for closed stream</span></span><br><span class="line">        <span class="keyword">if</span> (n &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">long</span> avail = count - pos;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (avail &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="comment">// If no mark position set then don't keep in buffer</span></span><br><span class="line">            <span class="keyword">if</span> (markpos &lt;<span class="number">0</span>)</span><br><span class="line">                <span class="keyword">return</span> getInIfOpen().skip(n);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Fill in buffer to save bytes for reset</span></span><br><span class="line">            fill();</span><br><span class="line">            avail = count - pos;</span><br><span class="line">            <span class="keyword">if</span> (avail &lt;= <span class="number">0</span>)</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">long</span> skipped = (avail &lt; n) ? avail : n;</span><br><span class="line">        pos += skipped;</span><br><span class="line">        <span class="keyword">return</span> skipped;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">int</span> <span class="title">available</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n = count - pos;</span><br><span class="line">        <span class="keyword">int</span> avail = getInIfOpen().available();</span><br><span class="line">        <span class="keyword">return</span> n &gt; (Integer.MAX_VALUE - avail)</span><br><span class="line">                    ? Integer.MAX_VALUE</span><br><span class="line">                    : n + avail;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">mark</span><span class="params">(<span class="keyword">int</span> readlimit)</span> </span>&#123;</span><br><span class="line">        marklimit = readlimit;</span><br><span class="line">        markpos = pos;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">reset</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        getBufIfOpen(); <span class="comment">// Cause exception if closed</span></span><br><span class="line">        <span class="keyword">if</span> (markpos &lt; <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IOException(<span class="string">"Resetting to invalid mark"</span>);</span><br><span class="line">        pos = markpos;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">markSupported</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] buffer;</span><br><span class="line">        <span class="keyword">while</span> ( (buffer = buf) != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (bufUpdater.compareAndSet(<span class="keyword">this</span>, buffer, <span class="keyword">null</span>)) &#123;</span><br><span class="line">                InputStream input = in;</span><br><span class="line">                in = <span class="keyword">null</span>;</span><br><span class="line">                <span class="keyword">if</span> (input != <span class="keyword">null</span>)</span><br><span class="line">                    input.close();</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// Else retry in case a new buf was CASed in fill()</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="B-示例-4"><a href="#B-示例-4" class="headerlink" title="B. 示例"></a>B. 示例</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">InputStream input = <span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"c:\\data\\input-file.txt"</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将内部缓冲区设置BufferedInputStream为8 KB。最好使用1024字节倍数的缓冲区大小。最适合如硬盘等的大多数内置缓冲。</span></span><br><span class="line"><span class="keyword">int</span> bufferSize = <span class="number">8</span> * <span class="number">1024</span>;</span><br><span class="line">InputStream input = <span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"c:\\data\\input-file.txt"</span>), bufferSize);</span><br></pre></td></tr></table></figure>
+<p>可以使用不同的缓冲区大小进行一些实验，以找出哪个缓冲区大小可以在具体硬件上提供最佳性能。最佳缓冲区大小可能取决于使用的<code>BufferedInputStream</code>是磁盘还是网络<code>InputStream</code>。对于磁盘和网络流，最佳缓冲区大小也可能取决于计算机中的具体硬件。如果硬盘一次至少读取4KB，那么使用少于4KB的缓冲区是不合适的。然后最好使用4KB倍数的缓冲区大小。例如，使用6KB也是不太合适的。<br>即使磁盘一次读取如4KB的块，使用大于此的缓冲区仍然是个不错的选择。磁盘擅长顺序读取数据，这意味着它擅长读取位于彼此之后的多个块。因此，使用16KB缓冲区或64KB的缓冲区(甚至更大)的<code>BufferedInputStream</code>仍然可以提供比仅使用4KB缓冲区更好的性能。<br>还要注意，某些硬盘具有几兆字节的读缓存。如果硬盘每次从文件读取固定大小(例如64KB)到其内部缓存中，也可以一次将所有这些数据放入<code>BufferedInputStream</code>，而不是多次读操作。多次读取操作将会变慢，并且可能会在读取操作之间擦除硬盘的读缓存，从而导致硬盘将该块重新读取到缓存中。<br>要找到最佳<code>BufferedInputStream</code>缓冲区大小，需找出硬盘读入的块大小，以及可能的缓存大小，并使缓冲区为该大小的倍数。  </p>
+<h2 id="8-BufferedOutputStream"><a href="#8-BufferedOutputStream" class="headerlink" title="8. BufferedOutputStream"></a>8. BufferedOutputStream</h2><p>示例：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">OutputStream output = <span class="keyword">new</span> BufferedOutputStream(<span class="keyword">new</span> FileOutputStream(<span class="string">"c:\\data\\output-file.txt"</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> bufferSize = <span class="number">8</span> * <span class="number">1024</span>;</span><br><span class="line">OutputStream output = <span class="keyword">new</span> BufferedOutputStream(<span class="keyword">new</span> FileOutputStream(<span class="string">"c:\\data\\output-file.txt"</span>), bufferSize);</span><br></pre></td></tr></table></figure></p>
+<h2 id="9-PushbackInputStream"><a href="#9-PushbackInputStream" class="headerlink" title="9. PushbackInputStream"></a>9. PushbackInputStream</h2><p><code>PushbackInputStream</code>用来解析数据时使用。有时候，解析数据需要提前读取一定内容来决定如何解析，此时可以使用<code>PushbackInputStream</code>，它允许将数据压回输入流中。</p>
+<p>示例：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">PushbackInputStream input = <span class="keyword">new</span> PushbackInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"c:\\data\\input.txt"</span>));</span><br><span class="line"><span class="keyword">int</span> data = input.read();</span><br><span class="line">input.unread(data);</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> pushbackLimit = <span class="number">8</span>;</span><br><span class="line">PushbackInputStream input = <span class="keyword">new</span> PushbackInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"c:\\data\\input.txt"</span>), pushbackLimit);</span><br></pre></td></tr></table></figure></p>
+<h2 id="9-SequenceInputStream"><a href="#9-SequenceInputStream" class="headerlink" title="9. SequenceInputStream"></a>9. SequenceInputStream</h2><p><code>SequenceInputStream</code>允许将两个或更多的输入流组合成一个，<code>SequenceInputStream</code>将从第一个读取所有字节，然后从第二个。  </p>
+<p>示例：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">InputStream input1 = <span class="keyword">new</span> FileInputStream(<span class="string">"c:\\data\\file1.txt"</span>);</span><br><span class="line">InputStream input2 = <span class="keyword">new</span> FileInputStream(<span class="string">"c:\\data\\file2.txt"</span>);</span><br><span class="line">SequenceInputStream sequenceInputStream = <span class="keyword">new</span> SequenceInputStream(input1, input2);</span><br><span class="line"><span class="keyword">int</span> data = sequenceInputStream.read();</span><br><span class="line"><span class="keyword">while</span>(data != -<span class="number">1</span>)&#123;</span><br><span class="line">    System.out.println(data);</span><br><span class="line">    data = sequenceInputStream.read();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">InputStream input1 = <span class="keyword">new</span> FileInputStream(<span class="string">"c:\\data\\file1.txt"</span>);</span><br><span class="line">InputStream input2 = <span class="keyword">new</span> FileInputStream(<span class="string">"c:\\data\\file2.txt"</span>);</span><br><span class="line">InputStream input3 = <span class="keyword">new</span> FileInputStream(<span class="string">"c:\\data\\file3.txt"</span>);</span><br><span class="line">Vector&lt;InputStream&gt; streams = <span class="keyword">new</span> Vector&lt;&gt;();</span><br><span class="line">streams.add(input1);</span><br><span class="line">streams.add(input2);</span><br><span class="line">streams.add(input3);</span><br><span class="line">SequenceInputStream sequenceInputStream = <span class="keyword">new</span> SequenceInputStream(streams.elements()))    </span><br><span class="line"><span class="keyword">int</span> data = sequenceInputStream.read();</span><br><span class="line"><span class="keyword">while</span>(data != -<span class="number">1</span>)&#123;</span><br><span class="line">    System.out.println(data);</span><br><span class="line">    data = sequenceInputStream.read();</span><br><span class="line">&#125;</span><br><span class="line">sequenceInputStream.close();</span><br><span class="line"></span><br><span class="line">SequenceInputStream sequenceInputStream1 = <span class="keyword">new</span> SequenceInputStream(input1, input2);</span><br><span class="line">SequenceInputStream sequenceInputStream2 = <span class="keyword">new</span> SequenceInputStream(input3, input4);</span><br><span class="line">SequenceInputStream sequenceInputStream = <span class="keyword">new</span> SequenceInputStream(sequenceInputStream1, sequenceInputStream2));</span><br><span class="line"><span class="keyword">int</span> data = sequenceInputStream.read();</span><br><span class="line"><span class="keyword">while</span>(data != -<span class="number">1</span>)&#123;</span><br><span class="line">    System.out.println(data);</span><br><span class="line">    data = sequenceInputStream.read();</span><br><span class="line">&#125;</span><br><span class="line">sequenceInputStream.close();</span><br></pre></td></tr></table></figure></p>
+<h2 id="10-DataInputStream"><a href="#10-DataInputStream" class="headerlink" title="10. DataInputStream"></a>10. DataInputStream</h2><p><code>DataInputStream</code>可以用来从输入流中读取原始类型(int/long/float等)而不是字节。</p>
+<p>示例：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">DataInputStream dataInputStream = <span class="keyword">new</span> DataInputStream(</span><br><span class="line">                            <span class="keyword">new</span> FileInputStream(<span class="string">"binary.data"</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span>    aByte   = input.read();</span><br><span class="line"><span class="keyword">int</span>    anInt   = input.readInt();</span><br><span class="line"><span class="keyword">float</span>  aFloat  = input.readFloat();</span><br><span class="line"><span class="keyword">double</span> aDouble = input.readDouble();</span><br><span class="line"><span class="comment">//etc.</span></span><br><span class="line"></span><br><span class="line">input.close();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DataInputStreamExample</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        DataOutputStream dataOutputStream = <span class="keyword">new</span> DataOutputStream(<span class="keyword">new</span> FileOutputStream(<span class="string">"data/data.bin"</span>));</span><br><span class="line"></span><br><span class="line">        dataOutputStream.writeInt(<span class="number">123</span>);</span><br><span class="line">        dataOutputStream.writeFloat(<span class="number">123.45F</span>);</span><br><span class="line">        dataOutputStream.writeLong(<span class="number">789</span>);</span><br><span class="line"></span><br><span class="line">        dataOutputStream.close();</span><br><span class="line"></span><br><span class="line">        DataInputStream dataInputStream = <span class="keyword">new</span> DataInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"data/data.bin"</span>));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span>   int123     = dataInputStream.readInt();</span><br><span class="line">        <span class="keyword">float</span> float12345 = dataInputStream.readFloat();</span><br><span class="line">        <span class="keyword">long</span>  long789    = dataInputStream.readLong();</span><br><span class="line"></span><br><span class="line">        dataInputStream.close();</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">"int123     = "</span> + int123);</span><br><span class="line">        System.out.println(<span class="string">"float12345 = "</span> + float12345);</span><br><span class="line">        System.out.println(<span class="string">"long789    = "</span> + long789);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="11-DataOutputStream"><a href="#11-DataOutputStream" class="headerlink" title="11. DataOutputStream"></a>11. DataOutputStream</h2><p><code>DataOutputStream</code>可以用来从输出流中读取原始类型(int/long/float等)而不是字节。</p>
+<h2 id="12-PrintStream"><a href="#12-PrintStream" class="headerlink" title="12. PrintStream"></a>12. PrintStream</h2><p><code>PrintStream</code>可以向低层的<code>OutputStream</code>写入格式化的数据。</p>
+<p>示例：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">PrintStream printStream = <span class="keyword">new</span> PrintStream(outputStream);</span><br><span class="line">printStream.print(<span class="keyword">true</span>);</span><br><span class="line">printStream.print((<span class="keyword">int</span>) <span class="number">123</span>);</span><br><span class="line">printStream.print((<span class="keyword">float</span>) <span class="number">123.456</span>);</span><br><span class="line">printStream.close();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">PrintStream printStream = <span class="keyword">new</span> PrintStream(outputStream);</span><br><span class="line">printStream.printf(Locale.UK, <span class="string">"Text + data: %1$"</span>, <span class="number">123</span>);</span><br><span class="line">printStream.close();</span><br></pre></td></tr></table></figure></p>
+<p><code>System.out</code>和<code>System.err</code>是典型的<code>PrintStream</code>的两个实例。<code>PrintStream</code>包含两个强大的方法：<code>format()</code>和<code>printf()</code>(它们作用相同)。这些方法允许您使用格式化字符串以非常高级的方式组合文本和数据。  </p>
+<h2 id="13-ObjectInputStream"><a href="#13-ObjectInputStream" class="headerlink" title="13. ObjectInputStream"></a>13. ObjectInputStream</h2><p><code>ObjectInputStream</code>可以来读取对象，而不是原始字节。示例：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ObjectInputStream objectInputStream = <span class="keyword">new</span> ObjectInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"object.data"</span>));</span><br><span class="line"></span><br><span class="line">MyClass object = (MyClass) objectInputStream.readObject();</span><br><span class="line"><span class="comment">//etc.</span></span><br><span class="line"></span><br><span class="line">objectInputStream.close();</span><br></pre></td></tr></table></figure></p>
+<p>对于这个例子，读取的对象必须是<code>MyClass</code>的一个实例，并且必须通过一个<code>ObjectOutputStream</code>序列化到文件<code>object.data</code>中。在序列化和反序列化对象之前，对象的类必须实现<code>java.io.Serializable</code>。  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ObjectInputStreamExample</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line">        <span class="keyword">public</span> String name = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">int</span>    age  =   <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, ClassNotFoundException </span>&#123;</span><br><span class="line"></span><br><span class="line">        ObjectOutputStream objectOutputStream = <span class="keyword">new</span> ObjectOutputStream(<span class="keyword">new</span> FileOutputStream(<span class="string">"data/person.bin"</span>));</span><br><span class="line"></span><br><span class="line">        Person person = <span class="keyword">new</span> Person();</span><br><span class="line">        person.name = <span class="string">"Jakob Jenkov"</span>;</span><br><span class="line">        person.age  = <span class="number">40</span>;</span><br><span class="line"></span><br><span class="line">        objectOutputStream.writeObject(person);</span><br><span class="line">        objectOutputStream.close();</span><br><span class="line"></span><br><span class="line">        ObjectInputStream objectInputStream = <span class="keyword">new</span> ObjectInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"data/person.bin"</span>));</span><br><span class="line"></span><br><span class="line">        Person personRead = (Person) objectInputStream.readObject();</span><br><span class="line"></span><br><span class="line">        objectInputStream.close();</span><br><span class="line"></span><br><span class="line">        System.out.println(personRead.name);</span><br><span class="line">        System.out.println(personRead.age);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="14-ObjectOutputStream"><a href="#14-ObjectOutputStream" class="headerlink" title="14. ObjectOutputStream"></a>14. ObjectOutputStream</h2><p><code>ObjectOutputStream</code>用来向输出流写入对象。</p>
+<h2 id="15-Serializable"><a href="#15-Serializable" class="headerlink" title="15. Serializable"></a>15. Serializable</h2><p><code>java.io.Serializable</code>接口用来标记可以序列化的对象。这个接口没有任何方法，它只是表示这个类的实例可以序列化。    </p>
+<h3 id="A-源码："><a href="#A-源码：" class="headerlink" title="A. 源码："></a>A. 源码：</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> java.io;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="B-serialVersionUID"><a href="#B-serialVersionUID" class="headerlink" title="B. serialVersionUID"></a>B. serialVersionUID</h3><p>除了实现<code>Serializable</code>接口之外，用于序列化的类还应包含<code>private static final long serialVersionUID</code>。  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.Serializable;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = <span class="number">1234L</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String name = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span>    age  =   <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Java对象序列化API使用<code>serialVersionUIDJava</code>域来确定将要反序列化的对象是否使用相同版本序列化。如果对类进行了重大更改，则还应更改其<code>serialVersionUID</code>值。Java SDK和许多Java IDE包含生成<code>serialVersionUID</code>所需的工具。<br>如今许多Java项目使用与Java序列化机制不同的机制来序列化Java对象。例如，Java对象被序列化为JSON、BSON或其他更优化的二进制格式。这具有以下优点：对象也可由非Java应用程序读取。例如，在Web浏览器中运行的JavaScript可以本地序列化和反序列化JSON中的对象。顺便说一下， 这些其他对象序列化机制通常不需要Java类实现<code>Serializable</code>。他们通常使用Java Reflection来检查类，因此实现<code>Serializable</code>接口将是多余的 - 它不会添加任何有用的信息。   </p>
+<p>可以参见<code>https://www.oracle.com/technetwork/articles/java/javaserial-1536170.html</code>。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/IO/" rel="tag"># IO</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/10/java/IO系统/Java IO Tutorial/Java IO Tutorial 03 File/" rel="next" title="Java IO Tutorial 03 File">
+                <i class="fa fa-chevron-left"></i> Java IO Tutorial 03 File
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/uploads/avatar.gif" alt="Javior Wang">
+            
+              <p class="site-author-name" itemprop="name">Javior Wang</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">46</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/index.html">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">10</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">21</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/scorego" title="GitHub &rarr; https://github.com/scorego" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://www.zhihu.com/people/scorego-6" title="Zhihu &rarr; https://www.zhihu.com/people/scorego-6" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>Zhihu</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-PipedInputStream"><span class="nav-text">1. PipedInputStream</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#B-示例"><span class="nav-text">B. 示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-PipedOutputStream"><span class="nav-text">2. PipedOutputStream</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-源码"><span class="nav-text">A. 源码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-示例-1"><span class="nav-text">B. 示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-ByteArrayInputStream"><span class="nav-text">3. ByteArrayInputStream</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-源码-1"><span class="nav-text">A. 源码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-示例-2"><span class="nav-text">B. 示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-ByteArrayOutputStream"><span class="nav-text">4. ByteArrayOutputStream</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-源码-2"><span class="nav-text">A. 源码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-示例-3"><span class="nav-text">B. 示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-FilterInputStream"><span class="nav-text">5. FilterInputStream</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-FilterOutputStream"><span class="nav-text">6. FilterOutputStream</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-BufferedInputStream"><span class="nav-text">7. BufferedInputStream</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-源码-3"><span class="nav-text">A. 源码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-示例-4"><span class="nav-text">B. 示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-BufferedOutputStream"><span class="nav-text">8. BufferedOutputStream</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-PushbackInputStream"><span class="nav-text">9. PushbackInputStream</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-SequenceInputStream"><span class="nav-text">9. SequenceInputStream</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-DataInputStream"><span class="nav-text">10. DataInputStream</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-DataOutputStream"><span class="nav-text">11. DataOutputStream</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#12-PrintStream"><span class="nav-text">12. PrintStream</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13-ObjectInputStream"><span class="nav-text">13. ObjectInputStream</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#14-ObjectOutputStream"><span class="nav-text">14. ObjectOutputStream</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#15-Serializable"><span class="nav-text">15. Serializable</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-源码："><span class="nav-text">A. 源码：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-serialVersionUID"><span class="nav-text">B. serialVersionUID</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Javior Wang</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

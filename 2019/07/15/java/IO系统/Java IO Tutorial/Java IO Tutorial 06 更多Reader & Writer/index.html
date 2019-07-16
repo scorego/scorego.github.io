@@ -94,18 +94,18 @@
 
 
 
-  <meta name="description" content="字符串搜索算法(String searching algorithms)又称字符串比对算法(string matching algorithms)，是一种重要的字符串算法，用来在一长字符串或文章中，找出其是否包含某一个或多个字符串及其出现位置。部分算法性能比较(m为模式的长度，n为要搜索的字符串长度，k为字母表长度)：    算法 预处理时间 匹配时间 空间复杂度     朴素算法 0 (无需预处">
-<meta name="keywords" content="字符串搜索算法">
+  <meta name="description" content="1. FileReaderFileReader类(java.io.FileReader)可以将文件的内容作为字符流读取。 2. FileWriterFileWriter类(java.io.FileWriter)可以将字符写入文件。   3. PipedReaderPipedReader类(java.io.PipedReader)使得可以将管道的内容作为字符流读取。 4.  PipedWriterP">
+<meta name="keywords" content="IO">
 <meta property="og:type" content="article">
-<meta property="og:title" content="字符串搜索算法">
-<meta property="og:url" content="javior.wang/2019/06/20/数据结构与算法/字符串搜索算法/index.html">
+<meta property="og:title" content="Java IO Tutorial 06 更多Reader &amp; Writer">
+<meta property="og:url" content="javior.wang/2019/07/15/java/IO系统/Java IO Tutorial/Java IO Tutorial 06 更多Reader & Writer/index.html">
 <meta property="og:site_name" content="Javior&#39;s Blog">
-<meta property="og:description" content="字符串搜索算法(String searching algorithms)又称字符串比对算法(string matching algorithms)，是一种重要的字符串算法，用来在一长字符串或文章中，找出其是否包含某一个或多个字符串及其出现位置。部分算法性能比较(m为模式的长度，n为要搜索的字符串长度，k为字母表长度)：    算法 预处理时间 匹配时间 空间复杂度     朴素算法 0 (无需预处">
+<meta property="og:description" content="1. FileReaderFileReader类(java.io.FileReader)可以将文件的内容作为字符流读取。 2. FileWriterFileWriter类(java.io.FileWriter)可以将字符写入文件。   3. PipedReaderPipedReader类(java.io.PipedReader)使得可以将管道的内容作为字符流读取。 4.  PipedWriterP">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-06-29T18:52:05.728Z">
+<meta property="og:updated_time" content="2019-07-16T05:50:11.357Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="字符串搜索算法">
-<meta name="twitter:description" content="字符串搜索算法(String searching algorithms)又称字符串比对算法(string matching algorithms)，是一种重要的字符串算法，用来在一长字符串或文章中，找出其是否包含某一个或多个字符串及其出现位置。部分算法性能比较(m为模式的长度，n为要搜索的字符串长度，k为字母表长度)：    算法 预处理时间 匹配时间 空间复杂度     朴素算法 0 (无需预处">
+<meta name="twitter:title" content="Java IO Tutorial 06 更多Reader &amp; Writer">
+<meta name="twitter:description" content="1. FileReaderFileReader类(java.io.FileReader)可以将文件的内容作为字符流读取。 2. FileWriterFileWriter类(java.io.FileWriter)可以将字符写入文件。   3. PipedReaderPipedReader类(java.io.PipedReader)使得可以将管道的内容作为字符流读取。 4.  PipedWriterP">
 
 
 
@@ -113,7 +113,7 @@
 
   
   
-  <link rel="canonical" href="javior.wang/2019/06/20/数据结构与算法/字符串搜索算法/">
+  <link rel="canonical" href="javior.wang/2019/07/15/java/IO系统/Java IO Tutorial/Java IO Tutorial 06 更多Reader & Writer/">
 
 
 
@@ -123,7 +123,7 @@
   };
 </script>
 
-  <title>字符串搜索算法 | Javior's Blog</title>
+  <title>Java IO Tutorial 06 更多Reader & Writer | Javior's Blog</title>
   
 
 
@@ -339,7 +339,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="javior.wang/2019/06/20/数据结构与算法/字符串搜索算法/">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/07/15/java/IO系统/Java IO Tutorial/Java IO Tutorial 06 更多Reader & Writer/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Javior Wang">
@@ -356,7 +356,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">字符串搜索算法
+          <h1 class="post-title" itemprop="name headline">Java IO Tutorial 06 更多Reader & Writer
 
               
             
@@ -382,7 +382,7 @@
                 
               
 
-              <time title="创建时间：2019-06-20 10:40:13" itemprop="dateCreated datePublished" datetime="2019-06-20T10:40:13+08:00">2019-06-20</time>
+              <time title="创建时间：2019-07-15 06:32:14" itemprop="dateCreated datePublished" datetime="2019-07-15T06:32:14+08:00">2019-07-15</time>
             
 
             
@@ -399,7 +399,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-06-30 02:52:05" itemprop="dateModified" datetime="2019-06-30T02:52:05+08:00">2019-06-30</time>
+                <time title="修改时间：2019-07-16 13:50:11" itemprop="dateModified" datetime="2019-07-16T13:50:11+08:00">2019-07-16</time>
               
             
           </span>
@@ -416,7 +416,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/数据结构与算法/" itemprop="url" rel="index"><span itemprop="name">数据结构与算法</span></a></span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Java-IO/" itemprop="url" rel="index"><span itemprop="name">Java IO</span></a></span>
 
                 
                 
@@ -451,96 +451,29 @@
       
 
       
-        <p>字符串搜索算法(String searching algorithms)又称字符串比对算法(string matching algorithms)，是一种重要的字符串算法，用来在一长字符串或文章中，找出其是否包含某一个或多个字符串及其出现位置。<br>部分算法性能比较(m为模式的长度，n为要搜索的字符串长度，k为字母表长度)：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">算法</th>
-<th style="text-align:center">预处理时间</th>
-<th style="text-align:center">匹配时间</th>
-<th>空间复杂度</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">朴素算法</td>
-<td style="text-align:center">0 (无需预处理)</td>
-<td style="text-align:center">Θ(nm)</td>
-<td>O(1)</td>
-</tr>
-<tr>
-<td style="text-align:center">Rabin-Karp算法</td>
-<td style="text-align:center">Θ(m)</td>
-<td style="text-align:center">平均 Θ(n + m),最差 Θ((n−m)m)</td>
-<td>O(1)</td>
-</tr>
-<tr>
-<td style="text-align:center">克努斯-莫里斯-普拉特(KMP)算法</td>
-<td style="text-align:center">Θ(m)</td>
-<td style="text-align:center">Θ(n)</td>
-<td>Θ(m)</td>
-</tr>
-<tr>
-<td style="text-align:center">Boyer-Moore字符串搜索算法</td>
-<td style="text-align:center">Θ(m + k)</td>
-<td style="text-align:center">最好Ω(n/m),最坏 O(mn)</td>
-<td>Θ(k)</td>
-</tr>
-<tr>
-<td style="text-align:center">Bitap算法  (shift-or, shift-and, Baeza–Yates–Gonnet)</td>
-<td style="text-align:center">Θ(m + k)</td>
-<td style="text-align:center">O(mn)</td>
-<td></td>
-</tr>
-<tr>
-<td style="text-align:center">Two-way string-matching algorithm</td>
-<td style="text-align:center">Θ(m)</td>
-<td style="text-align:center">O(n+m)</td>
-<td>O(1)</td>
-</tr>
-<tr>
-<td style="text-align:center">BNDM (Backward Non-Deterministic DAWG Matching)</td>
-<td style="text-align:center">O(m)</td>
-<td style="text-align:center">O(n)</td>
-<td></td>
-</tr>
-<tr>
-<td style="text-align:center">BOM (Backward Oracle Matching)</td>
-<td style="text-align:center">O(m)</td>
-<td style="text-align:center">O(mn)</td>
-</tr>
-</tbody>
-</table>
-<h2 id="1-朴素算法"><a href="#1-朴素算法" class="headerlink" title="1. 朴素算法"></a>1. 朴素算法</h2><p>直观的朴素算法就是将模式与字符串逐位相比，遇到不相等就从当前开始搜索位置的下个位置从头开始重新比较。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">naiveStringSearch</span><span class="params">(<span class="keyword">char</span>[] input, <span class="keyword">char</span>[] target)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> ilen = input.length;</span><br><span class="line">    <span class="keyword">int</span> tlen = target.length;</span><br><span class="line">    <span class="keyword">boolean</span> res = <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; ilen; i++)&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; tlen; j++)&#123;</span><br><span class="line">            <span class="keyword">if</span> (i + j &gt;= ilen || input[i + j] != target[j])&#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (j == tlen - <span class="number">1</span>)&#123;</span><br><span class="line">                res = <span class="keyword">true</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="2-KMP算法"><a href="#2-KMP算法" class="headerlink" title="2. KMP算法"></a>2. KMP算法</h2><p>KMP算法(Knuth-Morris-Pratt字符串查找算法)，由Donald Ervin Knuth和Vaughan Pratt在1974年构思，同年James H. Morris也独立地设计出该算法，最终由三人于1977年联合发表。<br>KMP算法的关键是利用匹配失败后的信息，尽量减少模式串与主串的匹配次数以达到快速匹配的目的。通过运用对这个词在不匹配时本身就包含足够的信息来确定下一个匹配将在哪里开始，从而避免重新检查先前匹配的字符。    </p>
-<h3 id="A-一些概念"><a href="#A-一些概念" class="headerlink" title="A. 一些概念"></a>A. 一些概念</h3><ol>
-<li><p>前缀<br>前缀指除了最后一个字符以外，一个字符串的全部头部组合。</p>
-</li>
-<li><p>后缀<br>后缀：指除了第一个字符以外，一个字符串的全部尾部组合。</p>
-</li>
-<li><p>部分匹配值<br>部分匹配值就是”前缀”和”后缀”的最长的共有元素的长度。</p>
-</li>
-</ol>
-<p>以字符串<code>ABCDABD</code>为例：</p>
+        <h2 id="1-FileReader"><a href="#1-FileReader" class="headerlink" title="1. FileReader"></a>1. FileReader</h2><p><code>FileReader</code>类(<code>java.io.FileReader</code>)可以将文件的内容作为字符流读取。</p>
+<h2 id="2-FileWriter"><a href="#2-FileWriter" class="headerlink" title="2. FileWriter"></a>2. FileWriter</h2><p><code>FileWriter</code>类(<code>java.io.FileWriter</code>)可以将字符写入文件。  </p>
+<h2 id="3-PipedReader"><a href="#3-PipedReader" class="headerlink" title="3. PipedReader"></a>3. PipedReader</h2><p><code>PipedReader</code>类(<code>java.io.PipedReader</code>)使得可以将管道的内容作为字符流读取。</p>
+<h2 id="4-PipedWriter"><a href="#4-PipedWriter" class="headerlink" title="4.  PipedWriter"></a>4.  PipedWriter</h2><p><code>PipedWriter</code>类(<code>java.io.PipedWriter</code>)使得可以将Java管道作为字符流写入。</p>
+<h2 id="5-CharArrayReader"><a href="#5-CharArrayReader" class="headerlink" title="5. CharArrayReader"></a>5. CharArrayReader</h2><p><code>CharArrayReader</code>类(<code>java.io.CharArrayReader</code>)可以将<code>char</code>数组的内容作为字符流读取。</p>
+<h2 id="6-CharArrayWriter"><a href="#6-CharArrayWriter" class="headerlink" title="6. CharArrayWriter"></a>6. CharArrayWriter</h2><p><code>CharArrayWriter</code>类(<code>java.io.CharArrayWriter</code>)可以通过<code>Writer</code>类的方法(<code>CharArrayWriter</code>是<code>Writer</code>子类)编写字符，并将写入的字符转换为<code>char</code>数组。</p>
+<h2 id="7-BufferedReader"><a href="#7-BufferedReader" class="headerlink" title="7. BufferedReader"></a>7. BufferedReader</h2><p><code>BufferedReader</code>类(<code>java.io.BufferedReader</code>)为<code>Reader</code>实例提供缓冲 。缓冲可以加快IO的速度。不是一次从网络或磁盘读取一个字符，<code>BufferedReader</code>一次读取一个更大的块。对于磁盘访问和大的数据量这通常要快得多。  </p>
+<h2 id="8-BufferedWriter"><a href="#8-BufferedWriter" class="headerlink" title="8. BufferedWriter"></a>8. BufferedWriter</h2><p><code>BufferedWriter</code>(<code>java.io.BufferedWriter</code>)为<code>Writer</code>实例提供缓冲。缓冲可以加快IO的速度。不是一次写一个字符到网络或磁盘，<code>BufferedWriter</code>一次写一个更大的块。对于磁盘访问和大的数据量这通常要快得多。</p>
+<h2 id="9-FilterReader"><a href="#9-FilterReader" class="headerlink" title="9. FilterReader"></a>9. FilterReader</h2><p><code>FilterReader</code>是实现自己的过滤器<code>Reader</code>的基类。基本上它只是覆盖了<code>Reader</code>的所有方法。与<code>FilterInputStream</code>一样，基本上可以直接扩展<code>Reader</code>类而不是该类，可以避免层次结构中的额外类。  </p>
+<h2 id="10-FilterWriter"><a href="#10-FilterWriter" class="headerlink" title="10. FilterWriter"></a>10. FilterWriter</h2><p><code>FilterWriter</code>是实现自己的过滤器的基类<code>Writer</code>。</p>
+<h2 id="11-PushbackReader"><a href="#11-PushbackReader" class="headerlink" title="11. PushbackReader"></a>11. PushbackReader</h2><p><code>PushbackReader</code>类(<code>java.io.PushbackReader</code>)旨在使用<code>Reader</code>解析数据。</p>
+<h2 id="12-LineNumberReader"><a href="#12-LineNumberReader" class="headerlink" title="12. LineNumberReader"></a>12. LineNumberReader</h2><p><code>LineNumberReader</code>类(<code>java.io.LineNumberReader</code>)是一种<code>BufferedReader</code>，用于跟踪所读取的字符的行号。行号从0开始，每当<code>LineNumberReader</code>遇到行终止符，行号递增。可以通过调用<code>LineNumberReader</code>的<code>getLineNumber()</code>方法获取当前行号。如果需要，还可以通过调用<code>setLineNumber()</code>方法来设置当前行号。  </p>
+<h2 id="13-StreamTokenizer"><a href="#13-StreamTokenizer" class="headerlink" title="13. StreamTokenizer"></a>13. StreamTokenizer</h2><p><code>StreamTokenizer</code>类(<code>java.io.StreamTokenizer</code>)可以将从一个<code>Reader</code>读入的字符标为标记(token)。例如，在字符串<code>Mary had a little lamb</code>中，每个单词都是一个单独的标记。在解析文件或计算机语言时，在进一步处理它们之前将输入分解为标记是常用的。这个过程也称为<code>lexing</code>或<code>tokenizing</code>。使用<code>StreamTokenizer</code>您可以遍历<code>Reader</code>的<code>token</code>。可以循环调用<code>nextToken()</code>方法。每次调用<code>nextToken()</code>可以获得几个字段，如<code>token</code>类型、值等。这些类型包括：</p>
 <ul>
-<li><p>“A”的前缀和后缀都为空集，共有元素的长度为0；</p>
-</li>
-<li><p>“AB”的前缀为[A]，后缀为[B]，共有元素的长度为0；</p>
-</li>
-<li><p>“ABC”的前缀为[A, AB]，后缀为[BC, C]，共有元素的长度0；</p>
-</li>
-<li><p>“ABCD”的前缀为[A, AB, ABC]，后缀为[BCD, CD, D]，共有元素的长度为0；</p>
-</li>
-<li><p>“ABCDA”的前缀为[A, AB, ABC, ABCD]，后缀为[BCDA, CDA, DA, A]，共有元素为”A”，长度为1；</p>
-</li>
-<li><p>“ABCDAB”的前缀为[A, AB, ABC, ABCD, ABCDA]，后缀为[BCDAB, CDAB, DAB, AB, B]，共有元素为”AB”，长度为2；</p>
-</li>
-<li><p>“ABCDABD”的前缀为[A, AB, ABC, ABCD, ABCDA, ABCDAB]，后缀为[BCDABD, CDABD, DABD, ABD, BD, D]，共有元素的长度为0。</p>
-</li>
+<li>ttype<br>The type of token read (word, number, end of line)</li>
+<li>sval<br>The string value of the token, if the token was a string (word)</li>
+<li>nval<br>The number value of the token, if the token was a number.</li>
 </ul>
-<p>部分匹配的实质是，有时候字符串头部和尾部会有重复。比如<code>ABCDAB</code>的有两个<code>AB</code>，它长度为6、部分匹配值为2。将<code>ABCDAB</code>向后移动<code>6 - 2 = 4</code>位，就可以使第一个<code>AB</code>来到第二个<code>AB</code>的位置。  </p>
-<h3 id="B-算法实现"><a href="#B-算法实现" class="headerlink" title="B. 算法实现"></a>B. 算法实现</h3><h2 id="3-BM算法"><a href="#3-BM算法" class="headerlink" title="3. BM算法"></a>3. BM算法</h2><h2 id="4-Sunday算法"><a href="#4-Sunday算法" class="headerlink" title="4. Sunday算法"></a>4. Sunday算法</h2>
+<h3 id="A-示例"><a href="#A-示例" class="headerlink" title="A. 示例"></a>A. 示例</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">StreamTokenizer streamTokenizer = <span class="keyword">new</span> StreamTokenizer(<span class="keyword">new</span> StringReader(<span class="string">"Mary had 1 little lamb..."</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span>(streamTokenizer.nextToken() != StreamTokenizer.TT_EOF)&#123;</span><br><span class="line">    <span class="keyword">if</span>(streamTokenizer.ttype == StreamTokenizer.TT_WORD) &#123;</span><br><span class="line">        System.out.println(streamTokenizer.sval);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span>(streamTokenizer.ttype == StreamTokenizer.TT_NUMBER) &#123;</span><br><span class="line">        System.out.println(streamTokenizer.nval);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span>(streamTokenizer.ttype == StreamTokenizer.TT_EOL) &#123;</span><br><span class="line">        System.out.println();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">streamTokenizer.close();</span><br></pre></td></tr></table></figure>
+<h2 id="14-PrintWriter"><a href="#14-PrintWriter" class="headerlink" title="14. PrintWriter"></a>14. PrintWriter</h2><p><code>PrintWriter</code>类(<code>java.io.PrintWriter</code>)可以将格式化数据写入底层<code>Writer</code>。</p>
+<h2 id="15-StringReader"><a href="#15-StringReader" class="headerlink" title="15. StringReader"></a>15. StringReader</h2><p><code>StringReader</code>类可以将普通<code>String</code>变为<code>Reader</code>。如果您将数据作为<code>String</code>但需要将该<code>String</code>传递给只接受<code>Reader</code>的组件，这将非常有用。</p>
+<h2 id="16-StringWriter"><a href="#16-StringWriter" class="headerlink" title="16. StringWriter"></a>16. StringWriter</h2><p><code>StringWriter</code>类(<code>java.io.StringWriter</code>)使您能够获得写入字符<code>Writer</code>作为<code>String</code>。</p>
+
       
     </div>
 
@@ -563,7 +496,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/字符串搜索算法/" rel="tag"># 字符串搜索算法</a>
+            <a href="/tags/IO/" rel="tag"># IO</a>
           
         </div>
       
@@ -576,8 +509,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/06/19/数据结构与算法/数据结构06 平衡二叉树/" rel="next" title="数据结构06 平衡二叉树">
-                <i class="fa fa-chevron-left"></i> 数据结构06 平衡二叉树
+              <a href="/2019/07/13/java/IO系统/Java IO Tutorial/Java IO Tutorial 05 Reader & Writer, InputStreamReader & OutputStreamWriter/" rel="next" title="Java IO Tutorial 05 Reader & Writer, InputStreamReader & OutputStreamWriter">
+                <i class="fa fa-chevron-left"></i> Java IO Tutorial 05 Reader & Writer, InputStreamReader & OutputStreamWriter
               </a>
             
           </div>
@@ -585,10 +518,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/06/30/java/IO系统/Java IO Tutorial/Java IO Tutorial 01 Overview/" rel="prev" title="Java IO Tutorial 01 Overview">
-                Java IO Tutorial 01 Overview <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -821,7 +750,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-朴素算法"><span class="nav-text">1. 朴素算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-KMP算法"><span class="nav-text">2. KMP算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-一些概念"><span class="nav-text">A. 一些概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-算法实现"><span class="nav-text">B. 算法实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-BM算法"><span class="nav-text">3. BM算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Sunday算法"><span class="nav-text">4. Sunday算法</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-FileReader"><span class="nav-text">1. FileReader</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-FileWriter"><span class="nav-text">2. FileWriter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-PipedReader"><span class="nav-text">3. PipedReader</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-PipedWriter"><span class="nav-text">4.  PipedWriter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-CharArrayReader"><span class="nav-text">5. CharArrayReader</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-CharArrayWriter"><span class="nav-text">6. CharArrayWriter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-BufferedReader"><span class="nav-text">7. BufferedReader</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-BufferedWriter"><span class="nav-text">8. BufferedWriter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-FilterReader"><span class="nav-text">9. FilterReader</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-FilterWriter"><span class="nav-text">10. FilterWriter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#11-PushbackReader"><span class="nav-text">11. PushbackReader</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#12-LineNumberReader"><span class="nav-text">12. LineNumberReader</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#13-StreamTokenizer"><span class="nav-text">13. StreamTokenizer</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-示例"><span class="nav-text">A. 示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#14-PrintWriter"><span class="nav-text">14. PrintWriter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#15-StringReader"><span class="nav-text">15. StringReader</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#16-StringWriter"><span class="nav-text">16. StringWriter</span></a></li></ol></div>
             
 
           </div>

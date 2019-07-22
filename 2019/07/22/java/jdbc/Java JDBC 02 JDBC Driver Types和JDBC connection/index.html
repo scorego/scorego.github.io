@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next mist" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/favicon-128x128-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-01.ico?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/uploads/favicon-128x128-01.ico?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="1. JDBC Driver TypesJDBC驱动程序是一组Java类，它们以特定数据库为目标，实现了JDBC接口。JDBC标准接口的实现特定于需要连接的数据库。具体实现称为JDBC驱动程序。JDBC驱动程序通常由数据库供应商提供，但有时可能由开发人员社区围绕数据库提供。共有四种JDBC驱动类型，分别是：  Type 1: JDBC-ODBC bridge JDBC driver Type 2:">
+<meta name="keywords" content="Java JDBC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java JDBC 02 JDBC Driver Types和JDBC connection">
+<meta property="og:url" content="javior.wang/2019/07/22/java/jdbc/Java JDBC 02 JDBC Driver Types和JDBC connection/index.html">
+<meta property="og:site_name" content="Javior&#39;s Blog">
+<meta property="og:description" content="1. JDBC Driver TypesJDBC驱动程序是一组Java类，它们以特定数据库为目标，实现了JDBC接口。JDBC标准接口的实现特定于需要连接的数据库。具体实现称为JDBC驱动程序。JDBC驱动程序通常由数据库供应商提供，但有时可能由开发人员社区围绕数据库提供。共有四种JDBC驱动类型，分别是：  Type 1: JDBC-ODBC bridge JDBC driver Type 2:">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="/images/java/jdbc/02-01.png">
+<meta property="og:image" content="/images/java/jdbc/02-02.png">
+<meta property="og:image" content="/images/java/jdbc/02-03.png">
+<meta property="og:image" content="/images/java/jdbc/02-04.png">
+<meta property="og:updated_time" content="2019-07-22T13:02:15.503Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java JDBC 02 JDBC Driver Types和JDBC connection">
+<meta name="twitter:description" content="1. JDBC Driver TypesJDBC驱动程序是一组Java类，它们以特定数据库为目标，实现了JDBC接口。JDBC标准接口的实现特定于需要连接的数据库。具体实现称为JDBC驱动程序。JDBC驱动程序通常由数据库供应商提供，但有时可能由开发人员社区围绕数据库提供。共有四种JDBC驱动类型，分别是：  Type 1: JDBC-ODBC bridge JDBC driver Type 2:">
+<meta name="twitter:image" content="/images/java/jdbc/02-01.png">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="javior.wang/2019/07/22/java/jdbc/Java JDBC 02 JDBC Driver Types和JDBC connection/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Java JDBC 02 JDBC Driver Types和JDBC connection | Javior's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Javior's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/index.html" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/07/22/java/jdbc/Java JDBC 02 JDBC Driver Types和JDBC connection/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Javior Wang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Javior's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java JDBC 02 JDBC Driver Types和JDBC connection
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-07-22 15:17:42 / 修改时间：21:02:15" itemprop="dateCreated datePublished" datetime="2019-07-22T15:17:42+08:00">2019-07-22</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Java-JDBC/" itemprop="url" rel="index"><span itemprop="name">Java JDBC</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="1-JDBC-Driver-Types"><a href="#1-JDBC-Driver-Types" class="headerlink" title="1. JDBC Driver Types"></a>1. JDBC Driver Types</h2><p>JDBC驱动程序是一组Java类，它们以特定数据库为目标，实现了JDBC接口。JDBC标准接口的实现特定于需要连接的数据库。具体实现称为JDBC驱动程序。JDBC驱动程序通常由数据库供应商提供，但有时可能由开发人员社区围绕数据库提供。<br>共有四种JDBC驱动类型，分别是：</p>
+<ul>
+<li>Type 1: JDBC-ODBC bridge JDBC driver</li>
+<li>Type 2: Java + Native code JDBC driver</li>
+<li>Type 3: All Java + Middleware translation JDBC driver</li>
+<li>Type 4: All Java JDBC driver</li>
+</ul>
+<h3 id="A-Type-1-JDBC-ODBC-bridge-JDBC-driver"><a href="#A-Type-1-JDBC-ODBC-bridge-JDBC-driver" class="headerlink" title="A. Type 1: JDBC-ODBC bridge JDBC driver"></a>A. Type 1: JDBC-ODBC bridge JDBC driver</h3><p>第一种JDBC驱动有一部分是Java组成，该部分将JDBC接口调用转换为ODBC调用。然后，ODBC桥接器调用给定数据库的ODBC驱动程序。  </p>
+<div align="center"><br>      <img src="/images/java/jdbc/02-01.png" width="500" height="500"><br></div>
+
+<h3 id="B-Type-2-Java-Native-code-JDBC-driver"><a href="#B-Type-2-Java-Native-code-JDBC-driver" class="headerlink" title="B. Type 2: Java + Native code JDBC driver"></a>B. Type 2: Java + Native code JDBC driver</h3><p>类型2的JDBC驱动程序类似于类型1的驱动程序，但ODBC部分替换为Native code。Native code部分针对特定的数据库产品。  </p>
+<div align="center"><br>      <img src="/images/java/jdbc/02-02.png" width="500" height="500"><br></div>
+
+<h3 id="C-Type-3-All-Java-Middleware-translation-JDBC-driver"><a href="#C-Type-3-All-Java-Middleware-translation-JDBC-driver" class="headerlink" title="C. Type 3: All Java + Middleware translation JDBC driver"></a>C. Type 3: All Java + Middleware translation JDBC driver</h3><p>类型3的JDBC驱动程序是将所有JDBC接口调用发送到中间服务器的全Java驱动程序。然后，中间服务器代表JDBC驱动程序连接到数据库。</p>
+<div align="center"><br>      <img src="/images/java/jdbc/02-03.png" width="500" height="500"><br></div>
+
+<h3 id="D-Type-4-All-Java-JDBC-driver"><a href="#D-Type-4-All-Java-JDBC-driver" class="headerlink" title="D. Type 4: All Java JDBC driver"></a>D. Type 4: All Java JDBC driver</h3><p>类型4的JDBC驱动程序是一个直接连接到数据库的全Java驱动程序。它是针对特定数据库产品实现的。今天，大多数JDBC驱动程序都是第4类驱动。  </p>
+<div align="center"><br>      <img src="/images/java/jdbc/02-04.png" width="500" height="500"><br></div>
+
+<h2 id="2-JDBC-Connection"><a href="#2-JDBC-Connection" class="headerlink" title="2. JDBC Connection"></a>2. JDBC Connection</h2><p>JDBC Connection类<code>java.sql.Connection</code>表示与关系数据库的数据库连接。在通过JDBC从数据库读取数据或向数据库写入数据之前，需要打开与数据库的连接。  </p>
+<h3 id="A-Loading-the-JDBC-Driver"><a href="#A-Loading-the-JDBC-Driver" class="headerlink" title="A. Loading the JDBC Driver"></a>A. Loading the JDBC Driver</h3><p>在打开和数据库的连接之前需要加载JDBC驱动。虽然在Java 6之后并不需要这么做了，但这么做并不会返回失败。加载驱动如：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Class.forName(<span class="string">"driverClassName"</span>);</span><br><span class="line"></span><br><span class="line">Class.forName(<span class="string">"org.h2.Driver"</span>);</span><br></pre></td></tr></table></figure></p>
+<p>只需要加载一次。并不是每次打开连接都要加载，只要在第一次打开连接前加载一次就行。</p>
+<h3 id="B-Opening-the-JDBC-Connection"><a href="#B-Opening-the-JDBC-Connection" class="headerlink" title="B. Opening the JDBC Connection"></a>B. Opening the JDBC Connection</h3><p>通过<code>java.sql.DriverManager</code>的<code>getConnection()</code>方法来打开JDBC连接。有三种方法的变体。</p>
+<h4 id="Open-Connection-With-URL"><a href="#Open-Connection-With-URL" class="headerlink" title="Open Connection With URL"></a>Open Connection With URL</h4><p><code>URL</code>是数据库的地址。URL的格式需要查看数据库和JDBC驱动的文档，不同的数据库可能不同。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String url      = <span class="string">"jdbc:h2:~/test"</span>;   <span class="comment">//database specific url.</span></span><br><span class="line"></span><br><span class="line">Connection connection = DriverManager.getConnection(url);</span><br></pre></td></tr></table></figure></p>
+<h4 id="Open-Connection-With-URL-User-and-Password"><a href="#Open-Connection-With-URL-User-and-Password" class="headerlink" title="Open Connection With URL, User and Password"></a>Open Connection With URL, User and Password</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">String url      = <span class="string">"jdbc:h2:~/test"</span>;   <span class="comment">//database specific url.</span></span><br><span class="line">String user     = <span class="string">"sa"</span>;</span><br><span class="line">String password = <span class="string">""</span>;</span><br><span class="line"></span><br><span class="line">Connection connection = DriverManager.getConnection(url, user, password);</span><br></pre></td></tr></table></figure>
+<h4 id="Open-Connection-With-URL-and-Properties"><a href="#Open-Connection-With-URL-and-Properties" class="headerlink" title="Open Connection With URL and Properties"></a>Open Connection With URL and Properties</h4><p><code>Properties</code>用来传递需要的参数。具体哪些参数需要查看数据库和JDBC驱动文档。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">String url      = <span class="string">"jdbc:h2:~/test"</span>;   <span class="comment">//database specific url.</span></span><br><span class="line"></span><br><span class="line">Properties properties = <span class="keyword">new</span> Properties( );</span><br><span class="line">properties.put( <span class="string">"user"</span>, <span class="string">"sa"</span> );</span><br><span class="line">properties.put( <span class="string">"password"</span>, <span class="string">""</span> );</span><br><span class="line"></span><br><span class="line">Connection connection = DriverManager.getConnection(url, properties);</span><br></pre></td></tr></table></figure></p>
+<h3 id="C-Closing-the-JDBC-Connection"><a href="#C-Closing-the-JDBC-Connection" class="headerlink" title="C. Closing the JDBC Connection"></a>C. Closing the JDBC Connection</h3><p>一旦使用完毕，需要关闭数据库连接。就像：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">connection.close();</span><br></pre></td></tr></table></figure></p>
+<p>关闭连接非常重要。一个数据库连接不仅占用自己的Java程序的资源，还占用数据库服务器的资源。也可以通过Java 7新增的<code>Try with resources</code>来关闭连接：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">String url      = <span class="string">"jdbc:h2:~/test"</span>;   <span class="comment">//database specific url.</span></span><br><span class="line">String user     = <span class="string">"sa"</span>;</span><br><span class="line">String password = <span class="string">""</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>(Connection connection = DriverManager.getConnection(url, user, password)) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//use the JDBC Connection inhere</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="D-setAutoCommit-commit-rollback"><a href="#D-setAutoCommit-commit-rollback" class="headerlink" title="D. setAutoCommit() / commit() / rollback()"></a>D. setAutoCommit() / commit() / rollback()</h3><p>JDBC Connection <code>setAutoCommit()</code>方法用于切换自动提交模式。在自动提交模式下，发送到数据库的每个更新将立即提交，就像在其自己的事务中执行一样。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">connection.setAutoCommit(<span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">connection.setAutoCommit(<span class="keyword">false</span>);</span><br></pre></td></tr></table></figure>
+<p>默认自动提交是开启的。当自动提交关闭时，则必须通过调用<code>commit()</code>方法显式提交每个数据库事务。一旦执行事务出现异常，可以调用<code>rollback()</code>方法来回滚。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">    connection.setAutoCommit(<span class="keyword">false</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// perform operations on the JDBC Connection</span></span><br><span class="line">    <span class="comment">// which are to be part of the transaction</span></span><br><span class="line"></span><br><span class="line">    connection.commit();</span><br><span class="line">&#125; <span class="keyword">catch</span> (SQLException e) &#123;</span><br><span class="line">    connection.rollback();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="E-createStatement-prepareStatement"><a href="#E-createStatement-prepareStatement" class="headerlink" title="E. createStatement() / prepareStatement()"></a>E. createStatement() / prepareStatement()</h3><p><code>createStatement()</code>用来创建<code>JDBC statement</code>对象。<code>statement</code>对象用来执行SQL。<code>prepareStatement()</code>用来创建<code>JDBC prepareStatement</code>对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Statement statement = connection.createStatement();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">String sql = <span class="string">"select * from people where id=?"</span>;</span><br><span class="line">PreparedStatement preparedStatement = connection.prepareStatement(sql);</span><br></pre></td></tr></table></figure>
+<h3 id="F-getMetaData"><a href="#F-getMetaData" class="headerlink" title="F. getMetaData()"></a>F. getMetaData()</h3><p><code>getMetaData()</code>用来返回JDBC connection对应的数据库关联的<code>JDBC DatabaseMetaData</code>对象。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DatabaseMetaData databaseMetaData = connection.getMetaData();</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java-JDBC/" rel="tag"># Java JDBC</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/21/java/jdbc/Java JDBC 01 综述/" rel="next" title="Java JDBC 01 综述">
+                <i class="fa fa-chevron-left"></i> Java JDBC 01 综述
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/uploads/avatar.gif" alt="Javior Wang">
+            
+              <p class="site-author-name" itemprop="name">Javior Wang</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">52</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/index.html">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">11</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">23</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/scorego" title="GitHub &rarr; https://github.com/scorego" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://www.zhihu.com/people/scorego-6" title="Zhihu &rarr; https://www.zhihu.com/people/scorego-6" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>Zhihu</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-JDBC-Driver-Types"><span class="nav-text">1. JDBC Driver Types</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-Type-1-JDBC-ODBC-bridge-JDBC-driver"><span class="nav-text">A. Type 1: JDBC-ODBC bridge JDBC driver</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-Type-2-Java-Native-code-JDBC-driver"><span class="nav-text">B. Type 2: Java + Native code JDBC driver</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C-Type-3-All-Java-Middleware-translation-JDBC-driver"><span class="nav-text">C. Type 3: All Java + Middleware translation JDBC driver</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#D-Type-4-All-Java-JDBC-driver"><span class="nav-text">D. Type 4: All Java JDBC driver</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-JDBC-Connection"><span class="nav-text">2. JDBC Connection</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-Loading-the-JDBC-Driver"><span class="nav-text">A. Loading the JDBC Driver</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-Opening-the-JDBC-Connection"><span class="nav-text">B. Opening the JDBC Connection</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Open-Connection-With-URL"><span class="nav-text">Open Connection With URL</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Open-Connection-With-URL-User-and-Password"><span class="nav-text">Open Connection With URL, User and Password</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Open-Connection-With-URL-and-Properties"><span class="nav-text">Open Connection With URL and Properties</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C-Closing-the-JDBC-Connection"><span class="nav-text">C. Closing the JDBC Connection</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#D-setAutoCommit-commit-rollback"><span class="nav-text">D. setAutoCommit() / commit() / rollback()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#E-createStatement-prepareStatement"><span class="nav-text">E. createStatement() / prepareStatement()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#F-getMetaData"><span class="nav-text">F. getMetaData()</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Javior Wang</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

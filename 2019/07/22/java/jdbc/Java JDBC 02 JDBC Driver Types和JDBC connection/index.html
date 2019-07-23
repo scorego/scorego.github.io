@@ -106,7 +106,7 @@
 <meta property="og:image" content="/images/java/jdbc/02-02.png">
 <meta property="og:image" content="/images/java/jdbc/02-03.png">
 <meta property="og:image" content="/images/java/jdbc/02-04.png">
-<meta property="og:updated_time" content="2019-07-22T13:02:15.503Z">
+<meta property="og:updated_time" content="2019-07-22T13:06:53.259Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java JDBC 02 JDBC Driver Types和JDBC connection">
 <meta name="twitter:description" content="1. JDBC Driver TypesJDBC驱动程序是一组Java类，它们以特定数据库为目标，实现了JDBC接口。JDBC标准接口的实现特定于需要连接的数据库。具体实现称为JDBC驱动程序。JDBC驱动程序通常由数据库供应商提供，但有时可能由开发人员社区围绕数据库提供。共有四种JDBC驱动类型，分别是：  Type 1: JDBC-ODBC bridge JDBC driver Type 2:">
@@ -387,7 +387,7 @@
                 
               
 
-              <time title="创建时间：2019-07-22 15:17:42 / 修改时间：21:02:15" itemprop="dateCreated datePublished" datetime="2019-07-22T15:17:42+08:00">2019-07-22</time>
+              <time title="创建时间：2019-07-22 15:17:42 / 修改时间：21:06:53" itemprop="dateCreated datePublished" datetime="2019-07-22T15:17:42+08:00">2019-07-22</time>
             
 
             
@@ -475,7 +475,7 @@
 <h3 id="D-setAutoCommit-commit-rollback"><a href="#D-setAutoCommit-commit-rollback" class="headerlink" title="D. setAutoCommit() / commit() / rollback()"></a>D. setAutoCommit() / commit() / rollback()</h3><p>JDBC Connection <code>setAutoCommit()</code>方法用于切换自动提交模式。在自动提交模式下，发送到数据库的每个更新将立即提交，就像在其自己的事务中执行一样。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">connection.setAutoCommit(<span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">connection.setAutoCommit(<span class="keyword">false</span>);</span><br></pre></td></tr></table></figure>
 <p>默认自动提交是开启的。当自动提交关闭时，则必须通过调用<code>commit()</code>方法显式提交每个数据库事务。一旦执行事务出现异常，可以调用<code>rollback()</code>方法来回滚。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">    connection.setAutoCommit(<span class="keyword">false</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// perform operations on the JDBC Connection</span></span><br><span class="line">    <span class="comment">// which are to be part of the transaction</span></span><br><span class="line"></span><br><span class="line">    connection.commit();</span><br><span class="line">&#125; <span class="keyword">catch</span> (SQLException e) &#123;</span><br><span class="line">    connection.rollback();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="E-createStatement-prepareStatement"><a href="#E-createStatement-prepareStatement" class="headerlink" title="E. createStatement() / prepareStatement()"></a>E. createStatement() / prepareStatement()</h3><p><code>createStatement()</code>用来创建<code>JDBC statement</code>对象。<code>statement</code>对象用来执行SQL。<code>prepareStatement()</code>用来创建<code>JDBC prepareStatement</code>对象。</p>
+<h3 id="E-createStatement-prepareStatement"><a href="#E-createStatement-prepareStatement" class="headerlink" title="E. createStatement() / prepareStatement()"></a>E. createStatement() / prepareStatement()</h3><p><code>createStatement()</code>用来创建<code>JDBC Statement</code>对象。<code>Statement</code>对象用来执行SQL。<code>prepareStatement()</code>用来创建<code>JDBC prepareStatement</code>对象。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Statement statement = connection.createStatement();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">String sql = <span class="string">"select * from people where id=?"</span>;</span><br><span class="line">PreparedStatement preparedStatement = connection.prepareStatement(sql);</span><br></pre></td></tr></table></figure>
 <h3 id="F-getMetaData"><a href="#F-getMetaData" class="headerlink" title="F. getMetaData()"></a>F. getMetaData()</h3><p><code>getMetaData()</code>用来返回JDBC connection对应的数据库关联的<code>JDBC DatabaseMetaData</code>对象。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DatabaseMetaData databaseMetaData = connection.getMetaData();</span><br></pre></td></tr></table></figure></p>
 
@@ -523,6 +523,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/23/java/jdbc/Java JDBC 03 More/" rel="prev" title="Java JDBC 03 More">
+                Java JDBC 03 More <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -593,7 +597,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">52</span>
+                    <span class="site-state-item-count">53</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

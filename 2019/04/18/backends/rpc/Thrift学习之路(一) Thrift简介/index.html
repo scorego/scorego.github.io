@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="Javior&#39;s Blog">
 <meta property="og:description" content="Thrift is a lightweight, language-independent software stack with an associated code generation mechanism for point-to-point RPC. Thrift provides clean abstractions for data transport, data serializa">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-04-20T06:07:31.419Z">
+<meta property="og:updated_time" content="2019-08-07T18:33:24.859Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Thrift学习之路(一) Thrift简介">
 <meta name="twitter:description" content="Thrift is a lightweight, language-independent software stack with an associated code generation mechanism for point-to-point RPC. Thrift provides clean abstractions for data transport, data serializa">
@@ -399,7 +399,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-04-20 14:07:31" itemprop="dateModified" datetime="2019-04-20T14:07:31+08:00">2019-04-20</time>
+                <time title="修改时间：2019-08-08 02:33:24" itemprop="dateModified" datetime="2019-08-08T02:33:24+08:00">2019-08-08</time>
               
             
           </span>
@@ -454,8 +454,9 @@
         <blockquote>
 <p>Thrift is a lightweight, language-independent software stack with an associated code generation mechanism for point-to-point RPC. Thrift provides clean abstractions for data transport, data serialization, and application level processing. The code generation system takes a simple definition language as input and generates code across programming languages that uses the abstracted stack to build interoperable RPC clients and servers.  </p>
 </blockquote>
-<p>Thrift通过IDL(Interface Definition Language，接口定义语言)来定义RPC(Remote Procedure Call，远程过程调用)的接口和数据类型，然后通过Thrift编译器生成不同语言的代码，并由生成的代码负责RPC协议层和传输层的实现。Thrift目前支持<a href="https://github.com/apache/thrift/blob/master/LANGUAGES.md" target="_blank" rel="noopener">25种语言</a>，官网地址是<a href="http://thrift.apache.org/" target="_blank" rel="noopener"> http://thrift.apache.org/ </a>,Github地址是<a href="https://github.com/apache/thrift" target="_blank" rel="noopener"> https://github.com/apache/thrift </a>。Thrift白皮书可以在<a href="http://thrift.apache.org/static/files/thrift-20070401.pdf" target="_blank" rel="noopener"> http://thrift.apache.org/static/files/thrift-20070401.pdf </a>下载。</p>
-<h2 id="Thrift数据类型"><a href="#Thrift数据类型" class="headerlink" title="Thrift数据类型"></a>Thrift数据类型</h2><p>Thrift数据类型设计原则主要是能使不同语言都使用本语言自带的数据类型，而不需要另外定义包装类。Thrift文件完全可以支持在其中定义所需要数据结构。<br><a name="1"> </a></p>
+<p><a href="http://thrift.apache.org/" target="_blank" rel="noopener">Thrift官网</a><br><a href="https://github.com/apache/thrift" target="_blank" rel="noopener">Github地址</a><br><a href="http://thrift.apache.org/static/files/thrift-20070401.pdf" target="_blank" rel="noopener">白皮书</a></p>
+<p>Thrift通过IDL(Interface Definition Language，接口定义语言)来定义RPC(Remote Procedure Call，远程过程调用)的接口和数据类型，然后通过Thrift编译器生成不同语言的代码，并由生成的代码负责RPC协议层和传输层的实现。Thrift目前支持<a href="https://github.com/apache/thrift/blob/master/LANGUAGES.md" target="_blank" rel="noopener">25种语言</a>。   </p>
+<h2 id="1-Thrift数据类型"><a href="#1-Thrift数据类型" class="headerlink" title="1. Thrift数据类型"></a>1. Thrift数据类型</h2><p>Thrift数据类型设计原则主要是能使不同语言都使用本语言自带的数据类型，而不需要另外定义包装类。Thrift文件完全可以支持在其中定义所需要数据结构。<br><a name="1"> </a></p>
 <h3 id="Base-Types-基本类型"><a href="#Base-Types-基本类型" class="headerlink" title="Base Types 基本类型"></a>Base Types 基本类型</h3><p>基础类型有:</p>
 <table>
 <thead>
@@ -463,7 +464,7 @@
 <th style="text-align:center">Thrift基础类型</th>
 <th style="text-align:center">定义</th>
 <th style="text-align:center">对应Java类型</th>
-<th style="text-align:center">备注</th>
+<th>备注</th>
 </tr>
 </thead>
 <tbody>
@@ -471,49 +472,49 @@
 <td style="text-align:center">bool</td>
 <td style="text-align:center">a boolean value, true or false</td>
 <td style="text-align:center">boolean</td>
-<td style="text-align:center"></td>
+<td></td>
 </tr>
 <tr>
 <td style="text-align:center">byte</td>
 <td style="text-align:center">a signed byte</td>
 <td style="text-align:center">byte</td>
-<td style="text-align:center"></td>
+<td></td>
 </tr>
 <tr>
 <td style="text-align:center">i16</td>
 <td style="text-align:center">a 16-bit signed integer</td>
 <td style="text-align:center">short</td>
-<td style="text-align:center"></td>
+<td></td>
 </tr>
 <tr>
 <td style="text-align:center">i32</td>
 <td style="text-align:center">a 32-bit signed integer</td>
 <td style="text-align:center">int</td>
-<td style="text-align:center"></td>
+<td></td>
 </tr>
 <tr>
 <td style="text-align:center">i64</td>
 <td style="text-align:center">a 64-bit signed intger</td>
 <td style="text-align:center">long</td>
-<td style="text-align:center"></td>
+<td></td>
 </tr>
 <tr>
 <td style="text-align:center">double</td>
 <td style="text-align:center">a 64-bit floating point number</td>
 <td style="text-align:center">double</td>
-<td style="text-align:center"></td>
+<td></td>
 </tr>
 <tr>
 <td style="text-align:center">string</td>
 <td style="text-align:center">an encoding-agnostic text or binary string</td>
 <td style="text-align:center">String</td>
-<td style="text-align:center">注意s的大小写</td>
+<td>注意s的大小写</td>
 </tr>
 </tbody>
 </table>
 <p>Thrift只保留了一些简单的基本类型，这些基本类型在不同语言都有支持的类型。Thrift忽略了只有部分语言支持的类型，如无符号整数，不过对于Java来说没有影响。</p>
-<h3 id="Structs-结构体"><a href="#Structs-结构体" class="headerlink" title="Structs 结构体"></a>Structs 结构体</h3><p>struct定义的是对象，对应Java中的Java Bean。它和C语言的struct定义很像。对象中每个字段(field)需要以一个数字标识开头，如果没有数字标识，会自动指定。字段还可指定默认值，还可以声明<code>optional</code>,当<code>optional</code>字段没有赋值时将不会序列化输出。自动生成的Java文件中会有getter/setter方法。<br>规范的struct定义中的每个域均会使用required或者optional关键字进行标识。如果required标识的域没有赋值，thrift将给予提示。如果optional标识的域没有赋值，该域将不会被序列化传输。如果某个optional标识域有缺省值而用户没有重新赋值，则该域的值一直为缺省值。<br>一个struct定义的Java bean的例子：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">struct MovieTicket&#123;</span><br><span class="line">    1: i64 ticketId = 0,</span><br><span class="line">    2: i64 movieId,</span><br><span class="line">    3: double price,</span><br><span class="line">    4: i64 userId,</span><br><span class="line">    5. optional string cinemaName,   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="Containers-容器"><a href="#Containers-容器" class="headerlink" title="Containers 容器"></a>Containers 容器</h3><p>Thrift容器有3中，并支持Java和C++的泛型。容器中的元素可以是除了service以外的任何合法Thrift类型，包括结构体和异常。</p>
+<h3 id="A-Structs-结构体"><a href="#A-Structs-结构体" class="headerlink" title="A. Structs 结构体"></a>A. Structs 结构体</h3><p>struct定义的是对象，对应Java中的Java Bean。它和C语言的struct定义很像。对象中每个字段(field)需要以一个数字标识开头，如果没有数字标识，会自动指定。字段还可指定默认值，还可以声明<code>optional</code>,当<code>optional</code>字段没有赋值时将不会序列化输出。自动生成的Java文件中会有getter/setter方法。<br>规范的struct定义中的每个域均会使用required或者optional关键字进行标识。如果required标识的域没有赋值，thrift将给予提示。如果optional标识的域没有赋值，该域将不会被序列化传输。如果某个optional标识域有缺省值而用户没有重新赋值，则该域的值一直为缺省值。<br>一个struct定义的Java bean的例子：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">struct MovieTicket&#123;</span><br><span class="line">    1: i64 ticketId = 0,</span><br><span class="line">    2: i64 movieId,</span><br><span class="line">    3: double price,</span><br><span class="line">    4: i64 userId,</span><br><span class="line">    5. optional string cinemaName,   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="B-Containers-容器"><a href="#B-Containers-容器" class="headerlink" title="B. Containers 容器"></a>B. Containers 容器</h3><p>Thrift容器有3中，并支持Java和C++的泛型。容器中的元素可以是除了service以外的任何合法Thrift类型，包括结构体和异常。</p>
 <table>
 <thead>
 <tr>
@@ -540,14 +541,14 @@
 </tr>
 </tbody>
 </table>
-<h3 id="Exceptions-异常"><a href="#Exceptions-异常" class="headerlink" title="Exceptions 异常"></a>Exceptions 异常</h3><p>异常在语法和功能上类似于结构体，只不过异常使用关键字exception而不是struct声明。但它在语义上不同于结构体，当定义一个RPC服务时，开发者可能需要声明一个远程方法抛出一个异常。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">exception InvalidOperation &#123;</span><br><span class="line">  1: i32 what,</span><br><span class="line">  2: string why,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="Services-服务"><a href="#Services-服务" class="headerlink" title="Services 服务"></a>Services 服务</h3><p>对于OOP语言来说，定义服务在语义上等价于定义接口或抽象类。Thrift编译器会根据选择的目标语言为server和client产生继承接口的stubs。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">service &lt;name&gt;&#123;</span><br><span class="line">    &lt;returntype&gt; &lt;name&gt;(&lt;arguments&gt;) [throws (&lt;exceptions&gt;)],</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="C-Exceptions-异常"><a href="#C-Exceptions-异常" class="headerlink" title="C. Exceptions 异常"></a>C. Exceptions 异常</h3><p>异常在语法和功能上类似于结构体，只不过异常使用关键字exception而不是struct声明。但它在语义上不同于结构体，当定义一个RPC服务时，开发者可能需要声明一个远程方法抛出一个异常。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">exception InvalidOperation &#123;</span><br><span class="line">  1: i32 what,</span><br><span class="line">  2: string why,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="D-Services-服务"><a href="#D-Services-服务" class="headerlink" title="D. Services 服务"></a>D. Services 服务</h3><p>对于OOP语言来说，定义服务在语义上等价于定义接口或抽象类。Thrift编译器会根据选择的目标语言为server和client产生继承接口的stubs。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">service &lt;name&gt;&#123;</span><br><span class="line">    &lt;returntype&gt; &lt;name&gt;(&lt;arguments&gt;) [throws (&lt;exceptions&gt;)],</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>例子：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">service StringCache&#123;</span><br><span class="line">    void set(1:i32 key, 2:string value),</span><br><span class="line">    string get(1:i32 key) throws (1:KeyNotFound knf),</span><br><span class="line">    void delete(1:i32 key)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="enum-枚举"><a href="#enum-枚举" class="headerlink" title="enum 枚举"></a>enum 枚举</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">struct TicketOrder &#123;</span><br><span class="line">1: required i64 orderId;</span><br><span class="line">2: required i64 userId;</span><br><span class="line">3: required string cinemaName;</span><br><span class="line">4: optional double price;</span><br><span class="line">5: optional OrderStatus status = OrderStatus.ORDER_PAIED // 给常量赋缺省值时，使用常量的全称</span><br><span class="line">6: optional string comments</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">enum OrderStatus &#123;</span><br><span class="line">ORDER_PAIED,         // 编译器默认从1开始赋值</span><br><span class="line">ORDER_CANCEL = 2,  // 可以赋予某个常量某个整数</span><br><span class="line">ORDER_INVALID = 0xa,     //允许常量是十六进制整数</span><br><span class="line">ORDER_EXPIRED         // 末尾没有逗号</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="E-enum-枚举"><a href="#E-enum-枚举" class="headerlink" title="E. enum 枚举"></a>E. enum 枚举</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">struct TicketOrder &#123;</span><br><span class="line">1: required i64 orderId;</span><br><span class="line">2: required i64 userId;</span><br><span class="line">3: required string cinemaName;</span><br><span class="line">4: optional double price;</span><br><span class="line">5: optional OrderStatus status = OrderStatus.ORDER_PAIED // 给常量赋缺省值时，使用常量的全称</span><br><span class="line">6: optional string comments</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">enum OrderStatus &#123;</span><br><span class="line">ORDER_PAIED,         // 编译器默认从1开始赋值</span><br><span class="line">ORDER_CANCEL = 2,  // 可以赋予某个常量某个整数</span><br><span class="line">ORDER_INVALID = 0xa,     //允许常量是十六进制整数</span><br><span class="line">ORDER_EXPIRED         // 末尾没有逗号</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>枚举常量必须是32位整数。</p>
-<h3 id="常量-const"><a href="#常量-const" class="headerlink" title="常量 const"></a>常量 const</h3><p>Thrift允许用户定义常量，复杂的类型和结构体可使用JSON形式表示。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">const i32 INT_CONST = 1234;    // 分号是可选的</span><br><span class="line">const map&lt;string,string&gt; MAP_CONST = &#123;&quot;hello&quot;: &quot;world&quot;, &quot;goodnight&quot;: &quot;moon&quot;&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="F-常量-const"><a href="#F-常量-const" class="headerlink" title="F. 常量 const"></a>F. 常量 const</h3><p>Thrift允许用户定义常量，复杂的类型和结构体可使用JSON形式表示。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">const i32 INT_CONST = 1234;    // 分号是可选的</span><br><span class="line">const map&lt;string,string&gt; MAP_CONST = &#123;&quot;hello&quot;: &quot;world&quot;, &quot;goodnight&quot;: &quot;moon&quot;&#125;</span><br></pre></td></tr></table></figure></p>
 <p>跟C语言类似，Thrift也支持typedef语句，例如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">typedef i32 int</span><br></pre></td></tr></table></figure></p>
-<h2 id="命名空间"><a href="#命名空间" class="headerlink" title="命名空间"></a>命名空间</h2><p>Thrift中的命名空间同C++中的namespace类似，它们均提供了一种组织(隔离)代码的方式。因为每种语言均有自己的命名空间定义方式(如python中有module)，thrift允许开发者针对特定语言定义namespace：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">namespace cpp wang.javior.project</span><br><span class="line">namespace java wang.javior.project</span><br></pre></td></tr></table></figure></p>
+<h2 id="2-命名空间"><a href="#2-命名空间" class="headerlink" title="2. 命名空间"></a>2. 命名空间</h2><p>Thrift中的命名空间同C++中的namespace类似，它们均提供了一种组织(隔离)代码的方式。因为每种语言均有自己的命名空间定义方式(如python中有module)，thrift允许开发者针对特定语言定义namespace：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">namespace cpp wang.javior.project</span><br><span class="line">namespace java wang.javior.project</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -835,7 +836,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Thrift数据类型"><span class="nav-text">Thrift数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Base-Types-基本类型"><span class="nav-text">Base Types 基本类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Structs-结构体"><span class="nav-text">Structs 结构体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Containers-容器"><span class="nav-text">Containers 容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Exceptions-异常"><span class="nav-text">Exceptions 异常</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Services-服务"><span class="nav-text">Services 服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#enum-枚举"><span class="nav-text">enum 枚举</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常量-const"><span class="nav-text">常量 const</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#命名空间"><span class="nav-text">命名空间</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Thrift数据类型"><span class="nav-text">1. Thrift数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Base-Types-基本类型"><span class="nav-text">Base Types 基本类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#A-Structs-结构体"><span class="nav-text">A. Structs 结构体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-Containers-容器"><span class="nav-text">B. Containers 容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C-Exceptions-异常"><span class="nav-text">C. Exceptions 异常</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#D-Services-服务"><span class="nav-text">D. Services 服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#E-enum-枚举"><span class="nav-text">E. enum 枚举</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#F-常量-const"><span class="nav-text">F. 常量 const</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-命名空间"><span class="nav-text">2. 命名空间</span></a></li></ol></div>
             
 
           </div>

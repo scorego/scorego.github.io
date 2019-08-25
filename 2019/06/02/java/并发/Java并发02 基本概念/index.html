@@ -104,7 +104,7 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="/images/java/concurrent/02_01threadstate.jpeg">
 <meta property="og:image" content="/images/java/concurrent/02_02arch.jpg">
-<meta property="og:updated_time" content="2019-06-18T10:17:00.919Z">
+<meta property="og:updated_time" content="2019-08-25T05:27:47.334Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java并发02 基本概念">
 <meta name="twitter:description" content="1. Java线程状态Java Language Specification : Chapter 17. Threads and Locks 线程可以有以下6种状态：  New / 新建 Runnable / 可运行 Blocked / 被阻塞 Waiting / 等待 Timed waiting / 计时等待 Terminated / 终止           线程间协作机制涉及到的有Objec">
@@ -402,7 +402,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-06-18 18:17:00" itemprop="dateModified" datetime="2019-06-18T18:17:00+08:00">2019-06-18</time>
+                <time title="修改时间：2019-08-25 13:27:47" itemprop="dateModified" datetime="2019-08-25T13:27:47+08:00">2019-08-25</time>
               
             
           </span>
@@ -457,21 +457,21 @@
         <h2 id="1-Java线程状态"><a href="#1-Java线程状态" class="headerlink" title="1. Java线程状态"></a>1. Java线程状态</h2><p><a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-17.html" target="_blank" rel="noopener">Java Language Specification : Chapter 17. Threads and Locks</a></p>
 <p>线程可以有以下6种状态：</p>
 <ol>
-<li>New / 新建</li>
-<li>Runnable / 可运行</li>
-<li>Blocked / 被阻塞</li>
-<li>Waiting / 等待</li>
-<li>Timed waiting / 计时等待</li>
-<li>Terminated / 终止</li>
+<li><code>New</code> / 新建</li>
+<li><code>Runnable</code> / 可运行</li>
+<li><code>Blocked</code> / 被阻塞</li>
+<li><code>Waiting</code> / 等待</li>
+<li><code>Timed waiting</code> / 计时等待</li>
+<li><code>Terminated</code> / 终止</li>
 </ol>
 <div align="center"><br>      <img src="/images/java/concurrent/02_01threadstate.jpeg" width="700" height="700"><br></div>
 
 
 <p>线程间协作机制涉及到的有<code>Object</code>、<code>Thread</code>和<code>Synchronized</code>关键字等。<code>Object</code>类有<code>notify()</code>、<code>notifyAll()</code>、<code>wait()</code>方法，<code>Thread</code>类定义了<code>sleep()</code>、<code>yield()</code>、<code>interrupt()</code>、<code>join()</code>方法。</p>
 <h3 id="A-wait-和notify"><a href="#A-wait-和notify" class="headerlink" title="A. wait()和notify()"></a>A. <code>wait()</code>和<code>notify()</code></h3><p>在<code>Object</code>类中，定义了<code>wait()</code>、<code>notify()</code>、<code>notify()</code>方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">wait</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    wait(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">wait</span><span class="params">(<span class="keyword">long</span> timeout)</span> <span class="keyword">throws</span> InterruptedException</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">wait</span><span class="params">(<span class="keyword">long</span> timeout, <span class="keyword">int</span> nanos)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (timeout &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"timeout value is negative"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (nanos &lt; <span class="number">0</span> || nanos &gt; <span class="number">999999</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"nanosecond timeout value out of range"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (nanos &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        timeout++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    wait(timeout);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">notify</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">notifyAll</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure></p>
-<p><code>wait()</code>会让线程进入等待状态，同时释放当前线程持有的锁。<code>notify()</code>和<code>notifyAll()</code>会唤醒当前对象上的等待线程，前者唤醒一个，后者唤醒全部。<br>为什么这些方法定义在<code>Object</code>类上，而不是<code>Thread</code>类上？因为这些方法依赖的是对象的<code>monitor</code>，一个对象对应一个<code>monitor</code>，所以这些方法要定义在<code>Object</code>类中。</p>
+<p><code>wait()</code>会让线程进入等待状态，同时释放当前线程持有的锁。<code>notify()</code>和<code>notifyAll()</code>会唤醒当前对象上的等待线程，前者唤醒一个，后者唤醒全部。<br>为什么这些方法定义在<code>Object</code>类上，而不是<code>Thread</code>类上？因为这些方法依赖的是对象的<code>monitor</code>，一个对象对应一个<code>monitor</code>，所以这些方法要定义在<code>Object</code>类中。  </p>
 <h4 id="wait"><a href="#wait" class="headerlink" title="wait()"></a><code>wait()</code></h4><p>使当前线程等待直到另一个线程调用了等待对象的<code>notify()</code>或<code>notifyAll()</code>方法。这和<code>wait(0)</code>的行为是一样的。<br>要调用这个方法，当前线程必须拥有该对象的<code>monitor</code>，调用后当前线程会释放对象的<code>monitor</code>并等待，直到另一个线程通过调用<code>notify()</code>或<code>notifyAll()</code>方法通知等待在该对象<code>monitor</code>上的线程醒来。然后，线程等待，直到它可以重新获得<code>monitor</code>的所有权，并继续执行。<br>只有一个参数的版本中，interrupts和伪唤醒是可能的，所以这个方法应该总是在循环中使用:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (obj) &#123;</span><br><span class="line">    <span class="keyword">while</span> (&lt;condition does not hold&gt;)</span><br><span class="line">        obj.wait();</span><br><span class="line">    ... <span class="comment">// Perform action appropriate to condition</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>此方法只能由该对象<code>monitor</code>的持有者线程调用。当前线程不是<code>monitor</code>的持有者时，会抛<code>IllegalMonitorStateException</code>。<br>如果任何线程在当前线程等待通知之前或期间中断(interrupt)了当前线程，将抛出<code>InterruptedException</code>，会清除当前线程的中断状态。  </p>
+<p>此方法只能由该对象<code>monitor</code>的持有者线程调用。当前线程不是<code>monitor</code>的持有者时，会抛<code>IllegalMonitorStateException</code>。<br>如果任何线程在当前线程等待通知之前或期间中断(<code>interrupt</code>)了当前线程，将抛出<code>InterruptedException</code>，会清除当前线程的中断状态。  </p>
 <h4 id="wait-long-timeout"><a href="#wait-long-timeout" class="headerlink" title="wait(long timeout)"></a><code>wait(long timeout)</code></h4><p>使当前线程等待直到另一个线程调用了等待对象的<code>notify()</code>或<code>notifyAll()</code>方法，或超过指定的时间。当前线程必须拥有该对象的<code>monitor</code>。<br>调用这个方法的当前线程(不妨称为T)会被放在该对象的等待集合里，然后其会放弃此对象上的所有同步声明。T线程变为对线程调度不可用，直到下述情形之一发生：</p>
 <ul>
 <li>其他线程调用了该对象的<code>notify()</code>方法，并且T线程碰巧被选为要唤醒的线程</li>

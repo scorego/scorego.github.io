@@ -107,7 +107,7 @@
 <meta property="og:image" content="/images/backend/zookeeper/01zkcomponents.jpg">
 <meta property="og:image" content="/images/backend/zookeeper/01zkperfRW-3.2.jpg">
 <meta property="og:image" content="/images/backend/zookeeper/01zkperfreliability.jpg">
-<meta property="og:updated_time" content="2019-05-16T05:41:46.734Z">
+<meta property="og:updated_time" content="2019-08-30T12:58:00.909Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ZooKeeper(一) ZooKeeper Overview">
 <meta name="twitter:description" content="ZooKeeper Homepage      Miscellaneous ZooKeeper Documentation (on 2016.10.26)ZooKeeper is a centralized service for maintaining configuration information, naming, providing distributed synchronization">
@@ -405,7 +405,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-05-16 13:41:46" itemprop="dateModified" datetime="2019-05-16T13:41:46+08:00">2019-05-16</time>
+                <time title="修改时间：2019-08-30 20:58:00" itemprop="dateModified" datetime="2019-08-30T20:58:00+08:00">2019-08-30</time>
               
             
           </span>
@@ -521,7 +521,7 @@
 <h3 id="Reliability"><a href="#Reliability" class="headerlink" title="Reliability"></a>Reliability</h3><p>下图使用由7台机器组成的ZooKeeper服务来展示当有failure时系统的变化。下面的基准测试和上一小节中的相同，只是保证写请求的比例在30%不变。  </p>
 <p><center><img src="/images/backend/zookeeper/01zkperfreliability.jpg" alt="avatar">  </center></p>
 <p>从这张图中可以得到几点重要的结果。首先，如果follower失效并快速恢复，Zookeeper能够维持高吞吐量。但也许更重要的是，leader选举算法能保证系统足够快地恢复来避免吞吐量的总体下降。从观察结果来看，Zookeeper花了不到200毫秒的时间选举出了一个新的leader。第三，只要follower恢复，Zookeeper的吞吐量能够再次上升到刚开始处理请求时的水平。  </p>
-<h3 id="The-ZooKeeper-Project"><a href="#The-ZooKeeper-Project" class="headerlink" title="The ZooKeeper Project"></a>The ZooKeeper Project</h3><p>Zookeeper 已经被成功地用在许多工业级的应用。在雅虎，Zookeeper被用作雅虎消息中间件的协调和失效恢复服务，该系统是一个高伸缩性的发布订阅系统，管理着成千上万的主题复制和数据分发。Zookeeper还被用在雅虎爬虫的抓取服务上，同时也管理失效恢复。许多雅虎的广告系统也用Zookeeper实现可靠的服务。  </p>
+<h3 id="The-ZooKeeper-Project"><a href="#The-ZooKeeper-Project" class="headerlink" title="The ZooKeeper Project"></a>The ZooKeeper Project</h3><p>Zookeeper已经被成功地用在许多工业级的应用。在雅虎，Zookeeper被用作雅虎消息中间件的协调和失效恢复服务，该系统是一个高伸缩性的发布订阅系统，管理着成千上万的主题复制和数据分发。Zookeeper还被用在雅虎爬虫的抓取服务上，同时也管理失效恢复。许多雅虎的广告系统也用Zookeeper实现可靠的服务。  </p>
 <hr>
 <p><font size="2" face="黑体">  注1： 本节翻译参考了<a href="https://juejin.im/post/5a3b542d6fb9a0452725c25f" target="_blank" rel="noopener">click here</a>.  <font></font></font></p>
 

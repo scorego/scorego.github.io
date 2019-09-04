@@ -104,7 +104,7 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="/images/java/collection/01_02collection.png">
 <meta property="og:image" content="/images/java/collection/01_04map.png">
-<meta property="og:updated_time" content="2019-06-11T02:11:40.577Z">
+<meta property="og:updated_time" content="2019-09-04T18:03:46.295Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java集合(一) 综述">
 <meta name="twitter:description" content="根据jdk1.8整理一下Java的集合类。  一、 Java集合结构图         java.util.*包提供了一些集合类，包含了常用的数据结构：集合、链表、队列、栈、数组、映射等，这些集合类又被称为容器。集合类与数组的不同是：数组的长度是固定的，集合的长度是可变的；数组用来存放基本类型的数据，集合用来存放对象的引用。Java集合的主干可以划分为4部分：List(列表)、Set(集合)、M">
@@ -402,7 +402,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-06-11 10:11:40" itemprop="dateModified" datetime="2019-06-11T10:11:40+08:00">2019-06-11</time>
+                <time title="修改时间：2019-09-05 02:03:46" itemprop="dateModified" datetime="2019-09-05T02:03:46+08:00">2019-09-05</time>
               
             
           </span>
@@ -587,6 +587,8 @@
 <h3 id="3-6-Dictionary"><a href="#3-6-Dictionary" class="headerlink" title="3.6 Dictionary"></a>3.6 Dictionary</h3><p>定义:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Dictionary</span>&lt;<span class="title">K</span>,<span class="title">V</span>&gt; </span>&#123;&#125;</span><br></pre></td></tr></table></figure></p>
 <p><code>Dictionary</code>是JDK 1.0定义的键值对的接口，它也包括了操作键值对的基本函数。  </p>
 <p>API:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">abstract</span>    <span class="keyword">public</span>      <span class="keyword">int</span>                 <span class="title">size</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="keyword">abstract</span>    <span class="keyword">public</span>      <span class="keyword">boolean</span>             <span class="title">isEmpty</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="keyword">abstract</span>    <span class="keyword">public</span>      Enumeration&lt;K&gt;      <span class="title">keys</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="keyword">abstract</span>    <span class="keyword">public</span>      Enumeration&lt;K&gt;      <span class="title">elements</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="keyword">abstract</span>    <span class="keyword">public</span>      V                   <span class="title">get</span><span class="params">(Object key)</span></span></span><br><span class="line"><span class="function"><span class="keyword">abstract</span>    <span class="keyword">public</span>      V                   <span class="title">put</span><span class="params">(K key, V value)</span></span></span><br><span class="line"><span class="function"><span class="keyword">abstract</span>    <span class="keyword">public</span>      V                   <span class="title">remove</span><span class="params">(Object key)</span></span></span><br></pre></td></tr></table></figure></p>
+<hr>
+<p><a href="https://blog.csdn.net/holmofy/article/details/71215548" target="_blank" rel="noopener">Java Collection框架概述</a></p>
 
       
     </div>

@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next mist" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/favicon-128x128-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-01.ico?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/uploads/favicon-128x128-01.ico?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="使用Java实现定时任务，基础的可以有三种方式。一是创建一个线程，在while循环里通过sleep方法来达到定时任务的效果；二是用Timer类和TimeTask；三是使用ScheduledThreadPoolExecutor调度线程池。除此之外，还有一些定时任务的框架，比如Spring-Task、Quartz等。Timer类可以实现指定延时调度任务，还可以实现任务的周期性执行。但是Timer中的所">
+<meta name="keywords" content="Java并发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java并发12 ScheduledThreadPoolExecutor">
+<meta property="og:url" content="javior.wang/2019/09/05/java/并发/Java并发12 ScheduledThreadPoolExecutor/index.html">
+<meta property="og:site_name" content="Javior&#39;s Blog">
+<meta property="og:description" content="使用Java实现定时任务，基础的可以有三种方式。一是创建一个线程，在while循环里通过sleep方法来达到定时任务的效果；二是用Timer类和TimeTask；三是使用ScheduledThreadPoolExecutor调度线程池。除此之外，还有一些定时任务的框架，比如Spring-Task、Quartz等。Timer类可以实现指定延时调度任务，还可以实现任务的周期性执行。但是Timer中的所">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-09-05T17:20:51.016Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java并发12 ScheduledThreadPoolExecutor">
+<meta name="twitter:description" content="使用Java实现定时任务，基础的可以有三种方式。一是创建一个线程，在while循环里通过sleep方法来达到定时任务的效果；二是用Timer类和TimeTask；三是使用ScheduledThreadPoolExecutor调度线程池。除此之外，还有一些定时任务的框架，比如Spring-Task、Quartz等。Timer类可以实现指定延时调度任务，还可以实现任务的周期性执行。但是Timer中的所">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="javior.wang/2019/09/05/java/并发/Java并发12 ScheduledThreadPoolExecutor/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Java并发12 ScheduledThreadPoolExecutor | Javior's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Javior's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/index.html" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/09/05/java/并发/Java并发12 ScheduledThreadPoolExecutor/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Javior Wang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Javior's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java并发12 ScheduledThreadPoolExecutor
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-05 10:15:23" itemprop="dateCreated datePublished" datetime="2019-09-05T10:15:23+08:00">2019-09-05</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-09-06 01:20:51" itemprop="dateModified" datetime="2019-09-06T01:20:51+08:00">2019-09-06</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Java并发/" itemprop="url" rel="index"><span itemprop="name">Java并发</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>使用Java实现定时任务，基础的可以有三种方式。一是创建一个线程，在<code>while</code>循环里通过<code>sleep</code>方法来达到定时任务的效果；二是用<code>Timer</code>类和<code>TimeTask</code>；三是使用<code>ScheduledThreadPoolExecutor</code>调度线程池。除此之外，还有一些定时任务的框架，比如Spring-Task、Quartz等。<br><code>Timer</code>类可以实现指定延时调度任务，还可以实现任务的周期性执行。但是<code>Timer</code>中的所有任务都是由一个<code>TimerThread</code>执行，也就是说<code>Timer</code>是单线程执行任务。这有一个致命的缺点：当某些任务的执行特别耗时，后续的任务无法在预定的时间内得到执行，前一个任务的延迟或异常将影响到后续的任务；另外<code>TimerThread</code>没有做异常处理，一个任务出现异常将会导致整个<code>Timer</code>线程结束。由于<code>Timer</code>单线程的种种缺点，可以使用线程池执行这些任务。   </p>
+<h2 id="1-继承结构"><a href="#1-继承结构" class="headerlink" title="1. 继承结构"></a>1. 继承结构</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> java.util.concurrent;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ScheduledThreadPoolExecutor</span></span></span><br><span class="line"><span class="class">                <span class="keyword">extends</span> <span class="title">ThreadPoolExecutor</span></span></span><br><span class="line"><span class="class">                <span class="keyword">implements</span> <span class="title">ScheduledExecutorService</span> </span>&#123; ... &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">package</span> java.util.concurrent;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ScheduledExecutorService</span> <span class="keyword">extends</span> <span class="title">ExecutorService</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> ScheduledFuture&lt;?&gt; schedule(Runnable command,</span><br><span class="line">                                       <span class="keyword">long</span> delay, TimeUnit unit);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> &lt;V&gt; <span class="function">ScheduledFuture&lt;V&gt; <span class="title">schedule</span><span class="params">(Callable&lt;V&gt; callable,</span></span></span><br><span class="line"><span class="function"><span class="params">                                           <span class="keyword">long</span> delay, TimeUnit unit)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> ScheduledFuture&lt;?&gt; scheduleAtFixedRate(Runnable command,</span><br><span class="line">                                                  <span class="keyword">long</span> initialDelay,</span><br><span class="line">                                                  <span class="keyword">long</span> period,</span><br><span class="line">                                                  TimeUnit unit);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> ScheduledFuture&lt;?&gt; scheduleWithFixedDelay(Runnable command,</span><br><span class="line">                                                     <span class="keyword">long</span> initialDelay,</span><br><span class="line">                                                     <span class="keyword">long</span> delay,</span><br><span class="line">                                                     TimeUnit unit);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">package</span> java.util.concurrent;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ScheduledFuture</span>&lt;<span class="title">V</span>&gt; <span class="keyword">extends</span> <span class="title">Delayed</span>, <span class="title">Future</span>&lt;<span class="title">V</span>&gt; </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="2-构造方法"><a href="#2-构造方法" class="headerlink" title="2. 构造方法"></a>2. 构造方法</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ScheduledThreadPoolExecutor</span><span class="params">(<span class="keyword">int</span> corePoolSize)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>(corePoolSize, Integer.MAX_VALUE, <span class="number">0</span>, NANOSECONDS,</span><br><span class="line">          <span class="keyword">new</span> DelayedWorkQueue());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ScheduledThreadPoolExecutor</span><span class="params">(<span class="keyword">int</span> corePoolSize,</span></span></span><br><span class="line"><span class="function"><span class="params">                                   ThreadFactory threadFactory)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>(corePoolSize, Integer.MAX_VALUE, <span class="number">0</span>, NANOSECONDS,</span><br><span class="line">          <span class="keyword">new</span> DelayedWorkQueue(), threadFactory);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ScheduledThreadPoolExecutor</span><span class="params">(<span class="keyword">int</span> corePoolSize,</span></span></span><br><span class="line"><span class="function"><span class="params">                                   RejectedExecutionHandler handler)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>(corePoolSize, Integer.MAX_VALUE, <span class="number">0</span>, NANOSECONDS,</span><br><span class="line">          <span class="keyword">new</span> DelayedWorkQueue(), handler);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ScheduledThreadPoolExecutor</span><span class="params">(<span class="keyword">int</span> corePoolSize,</span></span></span><br><span class="line"><span class="function"><span class="params">                                   ThreadFactory threadFactory,</span></span></span><br><span class="line"><span class="function"><span class="params">                                   RejectedExecutionHandler handler)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>(corePoolSize, Integer.MAX_VALUE, <span class="number">0</span>, NANOSECONDS,</span><br><span class="line">          <span class="keyword">new</span> DelayedWorkQueue(), threadFactory, handler);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到，<code>ScheduledThreadPoolExecutor</code>都是直接调用的父类<code>ThreadPoolExecutor</code>的构造方法。其中几个参数有些特殊：</p>
+<ul>
+<li>maximumPoolSize：线程池允许的最大线程数为<code>Integer.MAX_VALUE</code>，也就意味着<code>ScheduledThreadPoolExecutor</code>对线程数没有限制。因为必定会存在任务等待调度的情况，一旦对线程数有了限制，有等待就可能会存在任务延时，所以最大线程数不能有限制。</li>
+<li>keepAliveTime和unit：0 NANOSECONDS，也就是说一旦有空闲线程会立即销毁该线程对象。</li>
+<li>workQueue：<code>DelayedWorkQueue</code>是<code>ScheduledThreadPoolExecutor</code>的内部类，也是实现按时调度的核心。</li>
+</ul>
+<h2 id="3-二叉堆-DelayedWorkQueue"><a href="#3-二叉堆-DelayedWorkQueue" class="headerlink" title="3. 二叉堆 DelayedWorkQueue"></a>3. 二叉堆 DelayedWorkQueue</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">DelayedWorkQueue</span> <span class="keyword">extends</span> <span class="title">AbstractQueue</span>&lt;<span class="title">Runnable</span>&gt;</span></span><br><span class="line"><span class="class">    <span class="keyword">implements</span> <span class="title">BlockingQueue</span>&lt;<span class="title">Runnable</span>&gt; </span>&#123;...&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">package</span> java.util.concurrent;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DelayQueue</span>&lt;<span class="title">E</span> <span class="keyword">extends</span> <span class="title">Delayed</span>&gt; <span class="keyword">extends</span> <span class="title">AbstractQueue</span>&lt;<span class="title">E</span>&gt;</span></span><br><span class="line"><span class="class">    <span class="keyword">implements</span> <span class="title">BlockingQueue</span>&lt;<span class="title">E</span>&gt; </span>&#123;...&#125;</span><br></pre></td></tr></table></figure>
+<p><code>DelayedWorkQueue</code>和<code>java.util.concurrent.DelayQueue</code>非常相似。<code>DelayedWorkQueue</code>实现了一个容量无限的二叉堆，<code>DelayQueue</code>底层使用<code>PriorityQueue</code>实现二叉堆各种操作。<code>DelayedWorkQueue</code>存储了<code>java.util.concurrent.RunnableScheduledFuture</code>接口的实现类，<code>DelayQueue</code>存储<code>java.util.concurrent.Delayed</code>接口的实现类，<code>Delayed</code>是<code>RunnableScheduledFuture</code>的基类接口。  </p>
+<h2 id="4-任务的提交"><a href="#4-任务的提交" class="headerlink" title="4. 任务的提交"></a>4. 任务的提交</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(Runnable command)</span> </span>&#123;</span><br><span class="line">    schedule(command, <span class="number">0</span>, NANOSECONDS);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> Future&lt;?&gt; submit(Runnable task) &#123;</span><br><span class="line">    <span class="keyword">return</span> schedule(task, <span class="number">0</span>, NANOSECONDS);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function">Future&lt;T&gt; <span class="title">submit</span><span class="params">(Runnable task, T result)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> schedule(Executors.callable(task, result), <span class="number">0</span>, NANOSECONDS);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function">Future&lt;T&gt; <span class="title">submit</span><span class="params">(Callable&lt;T&gt; task)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> schedule(task, <span class="number">0</span>, NANOSECONDS);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>父类的提交方法都被重写了，调用的是<code>schedule()</code>方法，并且延时参数都是0纳秒。  </p>
+<h2 id="5-schedule"><a href="#5-schedule" class="headerlink" title="5. schedule"></a>5. schedule</h2><p><code>schedule()</code>及相关方法源码如下:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在指定的时间执行一次，没有返回值</span></span><br><span class="line"><span class="keyword">public</span> ScheduledFuture&lt;?&gt; schedule(Runnable command, <span class="keyword">long</span> delay, TimeUnit unit) &#123;</span><br><span class="line">    <span class="keyword">if</span> (command == <span class="keyword">null</span> || unit == <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</span><br><span class="line">    <span class="comment">// 将Runnable接口对象封装成ScheduledFutureTask</span></span><br><span class="line">    RunnableScheduledFuture&lt;?&gt; t =</span><br><span class="line">            decorateTask(command, <span class="keyword">new</span> ScheduledFutureTask&lt;Void&gt;(command, <span class="keyword">null</span>, <span class="comment">// Runnable给的返回值为null</span></span><br><span class="line">                                                                triggerTime(delay, unit)));</span><br><span class="line">    delayedExecute(t);</span><br><span class="line">    <span class="keyword">return</span> t;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在指定的时间执行一次，有返回值</span></span><br><span class="line"><span class="keyword">public</span> &lt;V&gt; <span class="function">ScheduledFuture&lt;V&gt; <span class="title">schedule</span><span class="params">(Callable&lt;V&gt; callable, <span class="keyword">long</span> delay, TimeUnit unit)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (callable == <span class="keyword">null</span> || unit == <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</span><br><span class="line">    <span class="comment">// 将Callable接口对象封装成ScheduledFutureTask</span></span><br><span class="line">    RunnableScheduledFuture&lt;V&gt; t =</span><br><span class="line">            decorateTask(callable, <span class="keyword">new</span> ScheduledFutureTask&lt;V&gt;(callable, triggerTime(delay, unit)));</span><br><span class="line">    delayedExecute(t);</span><br><span class="line">    <span class="keyword">return</span> t;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 触发时间</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">long</span> <span class="title">triggerTime</span><span class="params">(<span class="keyword">long</span> delay, TimeUnit unit)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> triggerTime(unit.toNanos((delay &lt; <span class="number">0</span>) ? <span class="number">0</span> : delay));</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">long</span> <span class="title">triggerTime</span><span class="params">(<span class="keyword">long</span> delay)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 当前时间加上延迟时间</span></span><br><span class="line">    <span class="keyword">return</span> now() + ((delay &lt; (Long.MAX_VALUE &gt;&gt; <span class="number">1</span>)) ? delay : overflowFree(delay));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">delayedExecute</span><span class="params">(RunnableScheduledFuture&lt;?&gt; task)</span> </span>&#123;</span><br><span class="line">     <span class="keyword">if</span> (isShutdown())</span><br><span class="line">         reject(task);</span><br><span class="line">     <span class="keyword">else</span> &#123;</span><br><span class="line">         <span class="keyword">super</span>.getQueue().add(task);</span><br><span class="line">         <span class="keyword">if</span> (isShutdown() &amp;&amp;</span><br><span class="line">             !canRunInCurrentRunState(task.isPeriodic()) &amp;&amp;</span><br><span class="line">             remove(task))</span><br><span class="line">             task.cancel(<span class="keyword">false</span>);</span><br><span class="line">         <span class="keyword">else</span></span><br><span class="line">             ensurePrestart();</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建并执行一个周期性的任务，这个任务在initialDelay时间后生效，以period为周期。</span></span><br><span class="line"><span class="comment">// 1. 如果执行过程中出现异常，后续的执行将会终止；</span></span><br><span class="line"><span class="comment">//    否则后续的任务会一直执行，除非任务调用cancel方法取消或者线程池终止了</span></span><br><span class="line"><span class="comment">// 2. 如果该任务任意一次执行超过了它的周期，那么后续的执行计划将会推迟</span></span><br><span class="line"><span class="comment">//    绝对不会一个任务同时由两个线程执行</span></span><br><span class="line"><span class="keyword">public</span> ScheduledFuture&lt;?&gt; scheduleAtFixedRate(Runnable command,</span><br><span class="line">                                              <span class="keyword">long</span> initialDelay,</span><br><span class="line">                                              <span class="keyword">long</span> period,</span><br><span class="line">                                              TimeUnit unit) &#123;</span><br><span class="line">    <span class="keyword">if</span> (command == <span class="keyword">null</span> || unit == <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</span><br><span class="line">    <span class="keyword">if</span> (period &lt;= <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException();</span><br><span class="line">    <span class="comment">// 周期执行的任务</span></span><br><span class="line">    ScheduledFutureTask&lt;Void&gt; sft =</span><br><span class="line">        <span class="keyword">new</span> ScheduledFutureTask&lt;Void&gt;(command,</span><br><span class="line">                                      <span class="keyword">null</span>,</span><br><span class="line">                                      triggerTime(initialDelay, unit),</span><br><span class="line">                                      <span class="comment">// 正数：固定周期执行</span></span><br><span class="line">                                      unit.toNanos(period));</span><br><span class="line">    RunnableScheduledFuture&lt;Void&gt; t = decorateTask(command, sft);</span><br><span class="line">    sft.outerTask = t;</span><br><span class="line">    delayedExecute(t);</span><br><span class="line">    <span class="keyword">return</span> t;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建并执行一个周期性的任务,任务在initialDelay时间后生效，</span></span><br><span class="line"><span class="comment">//      后续的执行时间在前一次任务执行完成后延时delay时间后执行。</span></span><br><span class="line"><span class="comment">// 第一次执行时间在initialDelay</span></span><br><span class="line"><span class="comment">// 如果第一次执行耗时T1,那么第二次执行时间在initialDelay + T1 + delay,</span></span><br><span class="line"><span class="comment">//      如果第二次执行耗时T2,那么第三次执行时间在initialDelay + T1 + T2 + 2*delay。</span></span><br><span class="line"><span class="keyword">public</span> ScheduledFuture&lt;?&gt; scheduleWithFixedDelay(Runnable command,</span><br><span class="line">                                                 <span class="keyword">long</span> initialDelay,</span><br><span class="line">                                                 <span class="keyword">long</span> delay,</span><br><span class="line">                                                 TimeUnit unit) &#123;</span><br><span class="line">    <span class="keyword">if</span> (command == <span class="keyword">null</span> || unit == <span class="keyword">null</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</span><br><span class="line">    <span class="keyword">if</span> (delay &lt;= <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException();</span><br><span class="line">    <span class="comment">// 延迟执行的任务</span></span><br><span class="line">    ScheduledFutureTask&lt;Void&gt; sft =</span><br><span class="line">        <span class="keyword">new</span> ScheduledFutureTask&lt;Void&gt;(command,</span><br><span class="line">                                      <span class="keyword">null</span>,</span><br><span class="line">                                      triggerTime(initialDelay, unit),</span><br><span class="line">                                      <span class="comment">// 负数：固定延迟执行</span></span><br><span class="line">                                      unit.toNanos(-delay));</span><br><span class="line">    RunnableScheduledFuture&lt;Void&gt; t = decorateTask(command, sft);</span><br><span class="line">    sft.outerTask = t;</span><br><span class="line">    delayedExecute(t);</span><br><span class="line">    <span class="keyword">return</span> t;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">delayedExecute</span><span class="params">(RunnableScheduledFuture&lt;?&gt; task)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 如果线程池已经SHUTDOWN，则拒绝任务</span></span><br><span class="line">    <span class="keyword">if</span> (isShutdown())</span><br><span class="line">        reject(task);</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 入队</span></span><br><span class="line">        <span class="keyword">super</span>.getQueue().add(task);</span><br><span class="line">        <span class="comment">// 再次检查</span></span><br><span class="line">        <span class="keyword">if</span> (isShutdown() &amp;&amp;</span><br><span class="line">            <span class="comment">// 检查线程池当前状态是否能继续执行任务</span></span><br><span class="line">            <span class="comment">// shutdown状态下是否把未完成的任务执行完</span></span><br><span class="line">            !canRunInCurrentRunState(task.isPeriodic()) &amp;&amp;</span><br><span class="line">             <span class="comment">// 不能执行则移除任务</span></span><br><span class="line">            remove(task))</span><br><span class="line">            <span class="comment">// 取消任务</span></span><br><span class="line">            task.cancel(<span class="keyword">false</span>);</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            ensurePrestart();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 下面两个方法时留给子类实现的，默认直接返回task</span></span><br><span class="line"><span class="keyword">protected</span> &lt;V&gt; <span class="function">RunnableScheduledFuture&lt;V&gt; <span class="title">decorateTask</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    Runnable runnable, RunnableScheduledFuture&lt;V&gt; task)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> task;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">protected</span> &lt;V&gt; <span class="function">RunnableScheduledFuture&lt;V&gt; <span class="title">decorateTask</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    Callable&lt;V&gt; callable, RunnableScheduledFuture&lt;V&gt; task)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> task;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="6-一些缺点"><a href="#6-一些缺点" class="headerlink" title="6. 一些缺点"></a>6. 一些缺点</h2><p><code>ScheduledThreadPoolExecutor</code>以纳秒为单位进行任务调度，底层使用的是<code>System.nanoTime()</code>来获取时间，这个时间是相对于JVM虚拟机启动的时间，这个纳秒值在2<sub>63</sub>纳秒，即约292年后会溢出(几乎可以忽略溢出问题)，<code>ScheduledThreadPoolExecutor</code>也对溢出进行了处理：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">final</span> <span class="keyword">long</span> <span class="title">now</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> System.nanoTime();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">long</span> <span class="title">overflowFree</span><span class="params">(<span class="keyword">long</span> delay)</span> </span>&#123;</span><br><span class="line">    Delayed head = (Delayed) <span class="keyword">super</span>.getQueue().peek();</span><br><span class="line">    <span class="keyword">if</span> (head != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">long</span> headDelay = head.getDelay(NANOSECONDS);</span><br><span class="line">        <span class="keyword">if</span> (headDelay &lt; <span class="number">0</span> &amp;&amp; (delay - headDelay &lt; <span class="number">0</span>))</span><br><span class="line">            delay = Long.MAX_VALUE + headDelay;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> delay;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>ScheduledThreadPoolExecutor</code>虽然处理了，但无法使用<code>yyyy-MM-dd HH-mm-ss</code>这种精确时间点的方式进行任务的调度。不过在<code>SpringTask</code>以及<code>Quartz</code>等框架中已经解决了这个问题，并提供了cron表达式来精确任务的调度时间。</p>
+<hr>
+<p><a href="https://blog.csdn.net/holmofy/article/details/79344914" target="_blank" rel="noopener">Java多线程复习与巩固（七）–任务调度线程池ScheduledThreadPoolExecutor</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java并发/" rel="tag"># Java并发</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/03/java/并发/Java并发11 ForkJoinPool/" rel="next" title="Java并发11 ForkJoinPool">
+                <i class="fa fa-chevron-left"></i> Java并发11 ForkJoinPool
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/uploads/avatar.gif" alt="Javior Wang">
+            
+              <p class="site-author-name" itemprop="name">Javior Wang</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">56</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/index.html">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">11</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">23</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/scorego" title="GitHub &rarr; https://github.com/scorego" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://www.zhihu.com/people/scorego-6" title="Zhihu &rarr; https://www.zhihu.com/people/scorego-6" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>Zhihu</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-继承结构"><span class="nav-text">1. 继承结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-构造方法"><span class="nav-text">2. 构造方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-二叉堆-DelayedWorkQueue"><span class="nav-text">3. 二叉堆 DelayedWorkQueue</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-任务的提交"><span class="nav-text">4. 任务的提交</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-schedule"><span class="nav-text">5. schedule</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-一些缺点"><span class="nav-text">6. 一些缺点</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Javior Wang</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

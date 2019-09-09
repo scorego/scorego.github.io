@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next mist" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/favicon-128x128-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-01.ico?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/uploads/favicon-128x128-01.ico?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="1. 综述IO 是主存和外部设备(硬盘、终端和网络等)拷贝数据的过程。IO是操作系统的底层功能实现，底层通过I/O指令进行完成。Unix有5种典型的IO模型：  阻塞式IO / blocking IO 非阻塞式IO / nonbloking IO IO复用 / IO multiplexing 信号驱动式IO / signal driven IO 异步IO / asynchronous IO  JD">
+<meta name="keywords" content="Unix IO">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Unix的5种IO模型">
+<meta property="og:url" content="javior.wang/2019/05/19/操作系统/Unix的5种IO模型/index.html">
+<meta property="og:site_name" content="Javior&#39;s Blog">
+<meta property="og:description" content="1. 综述IO 是主存和外部设备(硬盘、终端和网络等)拷贝数据的过程。IO是操作系统的底层功能实现，底层通过I/O指令进行完成。Unix有5种典型的IO模型：  阻塞式IO / blocking IO 非阻塞式IO / nonbloking IO IO复用 / IO multiplexing 信号驱动式IO / signal driven IO 异步IO / asynchronous IO  JD">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="/images/os/unixio/01_01.png">
+<meta property="og:image" content="/images/os/unixio/01_02.png">
+<meta property="og:image" content="/images/os/unixio/01_03.png">
+<meta property="og:image" content="/images/os/unixio/01_04.png">
+<meta property="og:image" content="/images/os/unixio/01_05.png">
+<meta property="og:image" content="/images/os/unixio/01_06.png">
+<meta property="og:updated_time" content="2019-09-09T09:14:09.849Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Unix的5种IO模型">
+<meta name="twitter:description" content="1. 综述IO 是主存和外部设备(硬盘、终端和网络等)拷贝数据的过程。IO是操作系统的底层功能实现，底层通过I/O指令进行完成。Unix有5种典型的IO模型：  阻塞式IO / blocking IO 非阻塞式IO / nonbloking IO IO复用 / IO multiplexing 信号驱动式IO / signal driven IO 异步IO / asynchronous IO  JD">
+<meta name="twitter:image" content="/images/os/unixio/01_01.png">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="javior.wang/2019/05/19/操作系统/Unix的5种IO模型/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Unix的5种IO模型 | Javior's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Javior's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/index.html" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/05/19/操作系统/Unix的5种IO模型/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Javior Wang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Javior's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Unix的5种IO模型
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-05-19 15:05:28" itemprop="dateCreated datePublished" datetime="2019-05-19T15:05:28+08:00">2019-05-19</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-09-09 17:14:09" itemprop="dateModified" datetime="2019-09-09T17:14:09+08:00">2019-09-09</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/操作系统/" itemprop="url" rel="index"><span itemprop="name">操作系统</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="1-综述"><a href="#1-综述" class="headerlink" title="1. 综述"></a>1. 综述</h2><p>IO 是主存和外部设备(硬盘、终端和网络等)拷贝数据的过程。IO是操作系统的底层功能实现，底层通过I/O指令进行完成。Unix有5种典型的IO模型：</p>
+<ol>
+<li>阻塞式IO / blocking IO</li>
+<li>非阻塞式IO / nonbloking IO</li>
+<li>IO复用 / IO multiplexing</li>
+<li>信号驱动式IO / signal driven IO</li>
+<li>异步IO / asynchronous IO</li>
+</ol>
+<p>JDK 1.4之前，Java的IO模型只支持阻塞式IO，简称BIO。JDK 1.4支持了IO多路复用模型，称为NIO。JDK 1.7对NIO包进行了升级，支持了异步IO，称为AIO，也称NIO 2.0。<br>IO操作可分两个阶段：</p>
+<ul>
+<li>准备阶段。如输入操作时要等待数据已经就绪，输出操作时缓冲区中有空间可供使用；</li>
+<li>数据拷贝阶段。如输入操作时将数据从内核复制到用户缓存，输出操作时从用户缓存复制到内核。</li>
+</ul>
+<h2 id="2-各模型详解"><a href="#2-各模型详解" class="headerlink" title="2. 各模型详解"></a>2. 各模型详解</h2><h3 id="2-1-阻塞式IO-blocking-IO"><a href="#2-1-阻塞式IO-blocking-IO" class="headerlink" title="2.1 阻塞式IO / blocking IO"></a>2.1 阻塞式IO / blocking IO</h3><p>同步阻塞IO是最常用的一个模型，Linux中默认情况所有的socket都是blocking。<br>同步阻塞模型中，用户进程活阻塞于<code>recvfrom</code>系统调用，直到数据准备好并从内核复制到用户进程。在等待数据到复制数据两个阶段进程都会阻塞，不能处理其他IO。从处理的角度来看这是非常有效的。  </p>
+<div align="center"><br>      <img src="/images/os/unixio/01_01.png" width="800" height="800"><br></div>
+
+<p>当用户进程调用<code>recv()</code>/<code>recvfrom()</code>系统调用时，kernel就开始第一阶段——准备数据。这个过程需要一定的等待。当等待的数据准备好后，kernel就会将数据拷贝到用户内存，然后返回返回结果，用户进程解除block态。<br>阻塞式IO能够及时返回数据，无延迟；另外内核开发简单。但对于用户进程来说性能差。  </p>
+<h3 id="2-2-同步非阻塞IO-nonblocking-IO"><a href="#2-2-同步非阻塞IO-nonblocking-IO" class="headerlink" title="2.2 同步非阻塞IO / nonblocking IO"></a>2.2 同步非阻塞IO / nonblocking IO</h3><p>进程把一个套接字设置成非阻塞是在通知内核：当所请求的IO操作需要把本进程投入睡眠才能完成时，不要把本进程投入睡眠，而是返回一个错误。也就是说IO操作不会立即完成时，<code>read</code>操作可能会返回一个错误代码，说明命令不能立即满足。设备以非阻塞的形式每隔一会查询一次，也就是轮询(<code>polling</code>)。<br>进程调用非阻塞的<code>recvfrom</code>系统调用后，并没有被阻塞，内核马上返回到进程。如果数据尚未准备好，会返回一个<code>error</code>。进程收到返回的<code>error</code>就知道数据尚未准备好，可以选择处理其他事情，然后在发起<code>recvfrom</code>系统调用，循环往复直到数据准备好，再拷贝数据到进程。这就是<code>polling</code>的流程。需要注意的是，<strong>拷贝数据的过程，进程依然处理阻塞状态</strong>。<br>在Linux下，可以设置socket将其编程non-blocking。  </p>
+<div align="center"><br>      <img src="/images/os/unixio/01_02.png" width="800" height="800"><br></div><br>同步非阻塞相比于同步阻塞来说，能够让进城在等待数据准备的时间执行其他任务，缺点是任务完成的响应延迟增大，导致整体数据吞吐量的降低。<br><br>### 2.3  IO多路复用 / IOmultiplexing(event driven IO)<br><br>由于同步非阻塞方式需要不断主动轮询，而轮训会消耗大量的CPU时间，所以会导致效率和吞吐量的降低。IO多路复用就是由内核来完成对多个任务的轮询工作，Unix的<code>select</code>/<code>poll</code>/<code>epoll</code>就是实现的这个功能。<br>IO复用的轮询与非阻塞IO的轮询的区别是前者可以等待多个socket，实现对多个IO端口的监听，当其中任何一个socket的数据准备完成就能返回进行可读。<code>select</code>/<code>poll</code>/<code>epoll</code>也会使进程阻塞，但个阻塞IO不同的是，前者可以同时阻塞多个IO操作。与IO多路复用密切相关的另一种IO模型是多线程中使用阻塞式IO，这两种模型极为相似，但一个是进程使用<code>select</code>阻塞于多个文件描述符上，一个是使用多线程分别调用诸如<code>recvfrom</code>之类的阻塞式IO系统调用上。<br><br><div align="center"><br>      <img src="/images/os/unixio/01_03.png" width="800" height="800"><br></div>
+
+<p>上图和阻塞式IO的图并没有太大不同，实际上因为IO多路复用需要使用两个系统调用(<code>select</code>、<code>recvfrom</code>)，而阻塞式IO只使用一个系统调用(<code>recvfrom</code>)，IO复用的效率还更差一点。但IO复用的优势在于可以同时处理多个<code>connection</code>。如果处理的连接数不是很高的话，使用<code>select</code>/<code>epoll</code>的web server并不一定比使用多线程 + 阻塞式IO的web server性能好，可能延迟还更大。即使用<code>select</code>/<code>epoll</code>的优势并不是对单个连接处理的更快，而是能处理更多的连接。与多线程 + 阻塞式IO相比，IO多路复用不需要创建新的进程或线程，也不需要维护这些进程或线程的运行，系统开销小、维护工作少，节省了系统资源。IO多路复用的主要场景是：</p>
+<ul>
+<li>服务器需要同时处理多个处于监听状态或多个连接状态的套接字；</li>
+<li>服务器需要同时处理多重网络协议的套接字。</li>
+</ul>
+<h3 id="2-4-信号驱动式IO-signal-driven-IO"><a href="#2-4-信号驱动式IO-signal-driven-IO" class="headerlink" title="2.4 信号驱动式IO / signal-driven IO"></a>2.4 信号驱动式IO / signal-driven IO</h3><p>也可以使用信号让内核在描述符就绪时发送SIGIO信号通知。首先开启套接字的信号驱动式IO功能，并通过<code>sigaction</code>系统调用安装一个信号处理函数。该系统调用立即返回，用户进程继续工作，并没有被阻塞。当数据报准备好读取时，内核就为该进程产生一个SIGIO信号，随后既可以在信号处理函数中调用<code>recvfrom</code>读取数据报并通知主循环数据已准备好待处理；也可以立即通知主循环，让它读取数据报。<br>这种模型的优势在于等待数据报到达期间进程不阻塞。主循环可以继续执行，只要等待信号处理函数的通知：既可以是数据已准备好被处理，也可以是数据报已准备好被读取。  </p>
+<div align="center"><br>      <img src="/images/os/unixio/01_04.png" width="800" height="800"><br></div>
+
+<h3 id="2-5-异步IO模型-asynchronous-IO"><a href="#2-5-异步IO模型-asynchronous-IO" class="headerlink" title="2.5 异步IO模型 / asynchronous IO"></a>2.5 异步IO模型 / asynchronous IO</h3><p>异步IO由POSIX规范定义。相比于同步IO，异步IO不是顺序执行，用户进程进行<code>aio_read</code>系统调用后，无论内核是否准备好，都会直接返回给用户进程，然后用户进程可以做其他事情。等到socket准备好后，内核直接复制数据给进程，然后从内核向进程发送通知。IO两个阶段，用户进程都是非阻塞的。<br>Linux提供了AIO库函数实现异步，但是使用较少。目前一些开源的异步IO库有<code>libvent</code>、<code>libev</code>、<code>libuv</code>等。  </p>
+<div align="center"><br>      <img src="/images/os/unixio/01_05.png" width="800" height="800"><br></div>
+
+<p>在Linux中，通知的方式是信号：</p>
+<ul>
+<li>如果进程正在用户态忙着做其他事，就强行打断之，调用实现注册的信号处理函数，处理函数可以决定何时以及如何处理这个异步调用。信号处理函数跟中断处理程序一样，很多事情是不能做的，因此保险起见，一般把事件登记一下放入队列，然后返回该进程原来在做的事。</li>
+<li>如果进程正在内核态忙着做其他事，例如以同步阻塞方式读写磁盘，那就只能把通知挂起，等内核态快切回用户态时触发信号通知。</li>
+<li>如果进程被挂起，那么就把进程唤醒。等进程下次得到调度时触发信号通知。</li>
+</ul>
+<h3 id="2-6-综述"><a href="#2-6-综述" class="headerlink" title="2.6 综述"></a>2.6 综述</h3><div align="center"><br>      <img src="/images/os/unixio/01_06.png" width="800" height="800"><br></div>
+
+<h2 id="3-select、poll、epoll"><a href="#3-select、poll、epoll" class="headerlink" title="3. select、poll、epoll"></a>3. select、poll、epoll</h2><p>与多进程和多线程相比，IO多路复用的系统开销小。目前支持IO多路复用的系统调用有<code>select</code>/<code>pselect</code>/<code>poll</code>/<code>epoll</code>。它们本质都是同步IO，因为它们都需要在读写时间就绪后自己进行读写，这个过程是则色的。异步IO的实现会负责把数据从内核拷贝到用户控件，无需用户进程负责读写。<br>现在的Linux内核都能支持<code>select</code>和<code>epoll</code>，其中<code>epoll</code>是Linux所特有；而<code>select</code>是POSIX所规定的，在一般操作系统均有实现。  </p>
+<h3 id="3-1-select"><a href="#3-1-select" class="headerlink" title="3.1 select"></a>3.1 select</h3><p><code>select</code>函数允许进程指示内核等待多个事件中的任何一个发生，并只有在一个或多个事件发生、或经历一段指定时间后才唤醒进程。该函数监视的文件描述符分3类，分别是<code>writefds</code>、<code>readfds</code>、<code>exceptfds</code>，当有描述符就绪(有数据可写、可读或有异常)，或者超过一段时间后，函数返回。当<code>select</code>返回后，可以通过遍历<code>fd_set</code>来找到就绪的描述符。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/select.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/time.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 若有描述符就绪则返回其数目；超时返回0；出错返回-1</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">select</span><span class="params">(<span class="keyword">int</span> maxfdp1, fd_set *readset, fd_set *writeset, fd_set * exceptset,</span></span></span><br><span class="line"><span class="function"><span class="params">                <span class="keyword">const</span> struct timeval *timeout)</span></span>;</span><br></pre></td></tr></table></figure>
+<h4 id="3-1-1-参数"><a href="#3-1-1-参数" class="headerlink" title="3.1.1 参数"></a>3.1.1 参数</h4><h5 id="A-timeout"><a href="#A-timeout" class="headerlink" title="A. timeout"></a>A. timeout</h5><p><code>timeout</code>参数告知内核可等待任何一个描述符就绪的时间，其<code>timeval</code>结构用于指定这段时间的秒数和微秒数：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">timeval</span> &#123;</span></span><br><span class="line">    <span class="keyword">long</span> tv_sec;  <span class="comment">// 秒数</span></span><br><span class="line">    <span class="keyword">long</span> tv_usec; <span class="comment">// 微秒数</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个参数有三种可能：</p>
+<ul>
+<li>永远等待，仅在有一个描述符准备好IO时返回。为此可把该参数设为空指针。</li>
+<li>等待一段固定时间，在有一个描述符准备好IO时返回，但不超过该参数所指向的<code>timeval</code>结构中指定的秒数和微秒数。</li>
+<li>不等待，检查描述符后立即返回，这个操作称为轮询(<code>polling</code>)。为此，该参数必须指向一个<code>timeval</code>结构，且其中的定时器值为0。</li>
+</ul>
+<p>前两种情形的等待通常会北金城在等待期间捕获的信号中断，并从信号处理函数返回。<br>尽管<code>timeval</code>结构允许制定一个微秒级别的精度，但内和支持的真实精度往往粗糙的多。很多Unix内核把超时值向上舍入成10ms的倍数。另外当定时器指定的时间到后，内核还需要花一点时间调度相应的进程运行。  </p>
+<h5 id="B-readset、writeset、exceptset"><a href="#B-readset、writeset、exceptset" class="headerlink" title="B. readset、writeset、exceptset"></a>B. readset、writeset、exceptset</h5><p><code>readset</code>、<code>writeset</code>、<code>exceptset</code>参数指定要让内核测试的读、写、异常条件的描述符。目前支持的异常条件只有两个：</p>
+<ul>
+<li>某个套接字的带外数据到达；</li>
+<li>某个已置为分组模式的为终端存在可从其主端读取的控制状态信息。</li>
+</ul>
+<p><code>select</code>使用<code>描述符集</code>来给这三个参数指定一个或多个描述符值，通常是一个整数数组，其中每个整数的每一位对应一个描述符。例如，假设使用32位整数，那么数组第一个元素的每一位对应于描述符<code>0 ~ 31</code>，第二个元素的每一位对应于描述符<code>32 ~ 63</code>，以此类推。这些实现细节与应用程序无关，它们隐藏在名为<code>fd_set</code>的数据类型和一下四个宏中：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">FD_ZERO</span> <span class="params">(fd_set *fdset)</span></span>;  <span class="comment">// clear all bits in fdset</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">FD_SET</span> <span class="params">(<span class="keyword">int</span> fd, fd_set *fdset)</span></span>; <span class="comment">// turn on the bit for fd in fdset</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">FD_CLR</span> <span class="params">(<span class="keyword">int</span> fd, fd_set *fdset)</span></span>; <span class="comment">// turn off the bit for fd in fdset</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">FD_ISSET</span> <span class="params">(<span class="keyword">int</span> fd, fd_set *fdset)</span></span>; <span class="comment">// is the bit for fd on in fdset?</span></span><br></pre></td></tr></table></figure>
+<p>这只是<code>select</code>函数的可能实现之一，不过是常见的一种实现。<br>如果对三个参数的某一个条件不感兴趣，可以将其设为空指针。如果三个指针均为空，那么就有了一个比Unix的<code>sleep</code>函数更精确的定时器(<code>sleep</code>以秒为最小单位)。  </p>
+<h5 id="C-maxfdp1"><a href="#C-maxfdp1" class="headerlink" title="C. maxfdp1"></a>C. maxfdp1</h5><p><code>maxfdp1</code>参数指定待测试的描述符个数，它的值是待测试的最大描述符加1。描述符<code>0, 1, 2, ..., maxfdp1 - 1</code>均将被测试。<br>头文件<code>&lt;sys/select.h&gt;</code>中定义的<code>FD_SETSIZE</code>常值是数据类型<code>fd_set</code>中的描述符总数，通常为<code>1024</code>。<br>存在这个参数以及计算其值的额外负担是为了提高效率。每个<code>fd_set</code>都有大量描述符(典型数量是1024)的空间，然而一个普通进程所用的数量少得多。内核正是在进程与内核之间不复制描述符集中不必要的部分，从而无需测试总为0的位来提高效率的。<br><code>select</code>函数修改<code>readset</code>、<code>writeset</code>、<code>exceptset</code>所指向的描述符集，因而这三个参数既是参数又是结果。调用<code>select</code>函数时指定所关心的描述符的值；函数返回时，结果将指示哪些描述符已就绪。函数返回后，使用<code>FD_ISSET</code>宏来测试<code>fd_set</code>数据类型中的描述符，描述符集内任何与未就绪描述符对应的位返回时均清0。因此每次重新调用<code>select</code>函数都要再次把所有描述符集内关心的位置为1。  </p>
+<h4 id="3-1-2-返回值"><a href="#3-1-2-返回值" class="headerlink" title="3.1.2 返回值"></a>3.1.2 返回值</h4><p>该函数的返回值表示跨所有描述符集的已就绪的总位数。如果任何描述符集就绪之前定时器到0，那么返回0。返回01表示出错(必须本函数被一个所捕获的信号中断)。  </p>
+<h4 id="3-1-3-描述符就绪条件"><a href="#3-1-3-描述符就绪条件" class="headerlink" title="3.1.3 描述符就绪条件"></a>3.1.3 描述符就绪条件</h4><p>尽管可读性和可写性对普通文件之类的描述符显而易见，但对于引起<code>select</code>函数返回的套接字就绪的条件可以更明确一些：</p>
+<ol>
+<li>满足下列条件的任何一个，一个套接字准备好读  <ul>
+<li>该套接字接受缓冲区的数据字节数大于等于套接字接收缓冲区低水位标记的当前大小。<br>对这样的套接字执行读操作不会阻塞并将返回一个大于0的值(也就是准备好读入的数据)。可以用<code>SO_RCVLOWAT</code>套接字选项设置该套接字的低水位标记，对于TCP/UDP套接字而言，默认值为1。</li>
+<li>该链接的读半部关闭(也就是接受了<code>FIN</code>的TCP链接)。<br>对这样的套接字的读操作将不阻塞并返回0(也就是返回<code>EOF</code>)。</li>
+<li>该套接字是一个监听套接字且已完成的连接数部位0。<br>对这样的套接字的<code>accept</code>通常不会阻塞，不过有少部分条件会阻塞。</li>
+<li>其上有一个套接字错误待处理。<br>对这样的套接字的读操作将不阻塞并返回-1，同时把<code>errno</code>设置成确切的错误条件。这些待处理错误也可以通过指定<code>SO_ERROR</code>套接字选项调用<code>getsockopt</code>获取并清除。  </li>
+</ul>
+</li>
+<li>满足下列条件的任何一个，一个套接字准备好写<ul>
+<li>该套接字发送缓冲区的可用空间字节数大于等于套接字发送缓冲区低水位标记的当前大小，并且或者该套接字已连接，或者该套接字不需要连接(如UDP套接字)。<br>这意味着如果把这样的套接字设置成非阻塞，写操作将不阻塞并返回一个正值。可以使用<code>SO_SNDLOWAT</code>套接字选项来设置低水位标记。对于TCP/UDP套接字而言，默认是2048。    </li>
+<li>该连接的写半部关闭。<br>对于这样的套接字的写操作将产生<code>SIGPIPE</code>信号。</li>
+<li>使用非阻塞式<code>connect</code>的套接字已建立连接，或者<code>connect</code>已经以失败告终。</li>
+<li>其上有一个套接字错误待处理。<br>对于这样的套接字的写操作将不阻塞并返回-1，同时把<code>errno</code>设置成确切的错误条件。这些待处理的错误也可以通过指定<code>SO_ERROR</code>套接字选项调用<code>getsockopt</code>获取并清除。</li>
+</ul>
+</li>
+<li>如果一个套接字存在带外数据或仍处于带外标记，那么它有异常待处理。  </li>
+</ol>
+<p>注意当某个套接字上发生错误时，它将由<code>select</code>标记为既可读又可写。  </p>
+<h4 id="3-1-4-select的最大描述符数"><a href="#3-1-4-select的最大描述符数" class="headerlink" title="3.1.4 select的最大描述符数"></a>3.1.4 select的最大描述符数</h4><p><code>select</code>目前几乎在所有的平台上支持，良好的跨平台性也是它的一个优点。<code>select</code>的一个缺点在于单个进程能监视的文件描述符的数量存在最大限制，虽然可以通过修改宏定义甚至重新编译内核的方式提升这一限制，但也会造成效率的降低。单个进程能打开的FD的限制由<code>FD_SIZE</code>设置，4.2BSD的限制是31，Linux默认为1024，具体数目可以通过<code>cat /proc/sys/fs/file-max</code>查看。<br><code>select</code>对socket进行扫描是线性扫描，即采用轮询的方法，效率低。当套接字较多的时候，每次<code>select</code>都要通过遍历<code>FD_SETSIZE</code>个socket来完成调度，无论哪个socket是活跃的，都要遍历一遍。这会浪费很多CPU时间。而且<code>select</code>还需要维护一个用来存放fd的描述符集。</p>
+<h3 id="3-2-poll"><a href="#3-2-poll" class="headerlink" title="3.2 poll"></a>3.2 poll</h3><p><code>poll</code>函数起源于SVR3，最初局限于流设备。SVR4取消了这种限制，允许<code>poll</code>工作在任何描述符上。<code>poll</code>提供的功能与<code>select</code>类似，不过在处理流设备时能提供额外的信息。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;poll.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 若有就绪描述符则返回其数目；超时返回0；出错返回-1</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">poll</span> <span class="params">(struct pollfd *fdarray, <span class="keyword">unsigned</span> <span class="keyword">long</span> nfds, <span class="keyword">int</span> timeout)</span></span>;</span><br></pre></td></tr></table></figure>
+<p><code>poll</code>本质上和<code>select</code>没有区别，它将用户传入的数组拷贝到内存空间，然后查询每个fd对应的设备状态，如果设备就绪则在设备等待队列中加入一项并继续遍历，如果遍历完所有fd后没有发现就绪设备，则挂起当前进程直到设备就绪或主动超时，被唤醒后又开始再次遍历。  </p>
+<h4 id="3-2-1-参数"><a href="#3-2-1-参数" class="headerlink" title="3.2.1 参数"></a>3.2.1 参数</h4><h5 id="A-fdarray、nfds"><a href="#A-fdarray、nfds" class="headerlink" title="A. fdarray、nfds"></a>A. fdarray、nfds</h5><p><code>fdarray</code>是指向一个结构数组的第一个元素的指针。每个数组元素都是一个<code>pollfd</code>结构，用于指定测试某个给定描述符<code>fd</code>的条件。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">pollfd</span> &#123;</span></span><br><span class="line">    <span class="keyword">int</span> fd;         <span class="comment">// descriptor to check</span></span><br><span class="line">    <span class="keyword">short</span> events;   <span class="comment">// events of interst on fd</span></span><br><span class="line">    <span class="keyword">short</span> revents;  <span class="comment">// events that occurred on fd</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>要测试的条件由<code>events</code>成员指定，函数在相应的<code>revents</code>成员中返回该描述符的状态。这两个成员中的每一个都由指定某个特定条件的一位或多位构成。<br><code>poll</code>识别三类数据：普通(<code>normal</code>)、优先级带(<code>priority band</code>)、高优先级(<code>high priority</code>)，这些术语均出自于基于流的实现。所有正规TCP/UDP数据都被认为是普通数据；TCP的带外数据被认为是普通数据；当TCP的读半部关闭时，也被认为是普通数据，随后的读操作将返回0；TCP的连接存在错误即可认为是普通数据，也可认为是错误，随后的读操作返回-1，并发<code>errno</code>设置成合适的值；在监听套接字上有新的连接可用即可认为是普通数据，也可认为是优先级数据，大多数实现视之为普通数据；非阻塞式<code>connect</code>的完成被认为是使相应套接字可写。<br>如果不关心某个特定描述符，那么可以把与之对应的<code>pollfd</code>结构的<code>fd</code>成员设置成一个负值。<code>poll</code>函数将忽略这样的<code>pollfd</code>结构的<code>events</code>成员，返回时将它的<code>revents</code>成员的值置为0。<br>结构数组中元素的个数是由<code>nfds</code>参数指定。      </p>
+<h5 id="B-timeout"><a href="#B-timeout" class="headerlink" title="B. timeout"></a>B. timeout</h5><p><code>timeout</code>指定<code>poll</code>函数返回前等待的时间。它是一个指定应等待毫秒数的正值。当为0时，表示立即返回不阻塞进程；大于0表示等待指定书目的毫秒数；为<code>INFTIM</code>时表示永远等待。<code>INFTIM</code>常值被定义为一个负值。</p>
+<h4 id="3-2-2-最大描述符数"><a href="#3-2-2-最大描述符数" class="headerlink" title="3.2.2 最大描述符数"></a>3.2.2 最大描述符数</h4><p><code>poll</code>是基于链表存储的，它没有最大连接数的限制。但它和<code>select</code>一样，返回后通过遍历文件描述符来获取已就绪的socket。因此随着监视的描述符数量的增长，其效率也会现行下降。  </p>
+<h3 id="3-3-epoll"><a href="#3-3-epoll" class="headerlink" title="3.3 epoll"></a>3.3 epoll</h3><p><code>epoll</code>是之前的<code>select</code>和<code>poll</code>的增强版本，在MacOS上类似的是<code>Kqueue</code>。<code>epoll</code>更加灵活，没有描述符的限制；且不是采用轮询的方式，只有活跃的FD才会调用<code>callback</code>函数，效率是<code>O(1)</code>。<br><code>epoll</code>对文件描述符的操作有两种模式：LT(<code>level trigger</code>)和ET(<code>edge trigger</code>)。LT是默认模式，此模式下当<code>epoll_wait</code>检测到描述符时间发生并将此时间通知应用程序，应用程序可以不立即处理该事件。下次调用<code>epoll_wait</code>时，会再次响应应用程序并通知改时间。ET模式下当<code>epoll_wait</code>检测到描述符事件发生并将此事件通知应用程序，应用程序必须处理该事件。如果不处理，下次调用<code>epoll_wait</code>时不会再次响应应用程序并通知此事件。  </p>
+<hr>
+<p><a href="https://book.douban.com/subject/4859464/" target="_blank" rel="noopener">UNIX网络编程 卷1：套接字联网API (第3版)</a><br><a href="https://www.jianshu.com/p/486b0965c296" target="_blank" rel="noopener">聊聊Linux 五种IO模型</a><br><a href="https://www.jianshu.com/p/dfd940e7fca2" target="_blank" rel="noopener">聊聊IO多路复用之select、poll、epoll详解</a>  </p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Unix-IO/" rel="tag"># Unix IO</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/14/backends/nosql/redis/Redis(三) Redis实现分布式锁/" rel="next" title="Redis(三) Redis实现分布式锁">
+                <i class="fa fa-chevron-left"></i> Redis(三) Redis实现分布式锁
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/05/19/操作系统/正则表达式及Linux的几个常用命令/" rel="prev" title="正则表达式及Linux的几个常用命令">
+                正则表达式及Linux的几个常用命令 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/uploads/avatar.gif" alt="Javior Wang">
+            
+              <p class="site-author-name" itemprop="name">Javior Wang</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">57</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/index.html">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">11</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">23</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/scorego" title="GitHub &rarr; https://github.com/scorego" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://www.zhihu.com/people/scorego-6" title="Zhihu &rarr; https://www.zhihu.com/people/scorego-6" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>Zhihu</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-综述"><span class="nav-text">1. 综述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-各模型详解"><span class="nav-text">2. 各模型详解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-阻塞式IO-blocking-IO"><span class="nav-text">2.1 阻塞式IO / blocking IO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-同步非阻塞IO-nonblocking-IO"><span class="nav-text">2.2 同步非阻塞IO / nonblocking IO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-信号驱动式IO-signal-driven-IO"><span class="nav-text">2.4 信号驱动式IO / signal-driven IO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-异步IO模型-asynchronous-IO"><span class="nav-text">2.5 异步IO模型 / asynchronous IO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-综述"><span class="nav-text">2.6 综述</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-select、poll、epoll"><span class="nav-text">3. select、poll、epoll</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-select"><span class="nav-text">3.1 select</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-1-参数"><span class="nav-text">3.1.1 参数</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#A-timeout"><span class="nav-text">A. timeout</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#B-readset、writeset、exceptset"><span class="nav-text">B. readset、writeset、exceptset</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#C-maxfdp1"><span class="nav-text">C. maxfdp1</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-2-返回值"><span class="nav-text">3.1.2 返回值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-3-描述符就绪条件"><span class="nav-text">3.1.3 描述符就绪条件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-4-select的最大描述符数"><span class="nav-text">3.1.4 select的最大描述符数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-poll"><span class="nav-text">3.2 poll</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-1-参数"><span class="nav-text">3.2.1 参数</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#A-fdarray、nfds"><span class="nav-text">A. fdarray、nfds</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#B-timeout"><span class="nav-text">B. timeout</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-2-最大描述符数"><span class="nav-text">3.2.2 最大描述符数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-epoll"><span class="nav-text">3.3 epoll</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Javior Wang</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

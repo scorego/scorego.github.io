@@ -335,6 +335,185 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/09/09/操作系统/Unix的5种IO模型/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Javior Wang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Javior's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/09/09/操作系统/Unix的5种IO模型/" class="post-title-link" itemprop="url">Unix的5种IO模型</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-09 17:19:28 / 修改时间：17:20:23" itemprop="dateCreated datePublished" datetime="2019-09-09T17:19:28+08:00">2019-09-09</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/操作系统/" itemprop="url" rel="index"><span itemprop="name">操作系统</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>
+              1. 综述IO 是主存和外部设备(硬盘、终端和网络等)拷贝数据的过程。IO是操作系统的底层功能实现，底层通过I/O指令进行完成。Unix有5种典型的IO模型：
+
+阻塞式IO / blocking IO
+非阻塞式IO / nonbloking IO
+IO复用 / IO multiplexing
+信号驱动式IO / signal driven IO
+异步IO / asynchronous IO
+
+JDK 1.4之前，Java的IO模型只支持阻塞式IO，简称BIO。JDK 1.4支持了IO多路复用模型，称为NIO。JDK 1.7对NIO包进行了升级，支持了异步IO，称为AIO，也称NIO 2.0。I
+              ...
+            </p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/09/09/操作系统/Unix的5种IO模型/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="javior.wang/2019/09/05/java/并发/Java并发12 ScheduledThreadPoolExecutor/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -1909,189 +2088,6 @@ Java NIO是Java 1.4新加入的替代IO的API。IO是面向流的，NIO是面向
           
             <div class="post-button text-center">
               <a class="btn" href="/2019/07/15/java/IO系统/Java IO Tutorial/Java IO Tutorial 06 更多Reader & Writer/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="javior.wang/2019/07/13/java/IO系统/Java IO Tutorial/Java IO Tutorial 05 Reader & Writer, InputStreamReader & OutputStreamWriter/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Javior Wang">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Javior's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/07/13/java/IO系统/Java IO Tutorial/Java IO Tutorial 05 Reader & Writer, InputStreamReader & OutputStreamWriter/" class="post-title-link" itemprop="url">Java IO Tutorial 05 Reader & Writer, InputStreamReader & OutputStreamWriter</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-07-13 17:22:12" itemprop="dateCreated datePublished" datetime="2019-07-13T17:22:12+08:00">2019-07-13</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2019-07-15 02:32:58" itemprop="dateModified" datetime="2019-07-15T02:32:58+08:00">2019-07-15</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Java-IO/" itemprop="url" rel="index"><span itemprop="name">Java IO</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>
-              1. ReaderReader类(java.io.Reader)是Java IO API中所有Reader子类的基类。Reader类似于InputStream，只是Reader是基于字符而不是基于字节的。换句话说，Reader用于读取文本，而InputStream用于读取原始字节。许多应用程序使用UTF(UTF-8或UTF-16)来存储文本数据。UTF-8中，每个字符可能需要一个或多个字节来表示；而在UTF-16中，每个字符需要2个字节来表示。因此，在读取文本数据时，数据中的单个字节可能与UTF中的一个字符不对应。如果只是通过InputStream每次读取UTF-8数据的一个字节，并尝试将其转
-              ...
-            </p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/07/13/java/IO系统/Java IO Tutorial/Java IO Tutorial 05 Reader & Writer, InputStreamReader & OutputStreamWriter/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>

@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="Javior&#39;s Blog">
 <meta property="og:description" content="因特网中凡是涉及两个或多个远程通信实体的所有活动都受协议的制约。协议定义了在两个或多个通信实体之间交换的报文格式和次序，以及报文发送和/或接受一条报文或其他事件所采取的的动作。一个协议层能够用硬件、软件或两者的结合来实现，网络设计者以分层的方式组织协议以及实现这些协议的网络硬件和软件。如HTTP和SMTP这样的应用层协议几乎总是在端系统中用软件实现，运输层也是；网络层通常是硬件和软件实现的混合体；">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-09-13T00:27:43.916Z">
+<meta property="og:updated_time" content="2019-09-13T16:46:24.277Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="计算机网络01 概述">
 <meta name="twitter:description" content="因特网中凡是涉及两个或多个远程通信实体的所有活动都受协议的制约。协议定义了在两个或多个通信实体之间交换的报文格式和次序，以及报文发送和/或接受一条报文或其他事件所采取的的动作。一个协议层能够用硬件、软件或两者的结合来实现，网络设计者以分层的方式组织协议以及实现这些协议的网络硬件和软件。如HTTP和SMTP这样的应用层协议几乎总是在端系统中用软件实现，运输层也是；网络层通常是硬件和软件实现的混合体；">
@@ -399,7 +399,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-09-13 08:27:43" itemprop="dateModified" datetime="2019-09-13T08:27:43+08:00">2019-09-13</time>
+                <time title="修改时间：2019-09-14 00:46:24" itemprop="dateModified" datetime="2019-09-14T00:46:24+08:00">2019-09-14</time>
               
             
           </span>
@@ -454,7 +454,7 @@
         <p>因特网中凡是涉及两个或多个远程通信实体的所有活动都受协议的制约。协议定义了在两个或多个通信实体之间交换的报文格式和次序，以及报文发送和/或接受一条报文或其他事件所采取的的动作。一个协议层能够用硬件、软件或两者的结合来实现，网络设计者以分层的方式组织协议以及实现这些协议的网络硬件和软件。如<code>HTTP</code>和<code>SMTP</code>这样的应用层协议几乎总是在端系统中用软件实现，运输层也是；网络层通常是硬件和软件实现的混合体；而物理层和数据链路层负责处理跨越特定链路的通信，通常实现在与给定链路相联系的网络接口卡中。<br>协议分层具有概念化和接口化的优点。分层提供了一种结构化方式来讨论系统组件，模块化使更新系统组件更为容易。分层的一个潜在缺点是一层可能会冗余其低层的功能。例如许多协议栈在基于每段链路和基于端到端两种情况下，都提供了差错恢复。第二种潜在缺点是某层功能可能需要仅在其他某层才出现的信息(如时间戳)，这违反了层次分离的目标。   </p>
 <h2 id="1-协议体系"><a href="#1-协议体系" class="headerlink" title="1. 协议体系"></a>1. 协议体系</h2><h3 id="1-1-因特网5层模型"><a href="#1-1-因特网5层模型" class="headerlink" title="1.1 因特网5层模型"></a>1.1 因特网5层模型</h3><p>各层的所有协议成为协议栈(<code>protocol stack</code>)。因特网的协议栈由5层组成：物理层、链路层、网络层、运输层、应用层。</p>
 <h4 id="A-应用层"><a href="#A-应用层" class="headerlink" title="A. 应用层"></a>A. 应用层</h4><p>应用层是网络应用程序以及它们的应用层协议存留的地方。常见的应用层协议有<code>HTTP</code>/<code>SMTP</code>/<code>FTP</code>/<code>DNS</code>。位于应用层的信息分组称为报文(<code>message</code>)。  </p>
-<h4 id="B-运输层"><a href="#B-运输层" class="headerlink" title="B. 运输层"></a>B. 运输层</h4><p>因特网中有两个运输层协议，<code>TCP</code>和<code>UDP</code>。运输层分组称为报文段(<code>segment</code>)。  </p>
+<h4 id="B-运输层"><a href="#B-运输层" class="headerlink" title="B. 运输层"></a>B. 运输层</h4><p>因特网中有两个运输层协议，<code>TCP</code>和<code>UDP</code>。运输层分组称为报文段(<code>segment</code>)。  </p>
 <h4 id="C-网络层"><a href="#C-网络层" class="headerlink" title="C. 网络层"></a>C. 网络层</h4><p>网络层分组称为数据报(<code>datagram</code>)。网络层协议包括注明的<code>IP</code>协议，该协议定义了在数据宝中各个字段以及端系统和路由器如何作用于这些字段。另外还有决定路由的路由选择协议。  </p>
 <h4 id="D-链路层"><a href="#D-链路层" class="headerlink" title="D. 链路层"></a>D. 链路层</h4><p>网络层将数据报下传给链路层，链路层沿着路径将数据报传递给下一个结点。在下个结点，链路层将数据报上传给网络层。链路层协议包括以太网、<code>WiFi</code>和电缆接入网的<code>DOCSIS</code>协议。<br>链路层分组成为帧(<code>frame</code>)。  </p>
 <h4 id="E-物理层"><a href="#E-物理层" class="headerlink" title="E. 物理层"></a>E. 物理层</h4><p>物理层的任务是将帧中一个一个的比特从一个结点移动到下一个结点。这层的协议和链路相关，并且进一步与该链路的实际传输媒体相关。如以太网有很多物理层协议：关于双绞铜线的、同轴电缆的、光纤的，等等。  </p>
@@ -776,7 +776,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-协议体系"><span class="nav-text">1. 协议体系</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-因特网5层模型"><span class="nav-text">1.1 因特网5层模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#A-应用层"><span class="nav-text">A. 应用层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B-运输层"><span class="nav-text">B. 运输层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C-网络层"><span class="nav-text">C. 网络层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#D-链路层"><span class="nav-text">D. 链路层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#E-物理层"><span class="nav-text">E. 物理层</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-OSI的7层模型"><span class="nav-text">1.2 OSI的7层模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-数据传输"><span class="nav-text">2. 数据传输</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-电路交换-circuit-switching"><span class="nav-text">A. 电路交换 (circuit switching)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-报文交换"><span class="nav-text">B. 报文交换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C-分组交换"><span class="nav-text">C. 分组交换</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-计算机网络的分类"><span class="nav-text">3. 计算机网络的分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-计算机网络的主要性能指标"><span class="nav-text">4. 计算机网络的主要性能指标</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-协议体系"><span class="nav-text">1. 协议体系</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-因特网5层模型"><span class="nav-text">1.1 因特网5层模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#A-应用层"><span class="nav-text">A. 应用层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B-运输层"><span class="nav-text">B. 运输层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C-网络层"><span class="nav-text">C. 网络层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#D-链路层"><span class="nav-text">D. 链路层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#E-物理层"><span class="nav-text">E. 物理层</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-OSI的7层模型"><span class="nav-text">1.2 OSI的7层模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-数据传输"><span class="nav-text">2. 数据传输</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-电路交换-circuit-switching"><span class="nav-text">A. 电路交换 (circuit switching)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-报文交换"><span class="nav-text">B. 报文交换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C-分组交换"><span class="nav-text">C. 分组交换</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-计算机网络的分类"><span class="nav-text">3. 计算机网络的分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-计算机网络的主要性能指标"><span class="nav-text">4. 计算机网络的主要性能指标</span></a></li></ol></div>
             
 
           </div>

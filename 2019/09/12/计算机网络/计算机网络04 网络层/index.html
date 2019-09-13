@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next mist" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/favicon-128x128-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-01.ico?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/uploads/favicon-128x128-01.ico?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="与运输层和应用层不同的是，网络中的每一台主机和路由器都有一个网络层部分。因此网络层协议是协议栈中最具挑战性的部分。网络层介于传输层和数据链路层之间，其主要作用是实现两个网络系统之间的数据透明传送，具体包括路由选择，拥塞控制和网际互连等。网络层是网络与网络之间通信的最底层，在数据从数据链路层向传输层进行数据传输的通信中，起到构建一个中间通信子网的作用。不同网络有不同的网络层协议和地址规范，如果一个网">
+<meta name="keywords" content="计算机网络">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机网络04 网络层">
+<meta property="og:url" content="javior.wang/2019/09/12/计算机网络/计算机网络04 网络层/index.html">
+<meta property="og:site_name" content="Javior&#39;s Blog">
+<meta property="og:description" content="与运输层和应用层不同的是，网络中的每一台主机和路由器都有一个网络层部分。因此网络层协议是协议栈中最具挑战性的部分。网络层介于传输层和数据链路层之间，其主要作用是实现两个网络系统之间的数据透明传送，具体包括路由选择，拥塞控制和网际互连等。网络层是网络与网络之间通信的最底层，在数据从数据链路层向传输层进行数据传输的通信中，起到构建一个中间通信子网的作用。不同网络有不同的网络层协议和地址规范，如果一个网">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="/images/computernetwork/04_01ipv4pattern.png">
+<meta property="og:image" content="/images/computernetwork/04_02ipv4class.png">
+<meta property="og:image" content="/images/computernetwork/04_03ipv6header.png">
+<meta property="og:updated_time" content="2019-09-13T00:39:45.022Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="计算机网络04 网络层">
+<meta name="twitter:description" content="与运输层和应用层不同的是，网络中的每一台主机和路由器都有一个网络层部分。因此网络层协议是协议栈中最具挑战性的部分。网络层介于传输层和数据链路层之间，其主要作用是实现两个网络系统之间的数据透明传送，具体包括路由选择，拥塞控制和网际互连等。网络层是网络与网络之间通信的最底层，在数据从数据链路层向传输层进行数据传输的通信中，起到构建一个中间通信子网的作用。不同网络有不同的网络层协议和地址规范，如果一个网">
+<meta name="twitter:image" content="/images/computernetwork/04_01ipv4pattern.png">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="javior.wang/2019/09/12/计算机网络/计算机网络04 网络层/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>计算机网络04 网络层 | Javior's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Javior's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/index.html" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/09/12/计算机网络/计算机网络04 网络层/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Javior Wang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Javior's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">计算机网络04 网络层
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-12 16:47:32" itemprop="dateCreated datePublished" datetime="2019-09-12T16:47:32+08:00">2019-09-12</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-09-13 08:39:45" itemprop="dateModified" datetime="2019-09-13T08:39:45+08:00">2019-09-13</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/计算机网络/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>与运输层和应用层不同的是，网络中的每一台主机和路由器都有一个网络层部分。因此网络层协议是协议栈中最具挑战性的部分。网络层介于传输层和数据链路层之间，其主要作用是实现两个网络系统之间的数据透明传送，具体包括路由选择，拥塞控制和网际互连等。网络层是网络与网络之间通信的最底层，在数据从数据链路层向传输层进行数据传输的通信中，起到构建一个中间通信子网的作用。不同网络有不同的网络层协议和地址规范，如果一个网络中的用户不能识别其他网络的通信协议和地址规范，那么这两个网络之间就不能进行数据通信。如果只是同一局域网内的各个计算机之间的通信，单靠物理层和数据链路层就可以建立通信链路完成用户间的数据通信，但要扩大应用范围，连接不同的局域子网，就需要借助网络层处理各个网络子网的协议，从而进行计算机的网络互连，所以网络层在TCP/IP协议体系中叫网际互连层。<br>通常一个计算机网络就是一个管理边界，一般属于一个特定的公司，由一个特定的管理者负责。所以在进行计算机网络互连时，要同时考虑两方面的问题：一是授权用户可以在不同网络间互访，共享双方的资源；二是要保持各计算机网络管理原来的独立性。不同用户之间进行通信，首先要知道彼此的地址，局域网内部的用户访问(物理层和数据链路层就可以构建一个局域网)是通过MAC地址进行，但不同网络之间进行访问不同于通过属于数据链路层地址的MAC地址寻址，而是需要网络层对应的网络地址来进行寻址。每个网络都通过其网络地址，即NSAP(网络服务访问点)来标识，网络中的每个节点都有一个NSAP。这个NSAP就是由对应网络所运行的网络层通信协议来定义的，在TCP/IP协议栈中，这个协议就是IP协议，对应的NSAP就是IP地址。<br>网络层的作用从表面看极为简单，即将分组从一台发送主机移动到一台接收主机。为此需要两种重要的网络层功能：转发和理由选择。转发是指将分组从一个输入链路接口转移到适当的输出链路接口的路由器本地动作。路有选择是指网络范围的过程，以决定分组从源到目的地所采取的端到端路径。<br>现在的国际互联网普遍采用了IP协议(Internet Protocol, 网际协议)。这是一种用于分组交换数据网络的协议。IP协议是TCP/IP协议族中网络层的主要协议，任务仅仅是根据源主机和目的主机地址来传送数据。为此IP定义了寻址方法和数据报的封装结构。第一个架构的主要版本是IPv4，此外还有IPv6。    </p>
+<h2 id="1-IPv4"><a href="#1-IPv4" class="headerlink" title="1. IPv4"></a>1. IPv4</h2><p>网际协议版本4(IPv4, Internet Protocol version 4)是网际协议开发过程中的第四个版本，也是此协议第一个被广泛部署和使用的版本。</p>
+<h3 id="1-1-IPv4数据报格式"><a href="#1-1-IPv4数据报格式" class="headerlink" title="1.1 IPv4数据报格式"></a>1.1 IPv4数据报格式</h3><p>网络层分组称为数据报，IPv4数据报格式如下：</p>
+<div align="center"><br>    <img src="/images/computernetwork/04_01ipv4pattern.png" width="800" height="500"><br></div>
+
+<ul>
+<li>版本(号)<br>这4bit规定了数据报的IP协议版本。通过查看版本号，路由器能确定如何解释IP数据报的剩余部分。IPv4此字段值为4。  </li>
+<li>首部长度<br>IPv4的数据报包含了一些可选项，故需要用这4bit来确定IP数据报中数据部分实际从哪里开始。首部长度的值以32bit(4字节)为单位。大多数IP数据报不包含选项，所以一般IP数据报具有20字节的首部，因此这个字段的最小值是5，最大值是15。  </li>
+<li>区分服务<br>占6bit。最初被定义为服务类型字段，但并未启用。1998年被重新定义为区分服务[RFC 2472]。一般情况不使用这个字段，只有在使用区分服务时这个字段才起作用。</li>
+<li>显式拥塞通告(Explicit Congestion Notification, ECN)<br>在[RFC 3168]中定义，允许在不丢弃报文的同时通知对方网络拥塞的发生。ECN是一种可选的功能，仅当两端都支持并希望使用，且底层网络支持时才被使用。</li>
+<li>全长<br>这16bit定义了报文总长，包含了首部和数据，单位为字节。字段的最小指为20，最大值是65535。IP规定所有主机必须支持最小576字节的报文，这是假定上层数据长度512字节，加上60自己的IP首部和4字节的富余量得到的，但大多数现代主机支持更大的报文。当下层的数据链路协议的最大传输单元(MTU)字段的值小于IP报文长度时间，报文就必须被分片。</li>
+<li>标识符<br>占16位。用来唯一地标识一个报文的所有分片，因为分片不一定按序到达，所以在重组时需要知道分片所属的报文。每产生一个数据报，计数器加1，并复制给此字段。</li>
+<li>标志<br>共3bit。他们是：位0，保留，必须为0；位1，禁止分片(DF)，当<code>DF = 0</code>时才允许分片；位2，更多分片(MF)，<code>MF = 1</code>代表后面还有分片，<code>MF = 0</code>代表已经是最后一个分片。如果<code>DF</code>标志被设置为1，但路由要求必须分片，此报文会被丢弃。</li>
+<li>分片偏移<br>这13bit指明了每个分片相对于原始报文开头的偏移量，以8字节作单位。</li>
+<li>存活时间(Time To Live, TTL)<br>这8bit表示存活时间，以秒为单位，实际中是一个跳数计数器，每经过一个路由器此字段减1，当此字段为0时报文不再向下一跳传送并丢弃。最大值为255。</li>
+<li>协议<br>8bit。定义了该报文数据区域使用的协议，比如值为6表示数据部分要交给TCP，值为17表示数据要交给UDP。IANA维护这一份协议列表，<a href="https://zh.wikipedia.org/wiki/IP%E5%8D%8F%E8%AE%AE%E5%8F%B7%E5%88%97%E8%A1%A8" target="_blank" rel="noopener">具体见此</a>。  </li>
+<li>首部校验和<br>这16bit校验和字段支队首部差错，不包括数据部分。每一跳路由器都要重新计算出首部校验和并比对，如果不一致此报文会被丢弃。重新计算的必要性是因为每一跳的一些首部字段(TTL、Flag等)都有可能发生变化，不检查数据部分是为了减少工作量。数据区的错误由上层协议处理。</li>
+<li>源IP地址和目的IP地址<br>一个IPv4地址有32位。这两个字段分别指向源和目的地址。</li>
+<li>选项<br>附加的首部字段可能跟在目的地址之后，但并不经常使用，从1到40字节不等。</li>
+<li>数据<br>数据字段不是首部的一部分，并不被包含在首部校验和中。数据的格式在首部字段(协议字段)中知名，可以是任意的传输层协议。</li>
+</ul>
+<h3 id="1-2-IPv4数据报分片"><a href="#1-2-IPv4数据报分片" class="headerlink" title="1.2 IPv4数据报分片"></a>1.2 IPv4数据报分片</h3><p>并不是所有的链路层协议都能承载相同长度的网络层分组，如以太网帧能够承载不超过1500字节的数据，而某些广域网链路的帧可承载不超过576字节的数据。链路层协议的MTU(最大传送单元)严格限制着IP数据报的长度，而且从发送方到目的地路径上的每段链路可能使用不同的链路层协议，且每种协议可能具有不同的MTU。<br>如果将过大IP分组压缩进链路层帧的有效载荷字段呢？方法是将IP数据报中的数据分片成两个或多个较小的IP数据报，用单独的链路层帧封装这些数据报，然后向输出链路上发送这些帧。这些较小的数据报称为片。<br>片在到达目的地运输层以前需要重新组装，而IPv4的设计者感到在路由器中重新组装数据报会影响路由器性能，所以数据报的重新组装工作放到端系统中，而不是放到网络路由器中。<br>IPv6不要求路由器执行分片操作，而是将检测路径最大传输单元大小的任务交给了主机。  </p>
+<h3 id="1-3-IPv4地址"><a href="#1-3-IPv4地址" class="headerlink" title="1.3 IPv4地址"></a>1.3 IPv4地址</h3><p>每个IP地址长度为32比特，总共有2<sup>32</sup>个可能的地址，大约有42亿个。但有一些地址是特殊用途保留的，如局域网专用地址、组播地址。这些地址一般以点分十进制记法书写。全球因特网中每台主机和路由器上的每个接口都必须有一个全球唯一的IP地址，一个接口的IP地址的一部分需要其连接的子网来决定。   </p>
+<p>公网IP地址指可以再广域网上直接使用的，直接被路由并需要向IP地址管理机构申请、注册、购买且全球唯一的IPv4地址。与之相对的是私网IP地址，又称专用网络IP地址或局域网IP地址，指尽可以在各用户自己的局域网内部使用，且不同用户可以重复使用，无须向IP地址管理机构申请、注册、购买的IPv4地址。随着公网地址不断被分配给最终的用户，IPv4地址枯竭问题也随之产生。虽然基于可变的子网掩码(VLSM)、无类别域间路由(CIDR)和网络地址转换(NAT)的地址结构重构显著地减少了地址的枯竭的速度，但在2011年2月3日，最后5个地址块被分配给5个区域互联网注册管理机构之后，IANA的主要地址池空了，所以现在正在积极推动IPv6。  </p>
+<h4 id="A-子网掩码"><a href="#A-子网掩码" class="headerlink" title="A. 子网掩码"></a>A. 子网掩码</h4><p>每个IP地址都分割成网络识别码和主机识别码两部分，以便于IPv4地址的寻址。如果不指定网络识别码和主机识别码各是多少位，在寻址时就不知道对应的IPv4地址哪些位代表什么，这些需要子网掩码来实现。<br>子网掩码也有32位，也分为网络识别码和主机识别码两部分，且各自长度与IPv4地址的网络识别码和主机识别码部分对应。子网掩码的网络识别码部分全是1，其数目等于网络识别码的长度；主机识别码部分全是0，数目等于主机ID的长度。</p>
+<h4 id="B-IPv4地址的分类"><a href="#B-IPv4地址的分类" class="headerlink" title="B. IPv4地址的分类"></a>B. IPv4地址的分类</h4><p>最初把一个地址分成两部分，网络识别码在最高的字节中，主机识别码在剩下的3个字节，但这样最多只能分配256个网络，显然是远远不够的。为了克服这个限制，随后出现的分类网络中，将最高位字节重新定义为网络的类别，共5中：A/B/C/D/E。A/B/C类用于单播通信中设备IP地址分配；D类属于组播地址，用于组播通信；E类是保留地址。它们均有不同的网络类别(网络识别码)长度，剩余部分用来识别网络内的主机(主机识别码)。  </p>
+<div align="center"><br>    <img src="/images/computernetwork/04_02ipv4class.png" width="800" height="800"><br></div>
+
+
+<ol>
+<li>A类地址<br>A类IPv4地址的网路识别码占用最高一个字节，主机识别码占剩余三个字节。网络识别码的最高位固定为0，后7位可变，因此A类网络共有2<sup>7</sup> = 128个。但实际可用的只有126个，因为网络识别码为0的地址为保留地址，不能被分配；网络识别码为127的地址为专用本地环路测试，也不能分配。A类地址的主机识别码共24位，所以可用的地址数约为1.6亿。A类地址可构建的网络数最少，但每个网络中拥有的地址数最多，可以构建的网络规模最大，适用大型企业和运营商。    </li>
+<li>B类IPv4地址<br>B类地址的网络识别码的最高位固定为<code>10</code>，后面14位可变。主机识别码共16位，所以，每个网络拥有的地址是65536个，除去全0和全1，可用的地址是65534个。</li>
+<li>C类地址<br>C类地址的网络识别码最高位固定为<code>110</code>，后21位可变，主机识别码共8位，除去全0和全1，可用的地址是<code>256 - 2 = 254</code>。  </li>
+<li>D类地址<br>D类地址是组播地址，用于IPv4组播通信。通过组播IPv4地址，组播主机只需发送一份数据，就可以使对应的组播组的中一个或多个主机收到这份数据的副本。<br>IP组播技术有效解决了单点发送、多点接收的问题，实现了IP网络中点到多点的高效数据传输，能够节约网络贷款、降低网络负载。  </li>
+<li>E类地址<br>E类地址属于IANA保留地址，不分配给用户使用，其最高5位是<code>11110</code>，剩余27位是可变的。</li>
+</ol>
+<p>以w/x/y/z分别代表IPv4地址的四个字节，A/B/C类地址总结如下：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">类别</th>
+<th style="text-align:center">w</th>
+<th style="text-align:center">网络识别码</th>
+<th style="text-align:center">主机识别码</th>
+<th style="text-align:center">网络数</th>
+<th style="text-align:center">每个网络的主机数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">A</td>
+<td style="text-align:center">1 ~ 126</td>
+<td style="text-align:center">w</td>
+<td style="text-align:center">x.y.z</td>
+<td style="text-align:center">126</td>
+<td style="text-align:center">16_777_214</td>
+</tr>
+<tr>
+<td style="text-align:center">B</td>
+<td style="text-align:center">128 ~ 191</td>
+<td style="text-align:center">w.x</td>
+<td style="text-align:center">y.z</td>
+<td style="text-align:center">16384</td>
+<td style="text-align:center">65_534</td>
+</tr>
+<tr>
+<td style="text-align:center">C</td>
+<td style="text-align:center">192 ~ 223</td>
+<td style="text-align:center">w.x.y</td>
+<td style="text-align:center">z</td>
+<td style="text-align:center">2_097_152</td>
+<td style="text-align:center">254</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-IPv6"><a href="#2-IPv6" class="headerlink" title="2. IPv6"></a>2. IPv6</h2><p>由于IPv4的地址池是紧缺资源，为应对对大IP地址空间的需求，开发了一种新的IP地址，即IPv6。</p>
+<h3 id="2-1-IPv6数据报格式"><a href="#2-1-IPv6数据报格式" class="headerlink" title="2.1 IPv6数据报格式"></a>2.1 IPv6数据报格式</h3><div align="center"><br>    <img src="/images/computernetwork/04_03ipv6header.png" width="800" height="500"><br></div>
+
+<p>IPv6数据包由两个主要部分组成：头部和负载。包头是包的前64比特，并且包含有源和目的地址、协议版本、通信类别（8位，包优先级）、流标记（20比特，QoS服务质量控制）、分组长度（16位）、下一个头部（用于入栈解码，类似IPv4中的协议号）和跳段数限制（8位，生存时间，相当于IPv4中的TTL）。后面是负载。MTU至少1280字节长，在常见的以太网环境中为1500字节。负载在标准模式下最大可为65535字节，如果扩展报头设置了”jumbo payload”选项，则长度值被置为0。<br>IPv6曾有两个有着细微差别的版本；在 RFC 1883 中定义的原始版本（现在废弃）和 RFC 2460 中描述的现在提议的标准版本。两者主要在通信类别这个选项上有所不同，它的位数由4位变为了8位。其他的区别都是微不足道的。<br>由于分片（Fragmentation）只在IPv6的主机中处理，而IPv6也要求实现“MTU路径发现”来避免数据包需要被中间设备分片，所以IPv4头涉及分片的字段从IPv6基本头移出至专用的分片扩展报头中。<br>在IPv6中，可选项都被从标准头部中移出并在协议字段中指定，类似于IPv4的协议字段功能。  </p>
+<h3 id="2-2-IPv6地址"><a href="#2-2-IPv6地址" class="headerlink" title="2.2 IPv6地址"></a>2.2 IPv6地址</h3><p>IPv6地址共128bit，每组以<code>:</code>隔开，可以分为8组，每组以4位16进制方式表示，如<code>2001:0db8:86a3:08d3:1319:8a2e:0370:7344</code>。同时：</p>
+<ul>
+<li>每项数字前导的0可以省略</li>
+<li>可以用双冒号<code>::</code>表示一组或多组连续的0，但只能出现一次</li>
+</ul>
+<p>IPv6地址可分为三种：</p>
+<ol>
+<li>单播(unicast)地址</li>
+<li>任播(anycast)地址</li>
+<li>多播(multicast)地址</li>
+</ol>
+<h2 id="3-路由选择算法"><a href="#3-路由选择算法" class="headerlink" title="3. 路由选择算法"></a>3. 路由选择算法</h2><p>路由算法，又名选路算法，可以根据多个特性来加以区分。算法的目的是找到一条从源路由器到目的路由器的“好”路径（即具有最低费用的路径）。算法设计者的特定目标影响了该路由协议的操作；具体来说存在着多种路由算法，每种算法对网络和路由器资源的影响都不同；由于路由算法使用多种度量标准（metric），从而影响到最佳路径的计算。<br>路由算法使用了许多种不同的度量标准去决定最佳路径。复杂的路由算法可能采用多种度量来选择路由，通过一定的加权运算，将它们合并为单个的复合度量、再填入路由表中，作为寻径的标准。通常所使用的度量有：路径长度、可靠性、时延、带宽、负载、通信成本等。<br>常见的路由选择算法有：</p>
+<ul>
+<li>LS算法</li>
+<li>Dijkstra算法</li>
+<li>链路向量选录算法</li>
+<li>距离向量算法</li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/计算机网络/" rel="tag"># 计算机网络</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/12/计算机网络/计算机网络03 运输层/" rel="next" title="计算机网络03 运输层">
+                <i class="fa fa-chevron-left"></i> 计算机网络03 运输层
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/uploads/avatar.gif" alt="Javior Wang">
+            
+              <p class="site-author-name" itemprop="name">Javior Wang</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">61</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/index.html">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/scorego" title="GitHub &rarr; https://github.com/scorego" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://www.zhihu.com/people/scorego-6" title="Zhihu &rarr; https://www.zhihu.com/people/scorego-6" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>Zhihu</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-IPv4"><span class="nav-text">1. IPv4</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-IPv4数据报格式"><span class="nav-text">1.1 IPv4数据报格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-IPv4数据报分片"><span class="nav-text">1.2 IPv4数据报分片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-IPv4地址"><span class="nav-text">1.3 IPv4地址</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#A-子网掩码"><span class="nav-text">A. 子网掩码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B-IPv4地址的分类"><span class="nav-text">B. IPv4地址的分类</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-IPv6"><span class="nav-text">2. IPv6</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-IPv6数据报格式"><span class="nav-text">2.1 IPv6数据报格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-IPv6地址"><span class="nav-text">2.2 IPv6地址</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-路由选择算法"><span class="nav-text">3. 路由选择算法</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Javior Wang</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

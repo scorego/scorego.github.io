@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next mist" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/favicon-128x128-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-01.ico?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/uploads/favicon-128x128-01.ico?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="网络应用是计算机网络存在的理由。研发网络应用程序的核心是写出能够运行在不同的端系统和通过网络批次通信的程序。现代网络应用程序有两种主流体系：客户-服务器体系结构或对等体系结构。客户-服务端体系结构(client-server architecture)中，有一个总是打开的主机称为服务器，它服务来自客户的请求。服务器具有固定的、周知的地址(IP地址)，客户能够通过地址来向服务器发送分组与其联系。此种">
+<meta name="keywords" content="计算机网络">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机网络02 应用层">
+<meta property="og:url" content="javior.wang/2019/09/11/计算机网络/计算机网络02 应用层/index.html">
+<meta property="og:site_name" content="Javior&#39;s Blog">
+<meta property="og:description" content="网络应用是计算机网络存在的理由。研发网络应用程序的核心是写出能够运行在不同的端系统和通过网络批次通信的程序。现代网络应用程序有两种主流体系：客户-服务器体系结构或对等体系结构。客户-服务端体系结构(client-server architecture)中，有一个总是打开的主机称为服务器，它服务来自客户的请求。服务器具有固定的、周知的地址(IP地址)，客户能够通过地址来向服务器发送分组与其联系。此种">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-09-13T00:27:42.130Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="计算机网络02 应用层">
+<meta name="twitter:description" content="网络应用是计算机网络存在的理由。研发网络应用程序的核心是写出能够运行在不同的端系统和通过网络批次通信的程序。现代网络应用程序有两种主流体系：客户-服务器体系结构或对等体系结构。客户-服务端体系结构(client-server architecture)中，有一个总是打开的主机称为服务器，它服务来自客户的请求。服务器具有固定的、周知的地址(IP地址)，客户能够通过地址来向服务器发送分组与其联系。此种">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="javior.wang/2019/09/11/计算机网络/计算机网络02 应用层/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>计算机网络02 应用层 | Javior's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Javior's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/index.html" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/09/11/计算机网络/计算机网络02 应用层/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Javior Wang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Javior's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">计算机网络02 应用层
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-11 10:36:43" itemprop="dateCreated datePublished" datetime="2019-09-11T10:36:43+08:00">2019-09-11</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-09-13 08:27:42" itemprop="dateModified" datetime="2019-09-13T08:27:42+08:00">2019-09-13</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/计算机网络/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>网络应用是计算机网络存在的理由。研发网络应用程序的核心是写出能够运行在不同的端系统和通过网络批次通信的程序。现代网络应用程序有两种主流体系：客户-服务器体系结构或对等体系结构。<br>客户-服务端体系结构(client-server architecture)中，有一个总是打开的主机称为服务器，它服务来自客户的请求。服务器具有固定的、周知的地址(IP地址)，客户能够通过地址来向服务器发送分组与其联系。此种体系结构中，客户端主动地发起通信请求，服务器被动地等待通信的建立，客户之间不直接通信。<br>对等体系结构(P2P architecture)对位于数据中心的专用服务器具有最小的依赖。应用程序在间断连接的主机对之间使用直接通信，这些主机被称为对等方。许多流行的、流量密集型应用都是P2P体系结构，如文件共享(BitTorrent)、对等方协助下载加速器(迅雷)、因特网电话(Skype)等。P2P体系结构的自扩展性比较好，尽管每个对等方都由于请求产生工作量，但每个对等方通过向其他对等方提供服务也为系统增加服务能力。<br>同一个端系统上的进程通过操作系统的进程间通信机制相互通信，而不同端系统上的进程通过跨越计算机网络交换报文(message)相互通信。对于每对通信进程，通常将其中一个标为客户机(client)，另一个标识为服务器(server)。P2P结构中一个进程提供服务时为服务器，请求服务时为客户机。<br>应用层协议定义了运行在不同端系统上的应用程序进程如何相互传递报文，特别是：</p>
+<ul>
+<li>交换的报文类型。如请求报文和响应报文。</li>
+<li>各种报文类型的语法。如报文中各个字段及这些字段是如何描述的。</li>
+<li>字段的语义。即这些字段中包含的信息的含义。</li>
+<li>一个进程何时以及如何发送报文，以及对报文进行响应的规则。</li>
+</ul>
+<p>一些常见的应用层协议如下：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">应用层协议</th>
+<th style="text-align:center">网络应用</th>
+<th style="text-align:center">使用的传输层协议</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">SMTP</td>
+<td style="text-align:center">电子邮件</td>
+<td style="text-align:center">TCP</td>
+</tr>
+<tr>
+<td style="text-align:center">FTP</td>
+<td style="text-align:center">远程文件传输</td>
+<td style="text-align:center">TCP</td>
+</tr>
+<tr>
+<td style="text-align:center">Telnet</td>
+<td style="text-align:center">虚终端</td>
+<td style="text-align:center">TCP</td>
+</tr>
+<tr>
+<td style="text-align:center">HTTP</td>
+<td style="text-align:center">Web服务</td>
+<td style="text-align:center">TCP</td>
+</tr>
+<tr>
+<td style="text-align:center">DNS</td>
+<td style="text-align:center">域名解析</td>
+<td style="text-align:center">TCP或UDP</td>
+</tr>
+<tr>
+<td style="text-align:center">SNMP</td>
+<td style="text-align:center">网络管理</td>
+<td style="text-align:center">UDP</td>
+</tr>
+<tr>
+<td style="text-align:center">RTP、SIP</td>
+<td style="text-align:center">流媒体传输</td>
+<td style="text-align:center">TCP或UDP</td>
+</tr>
+</tbody>
+</table>
+<h2 id="1-HTTP"><a href="#1-HTTP" class="headerlink" title="1. HTTP"></a>1. HTTP</h2><p>20世纪90年代中期，万维网(World Wide Web)登上了舞台。Web的吸引力来自于按需操作。用户根据需要获取内容，相比之下，无线电广播和电视只能迫使用户收听。Web的应用层协议是超文本传输协议(HyperText Transfer Protocol, HTTP)，在[RFC 1945]和[RFC 2616]中进行了定义。HTTP由两个程序实现：一个客户端程序和一个服务器程序，它们运行在不同的端系统中，通过交换HTTP报文进行会话。HTTP定义了这些报文的结构以及客户和服务器进行报文交换的方式。<br>HTTP使用TCP作为运输层支撑协议。HTTP客户首先发起一个与服务器的TCP连接，一旦连接建立，浏览器和服务器可以通过套接字接口访问TCP。客户向套接字接口发送HTTP请求和接受HTTP响应报文，服务器向套接字接口接收HTTP请求报文和发送HTTP响应报文。一旦客户向套接字接口发送HTTP请求报文，该报文就脱离了客户控制并进入TCP控制。TCP为HTTP提供可靠数据传输服务，这意味着一个客户进程发出的每个HTTP请求报文最终能完整地到达服务器，即HTTP协议不用担心数据丢失，也不关注TCP从网络的数据丢失和乱序故障中恢复的细节。<br>HTTP是一个 <strong>无状态协议</strong> ，HTTP服务器不保存关于客户的状态信息。如果某个特定客户在短时间内多次请求同一个对象，服务器会一直重新发送该对象，就像完全忘记不久之前所做的事情一样。  </p>
+<h2 id="1-1-非持续连接和持续连接"><a href="#1-1-非持续连接和持续连接" class="headerlink" title="1.1 非持续连接和持续连接"></a>1.1 非持续连接和持续连接</h2><p>HTTP即可以使用非持续连接(non-persistent connection)，即所有的请求及相应经相同的TCP连接发送；也可以使用持续连接(persistent connection)，即每个请求/响应对经一个单独的TCP连接发送。默认使用持续连接。<br>采用非持续连接的HTTP，会在每次访问一个资源的时候重新建立TCP连接。TCP连接需要三次握手，而且在客户和服务器中都要分配TCP的缓冲区和保持TCP变量，给服务器带来严重负担。但是使用并行连接可以缩短响应时间。<br>HTTP默认采用带流水线的持续连接。采用持续连接的情况下，服务器在发送响应后保持该TCP连接打开，在相同的客户与服务器之间的后续请求和响应报文能够通过相同的连接进行传送。一般来说，如果一条连接经过一定时间间隔仍未被使用，HTTP服务器就关闭该连接。  </p>
+<h2 id="1-2-HTTP报文格式"><a href="#1-2-HTTP报文格式" class="headerlink" title="1.2 HTTP报文格式"></a>1.2 HTTP报文格式</h2><p>HTTP报文有两种：请求报文和响应报文。  </p>
+<h3 id="A-HTTP请求报文"><a href="#A-HTTP请求报文" class="headerlink" title="A. HTTP请求报文"></a>A. HTTP请求报文</h3><p>HTTP请求报文的格式和一个典型示例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">请求行：方法 sp URL sp 版本 cr lf</span><br><span class="line">首部行：首部字段名：sp 值 cr lf</span><br><span class="line">...</span><br><span class="line">空行：cr lf</span><br><span class="line">实体主体：</span><br><span class="line"></span><br><span class="line">###############################</span><br><span class="line"></span><br><span class="line">GET /somedir/page.html HTTP/1.1</span><br><span class="line">Host: www.someschool.edu</span><br><span class="line">Connection: close</span><br><span class="line">User-agent: Mozilla/4.0</span><br><span class="line">Accept-language: fr</span><br></pre></td></tr></table></figure></p>
+<p>第一行叫请求行(request line)，由3个字段组成：方法字段、URL字段、HTTP版本字段。方法字段有几种不同的取值，包括GET/POST/HEAD/PUT/DELETE。<br>后继的行称为首部行(header line)。如<code>Host: www.someschool.edu</code>指明了对象所在的主机，这主要是Web代理高速缓存所要求的的。<code>Connection: close</code>告诉服务器不希望使用持续连接，它要求服务器在发送完被请求的对象后关闭这条连接。<br>使用GET方法时实体主体(entity body)为空，而使用POST方法时才使用该实体体。  </p>
+<h3 id="B-HTTP响应报文"><a href="#B-HTTP响应报文" class="headerlink" title="B. HTTP响应报文"></a>B. HTTP响应报文</h3><p>下面是HTTP响应报文的格式和一个典型示例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">状态行：版本 sp 状态码 sp 短语 cr lf</span><br><span class="line">首部行：首部字段名： sp 值 cr lf</span><br><span class="line">...</span><br><span class="line">空行：cr lf</span><br><span class="line">实体体：</span><br><span class="line"></span><br><span class="line">################################</span><br><span class="line"></span><br><span class="line">HTTP/1.1 200 OK</span><br><span class="line">Connection: close</span><br><span class="line">Date: Thu, 03 Jul 2003 12:00:15 GMT</span><br><span class="line">Server: Apache/1.3.0 (Unix)</span><br><span class="line">Last-Modified: Sun, 6 May 2007 09:23:24 GMT</span><br><span class="line">Content-Length: 6821</span><br><span class="line">Content-Type: text/html</span><br><span class="line"></span><br><span class="line">(data data data ...)</span><br></pre></td></tr></table></figure></p>
+<p>响应报文由三部分组成：状态行(status line)、首部行(header line)、实体体(entity body)。实体体是报文的主要部分，它包含了请求的对象本身。状态行有3个字段：协议版本字段、状态码、状态信息。首部行则包含了一些基本信息。<br>一些常见的状态码和相关短语包括：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">200 OK: 请求成功，信息包含在返回的响应报文中</span><br><span class="line">301 Moved Permanently: 请求对象已经被永久转移了</span><br><span class="line">400 Bad Request: 请求不能被服务器理解</span><br><span class="line">404 Not Found: 请求的文档不在服务器上</span><br><span class="line">505 HTTP Version Not Supported: 服务器不支持请求报文使用的HTTP协议版本</span><br></pre></td></tr></table></figure></p>
+<h3 id="C-cookie"><a href="#C-cookie" class="headerlink" title="C. cookie"></a>C. cookie</h3><p>HTTP是无状态的，为了能够识别用户，其使用cookie([RFC 6265])技术。cookie技术有4个组件：</p>
+<ul>
+<li>在HTTP响应报文中有一个cookie首部行；</li>
+<li>在HTTP请求报文中有一个cookie首部行；</li>
+<li>在用户端系统中保留有一个cookie文件，并由用户浏览器进行管理；</li>
+<li>web站点有一个后端数据库。</li>
+</ul>
+<p>cookie的工作流程：</p>
+<ol>
+<li>客户端访问一个网站，请求报文到达服务器</li>
+<li>服务器喊声一个唯一识别码，以此识别码作为索引在数据库中产生一个表项</li>
+<li>服务器用一个包含<code>Set-cookie</code>首部行的HTTP响应报文对客户端进行响应，<code>Set-cookie</code>首部行含有识别码</li>
+<li>客户端接收到响应报文，看到<code>Set-cookie</code>首部，在它管理的特定cookie文件中添加报文中的识别码</li>
+<li>客户端继续向服务器请求页面，此时浏览器会从文件中提取识别码并放置到请求报文的cookie首部行中</li>
+<li>服务器根据请求报文中的cookie信息识别用户</li>
+<li>客户端后续每次向服务器发送请求都将携带cookie信息直到cookie被删除</li>
+</ol>
+<h2 id="2-SMTP"><a href="#2-SMTP" class="headerlink" title="2. SMTP"></a>2. SMTP</h2><p>简单邮件传输协议(SMTP, Simple Mail Transfer Protocol, RFC 5321)是因特网电子邮件中的主要的应用层协议。它使用TCP可靠数据传输服务，从发送方的邮件服务器向接收方的邮件服务器发送邮件。SMTP一般不使用中间邮件服务器发送邮件，当A向B发送邮件时，发起的TCP连接不经过其他服务器，如果B的服务器没有开机，那么邮件会保留在A的服务器上并在稍后继续进行新的发送尝试。<br>SMTP是如何将一个报文从发送邮件服务器传送到接收邮件服务器的呢？首先，客户SMTP在25号端口建立一个到服务器SMTP的TCP连接，如果服务器没有开机，客户会在稍后继续尝试连接。一旦连接简历，服务器和客户执行某些应用层的握手。在SMTP握手阶段，SMTP客户只是发送方的邮件地址和接收方的邮件地址。一旦该SMTP客户和服务器彼此介绍后客户发送该报文。SMTP依赖TCP提供的可靠数据传输无差错地将邮件投递到接收服务器。该客户如果有另外的报文要发送到该服务器，就在相同的TCP连接上重复这种处理；否则它只是TCP关闭连接。<br>一个从发送的机器到主机<code>www.example.com</code>的典型连接示例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">telnet www.example.com 25</span><br><span class="line"></span><br><span class="line">S: 220 www.example.com ESMTP Postfix</span><br><span class="line">C: HELO mydomain.com</span><br><span class="line">S: 250 Hello mydomain.com</span><br><span class="line">C: MAIL FROM: &lt;sender@mydomain.com&gt;</span><br><span class="line">S: 250 Ok</span><br><span class="line">C: RCPT TO: &lt;friend@example.com&gt;</span><br><span class="line">S: 250 Ok</span><br><span class="line">C: DATA</span><br><span class="line">S: 354 End data with &lt;CR&gt;&lt;LF&gt;.&lt;CR&gt;&lt;LF&gt;</span><br><span class="line">C: Subject: test message</span><br><span class="line">C: From:&quot;&quot;&lt; sender@mydomain.com&gt;</span><br><span class="line">C: To:&quot;&quot;&lt; friend@example.com&gt;</span><br><span class="line">C:</span><br><span class="line">C: Hello,</span><br><span class="line">C: This is a test.</span><br><span class="line">C: Goodbye.</span><br><span class="line">C: .</span><br><span class="line">S: 250 Ok: queued as 12345</span><br><span class="line">C: quit</span><br><span class="line">S: 221 Bye</span><br></pre></td></tr></table></figure></p>
+<h2 id="3-邮件访问协议"><a href="#3-邮件访问协议" class="headerlink" title="3. 邮件访问协议"></a>3. 邮件访问协议</h2><p>一旦SMTP将邮件报文从A的邮件服务器交付给B的邮件服务器，该报文就放入了B的邮箱中。目前主流的实现是用户通常在本地PC上运行一个用户代理程序，而邮件存储在总是保持开机的共享邮件服务器上，该邮件服务器与其他用户共享，并且通常由用户的ISP进行维护。<br>用户是如何通过运行于其本地PC上的用户代理获取ISP的邮件服务器上的邮件呢？首先肯定不能通过SMTP协议取回报文，因为去报文是一个拉(pull)操作，而SMTP是一个推(push)协议。目前有一些流行的邮件访问协议，包括POP3(Post Office Protocol——Version 3，第三版有据协议)、IMAP(Internet Mail Access Protocol，因特网邮件访问协议)以及HTTP。<br>典型邮件流程：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A的代理 --SMTP--》 A的邮件服务器  --SMTP--》 B的邮件服务器 --POP3、IMAP、HTTP--》 B的代理</span><br></pre></td></tr></table></figure></p>
+<h3 id="A-POP3"><a href="#A-POP3" class="headerlink" title="A. POP3"></a>A. POP3</h3><p>POP3是一个极为简单的邮件访问协议，由[RFC 1939]定义。该协议非常简单，功能也有限。当用户代理打开一个到邮件服务器110端口上的TCP连接后，POP3就开始工作了。一共有三个阶段：特许、事务处理、更新。特许阶段，用户代理以明文形式发送用户名和口令。事务处理阶段用户代理取回报文，同时还能对报文做删除标记、取消报文删除标记、获取邮件统计信息。更新阶段是客户发出<code>quit</code>命令以结束该POP3会话，这是该邮件服务器会删除哪些被标记为删除的报文。<br>在特许阶段以后，用户代理仅使用4个命令：list、retr、dele、quit。支持的功能有限。   </p>
+<h3 id="B-IMAP"><a href="#B-IMAP" class="headerlink" title="B. IMAP"></a>B. IMAP</h3><p>POP3协议没有给用户提供任何创建远程文件夹并为报文指派文件夹的方法。为了解决这个或其他问题，有RFC 3501定义的因特网邮件访问协议应运而生，它比POP3具有更多特色，也比POP3复杂的多。IMAP现在的版本是”IMAP第7班第3次修订版(IMAP4REV1)”。IMAP一些特色包括：</p>
+<ul>
+<li>支持链接和断开两种操作模式。使用POP3时，客户端只会在一段时间内连接到服务器，指导下载完所有新信息即断开连接。IMAP中只要用户需要，客户端就会一直连接服务器。对于有很多或很大邮件的用户来说，使用IMAP4模式可以获得更快的响应时间。</li>
+<li>支持多个客户同时连接到一个邮箱。POP3协议假定邮箱当前的连接是唯一的连接，而IMAP4协议提供一种机制让客户能够感知其他当前连接到这个邮箱的用户的操作。</li>
+<li>支持访问消息中的MIME部分和部分获取。</li>
+<li>支持在服务器保留消息状态信息。</li>
+<li>支持在服务器上访问多个邮箱。</li>
+<li>支持服务器端搜索。</li>
+<li>支持一个定义良好的扩展机制。</li>
+</ul>
+<p>IMAP4使用端口143在TCP/IP连接上工作。  </p>
+<h3 id="C-基于Web"><a href="#C-基于Web" class="headerlink" title="C. 基于Web"></a>C. 基于Web</h3><p>也可以使用HTTP获取邮件。</p>
+<h2 id="3-DNS"><a href="#3-DNS" class="headerlink" title="3. DNS"></a>3. DNS</h2><p>域名系统(DNS, Domain Name Service)是互联网的一项服务，它作为一个将域名和IP地址相互映射的一个分布式数据库，能够诗人更方便的访问互联网。DNS使用TCP和UDP的53号端口。当前对于每一级域名长度的限制是63字符，域名总长度不能超过253字符。<br>除了主机名到IP地址的转换外，DNS还提供了一些重要服务：主机别名、邮件服务器别名、负载分配。  </p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/计算机网络/" rel="tag"># 计算机网络</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/10/计算机网络/计算机网络01 概述/" rel="next" title="计算机网络01 概述">
+                <i class="fa fa-chevron-left"></i> 计算机网络01 概述
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/09/12/计算机网络/计算机网络03 运输层/" rel="prev" title="计算机网络03 运输层">
+                计算机网络03 运输层 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/uploads/avatar.gif" alt="Javior Wang">
+            
+              <p class="site-author-name" itemprop="name">Javior Wang</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">61</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/index.html">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/scorego" title="GitHub &rarr; https://github.com/scorego" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://www.zhihu.com/people/scorego-6" title="Zhihu &rarr; https://www.zhihu.com/people/scorego-6" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>Zhihu</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-HTTP"><span class="nav-text">1. HTTP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-非持续连接和持续连接"><span class="nav-text">1.1 非持续连接和持续连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-HTTP报文格式"><span class="nav-text">1.2 HTTP报文格式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-HTTP请求报文"><span class="nav-text">A. HTTP请求报文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-HTTP响应报文"><span class="nav-text">B. HTTP响应报文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C-cookie"><span class="nav-text">C. cookie</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-SMTP"><span class="nav-text">2. SMTP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-邮件访问协议"><span class="nav-text">3. 邮件访问协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-POP3"><span class="nav-text">A. POP3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-IMAP"><span class="nav-text">B. IMAP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C-基于Web"><span class="nav-text">C. 基于Web</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-DNS"><span class="nav-text">3. DNS</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Javior Wang</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

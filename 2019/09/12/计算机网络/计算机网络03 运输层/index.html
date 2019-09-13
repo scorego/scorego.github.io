@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next mist" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/favicon-128x128-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-01.ico?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/uploads/favicon-128x128-01.ico?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="运输层位于应用层和网络层之间，为应用层提供通信服务。运输层的协议有TCP/UDP/SCTP/DCCP等。运输层协议为运行在不同主机上的应用程序之间提供了逻辑通信功能，从应用程序的角度看，通过逻辑通信运行在不同进程的主机好像直接相连一样。运输层协议是在端系统中而不是在路由器中实现的。在发送端，运输层将从发送应用程序进程接收到的报文转换成运输层分组。运输层位于网络层之上。网络层提供了主机之间的逻辑通信">
+<meta name="keywords" content="计算机网络">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机网络03 运输层">
+<meta property="og:url" content="javior.wang/2019/09/12/计算机网络/计算机网络03 运输层/index.html">
+<meta property="og:site_name" content="Javior&#39;s Blog">
+<meta property="og:description" content="运输层位于应用层和网络层之间，为应用层提供通信服务。运输层的协议有TCP/UDP/SCTP/DCCP等。运输层协议为运行在不同主机上的应用程序之间提供了逻辑通信功能，从应用程序的角度看，通过逻辑通信运行在不同进程的主机好像直接相连一样。运输层协议是在端系统中而不是在路由器中实现的。在发送端，运输层将从发送应用程序进程接收到的报文转换成运输层分组。运输层位于网络层之上。网络层提供了主机之间的逻辑通信">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="/images/computernetwork/03_01tcphead.png">
+<meta property="og:image" content="/images/computernetwork/03_02tcp-three-way-handshake.png">
+<meta property="og:image" content="/images/computernetwork/03_03tcp-four-way-handshake.png">
+<meta property="og:updated_time" content="2019-09-13T00:37:29.731Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="计算机网络03 运输层">
+<meta name="twitter:description" content="运输层位于应用层和网络层之间，为应用层提供通信服务。运输层的协议有TCP/UDP/SCTP/DCCP等。运输层协议为运行在不同主机上的应用程序之间提供了逻辑通信功能，从应用程序的角度看，通过逻辑通信运行在不同进程的主机好像直接相连一样。运输层协议是在端系统中而不是在路由器中实现的。在发送端，运输层将从发送应用程序进程接收到的报文转换成运输层分组。运输层位于网络层之上。网络层提供了主机之间的逻辑通信">
+<meta name="twitter:image" content="/images/computernetwork/03_01tcphead.png">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="javior.wang/2019/09/12/计算机网络/计算机网络03 运输层/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>计算机网络03 运输层 | Javior's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Javior's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/index.html" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/09/12/计算机网络/计算机网络03 运输层/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Javior Wang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Javior's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">计算机网络03 运输层
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-12 10:01:21" itemprop="dateCreated datePublished" datetime="2019-09-12T10:01:21+08:00">2019-09-12</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-09-13 08:37:29" itemprop="dateModified" datetime="2019-09-13T08:37:29+08:00">2019-09-13</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/计算机网络/" itemprop="url" rel="index"><span itemprop="name">计算机网络</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>运输层位于应用层和网络层之间，为应用层提供通信服务。运输层的协议有TCP/UDP/SCTP/DCCP等。<br>运输层协议为运行在不同主机上的应用程序之间提供了逻辑通信功能，从应用程序的角度看，通过逻辑通信运行在不同进程的主机好像直接相连一样。运输层协议是在端系统中而不是在路由器中实现的。在发送端，运输层将从发送应用程序进程接收到的报文转换成运输层分组。<br>运输层位于网络层之上。网络层提供了主机之间的逻辑通信，而运输层为运行在不同主机的进程之间提供了逻辑通信。因特网网络层有一个协议是IP，即网际协议，它的服务模型是尽力而为交付服务，这意味着它并不做任何确保，特别是不确保报文段的交付、不保证报文段的按序交付、不保证报文段中数据的完整性。因此IP被称为不可靠服务。<br>因特网微应用层提供了两种运输层协议：TCP和UDP。UDP提供一种不可靠、无连接的服务；而TCP提供可一种可靠的、面向连接的服务。</p>
+<h2 id="1-多路复用与多路分解"><a href="#1-多路复用与多路分解" class="headerlink" title="1. 多路复用与多路分解"></a>1. 多路复用与多路分解</h2><p>运输层的多路复用和多路分解，也就是将由网络层提供的主机到主机交付服务延伸到为运行在主机上的应用程序提供进程到进程的交付服务。不仅是因特网，多路复用和多路分解是所有的计算机网络都需要的。<br>一个进程有一个或多个套接字，它相当于从网络向进程传递数据和从进程向网络传递数据的门户。运输层实际上并没有直接将数据交付给进程，而是将数据交给了一个中间的套接字，而每个套接字都有一个唯一的标识符，标识符的格式取决于它是UDP还是TCP。<br>将运输层报文段的数据交付到正确的套接字的工作称为多路分解。在源主机从不同套接字中收集数据块，并为每个数据块封装首部信息从而生成报文段，然后将报文段传递给网络层，这些工作称为多路复用。多路复用要求每个套接字有唯一标识符，且每个报文段有特殊字段来指示该报文段要交付到的套接字。这些特殊字段是源端口号字段和目的端口号字段。端口号是一个16bit的数，其大小在0 ~ 65536之间。0 ~ 1023范围的端口号称为周知端口号，是保留给周知应用层协议来使用的。也就是：在主机上的每个套接字能够分配一个端口号，当报文段到达主机时，运输层检查报文段中的目的端口号，并将其定向到相应的套接字。然后报文段中的数据通过套接字进入其所连接的进程。UDP基本是这么做的，TCP的更为复杂一些。  </p>
+<h2 id="2-UDP"><a href="#2-UDP" class="headerlink" title="2. UDP"></a>2. UDP</h2><p>用户数据报协议(UDP, User Datagram Protocol)是一个简单的面向数据报的通信协议，只在IP数据报服务的基础上增加了少量功能：复用与分解、对整个报文的差错检测。<br>使用UDP时，在发送报文之前，发送方和接收方的运输层实体之间没有握手，因此UDP被称为无连接的。使用UDP时，只要应用进程将数据传递给UDP，UDP就会将此数据打包进UDP报文段并立即将其传递给网络层。而TCP有拥塞控制机制，因此不保证能立即将应用层的数据发送出去。另外UDP无需连接建立，不会引入建立连接的时延。UDP是无状态连接，不需要维护连接状态，因此一般UDP比TCP能支持更多的活跃客户。UDP的分组首部开销小，仅有8字节，而TCP首部开销有20字节。UDP支持一对一、一对多、多对多、多对一通信，而TCP只支持一对一通信。<br>使用UDP的应用是可以实现可靠数据传输的，这可以通过应用程序自身中建立可靠性机制来完成。<br>UDP报文段由RFC 768定义，应用层数据占用UDP报文段的数据字段。UDP首部只有4个字段，每个字段由两个字节组成，4个字段为源端口号、目的端口号、长度、校验和。通过端口号可以使目的主机将应用数据交给运行在目的端系统中的相应进程。长度字段指示了在UDP报文段中的字节数(首部加数据)。接收方使用校验和来检查该报文段中是否出现了差错。<br>虽然UDP提供差错检测，但它对差错回复无能为力。UDP的某些实现只是丢弃受损的报文段，而其他实现是将受损的报文段交给应用程序并给出警告。  </p>
+<h2 id="3-TCP"><a href="#3-TCP" class="headerlink" title="3. TCP"></a>3. TCP</h2><p>传输控制协议(TCP, Transmission Control Protocol)是一种面向连接的、可靠的、基于字节流的传输层通信协议。应用层向TCP层发送用于网间传输的、用8位字节表示的数据流，然后TCP把数据流分割成适当长度的报文段(通常受网络的数据链路层的最大传输单元MTU的限制)。之后TCP吧结果包传给IP层，同时为了保证不发生丢包，会给每个包一个序号，序号也保证了按序接收。接收端实体对已成功收到的包发回一个相应的ACK信息，如果在合理的往返时延(RTT)内未收到确认，那么对应的数据报就被假设为已丢失并进行重传。TCP使用一个叫校验和函数来检验数据是否有错误，在发送和接收时都要计算校验和。<br>注意TCP并不能保证数据一定会被对方接收到，因为没有任何协议能做到这一点。TCP能做到的是，如果有可能就把数据递送到接收方，否则就通过放弃重传并中断连接这一手段来通知用户。因此确切的说，TCP也不是完全可靠的协议，它能提供的是数据的可靠递送或故障的可靠通知。  </p>
+<h3 id="3-1-TCP报文段结构"><a href="#3-1-TCP报文段结构" class="headerlink" title="3.1 TCP报文段结构"></a>3.1 TCP报文段结构</h3><p>TCP报文段结构如下：</p>
+<div align="center"><br>    <img src="/images/computernetwork/03_01tcphead.png" width="800" height="500"><br></div>
+
+
+<ul>
+<li>来源连接端口(16bit)。识别发送连接端口</li>
+<li>目的连接端口(16bit)。识别接收连接端口</li>
+<li>序列号(seq, 32bit)<ul>
+<li>如果含有同步化旗标(SYN)，则此为最初的序列号，第一个数据比特的序列码为本序列号加1</li>
+<li>如果没有同步化旗标(SYN)，则此为第一个数据比特的序列码</li>
+</ul>
+</li>
+<li>确认号(ack, 32bit)。期望收到的数据的开始序列号，即已经收到的数据的字节长度加1</li>
+<li>数据偏移/首部长度字段(32bit)。指示以32bit的字为单位的TCP首部长度。由于TCP存在选项字段，所以首部的长度是可变的，当选项字段为空时，首部的典型长度是20字节</li>
+<li>保留(3bit)。须置0</li>
+<li>标志符(9bit)<ul>
+<li>NS: ECN-nouce</li>
+<li>CWR: Congestion Window Reduced</li>
+<li>ECE: ECN-Echo，有两种意思，取决于SYN标志的值</li>
+<li>URG: 为1表示高优先级数据包，紧急指针字段有效</li>
+<li>ACK: 为1表示确认号字段有效</li>
+<li>PSH: 为1表示是带有PUSH标志的数据，只是接收方应尽快将这个报文段交给应用层而不用等待缓冲区装满</li>
+<li>RST: 为1表示出现严重差错，可能需要重新创建TCP连接。还可以用于拒绝非法的报文段和拒绝连接请求</li>
+<li>SYN: 为1表示这是连接请求或是连接接受请求，用于创建连接和使顺序号同步</li>
+<li>FIN: 为1表示发送方没有数据要传输，要求释放连接</li>
+</ul>
+</li>
+<li>窗口(16bit)。表示从确认号开始，本报文的发送方可以接收的字节数，即接收窗口大小。用于流量控制</li>
+<li>校验和(checksum, 16bit)。对整个TCP报文段，包括TCP头部和TCP数据的校验。这是一个强制性的字段</li>
+<li>紧急指针(16bit)。本报文段中的紧急数据的最后一个字节的序号</li>
+<li>选项指针(最多40字节)。每个选项的开始是1字节的kind字段，说明选项的类型</li>
+</ul>
+<h4 id="A-序列号和确认号"><a href="#A-序列号和确认号" class="headerlink" title="A. 序列号和确认号"></a>A. 序列号和确认号</h4><p>TCP报文段首部中两个最重要的字段就是序列号字段和确认号字段，这是TCP可靠传输服务的关键部分。<br>TCP把数据看成一个无结构的、有序的字节流。序号是建立在传送的字节流之上，而不是建立在传送的报文段的序列之上。一个报文段的序列号是该报文段首字节的字节流编号。例如，假设主机A上一个进程想通过一条TCP连接向主机B上一个进程发送一个数据流，主机A上的TCP将隐式地对数据流中的每一个字节编号。假定数据流由一个包含500000字节的文件组成，其MSS为1000字节，数据流的首字节编号是0，则该TCP将为该数据流构建500个报文段。给第一个报文段的分配序号0，第二个报文段分配序号1000，第三个报文段分配序号2000，以此类推，每一个序号被填入到相应TCP报文段首部的序号字段中。<br>确认号要比序号难处理一些，因为A在向B发送数据的同时也可能收到来自B的数据(都是同一条TCP连接的一部分)。从B发往A的每个报文段都有一个序列号用于B流向A的数据，而A填充进报文段的确认号是A期望从B收到的下一字节的序号，即B流向A的尾字节序列号加1。<br>一条TCP连接的双方均可随机地选择初始序号，这样做可以减少将那些仍在网络中存在的、来自两台主机之间先前已终止的连接的报文段误认为是后来这两台主机之间新建连接所产生的有效报文段的可能性(它碰巧与旧连接使用了相同的端口号)。   </p>
+<h3 id="3-2-可靠数据传输"><a href="#3-2-可靠数据传输" class="headerlink" title="3.2 可靠数据传输"></a>3.2 可靠数据传输</h3><p>网路层(IP)是不可靠的，不保证数据报的交付、按序交付、完整性。TCP在IP不可靠的尽力而为服务之上创建了一种可靠数据传输服务，确保了一个从其接收缓存中读出的数据流是无损坏、无间隔、非冗余和按序的字节流。TCP发送方有几个与重传有关的主要事件：从上层应用数据接收数据、定时器超时、收到ACK、快速重传。</p>
+<h3 id="3-3-流量控制"><a href="#3-3-流量控制" class="headerlink" title="3.3 流量控制"></a>3.3 流量控制</h3><p>一条TCP连接的每一侧主机都为该连接设置了接收缓存。当该TCP连接收到正确、按序的字节后，它将数据放入接收缓存。相关联的应用进程会从缓存中读取数据，但并不必数据刚到达就立即接收。如果应用程序读取数据时相对缓慢，而发送方发送得太多、太快，发送的数据就会很容易使该连接的接收缓存溢出。TCP为应用程序提供了流量控制服务(flow-control service)以消除发送方使接收方缓存溢出的可能性。即流量控制是一个速度匹配服务，使发送方的发送速率与接收方应用程序的读取速率相匹配。<br>流量控制与拥塞控制采取的动作非常相似，都是对发送方的遏制，但它们的原因是不同的。一个是因为接口方的缓存溢出，一个是IP网络的拥塞。TCP通过让发送方维护一个称为接收窗口(receive window)的变量来提供流量控制。接收窗口用于给发送方指示接收方还有多少可用的缓存空间。因为TCP是全双工通信，所以连接两端的发送方都各自维护一个接受窗口。<br>假设A通过一条TCP连接向B发送一个文件，B为该连接分配了一个接收缓存，并用<code>RcvBuffer</code>表示其大小。主机B的应用程序不时地从该缓存中读取数据，定义一下变量：</p>
+<ul>
+<li><code>LastByteRead</code>：B上应用进程从缓存读出的数据流的最后一个字节的编号。</li>
+<li><code>LastByteRcvd</code>：从网络中到达并已放入主机B接收缓存中的数据流的最后一个字节的编号。</li>
+</ul>
+<p>由于TCP不允许已分配的缓存溢出，所以一定有<code>LastByteRcvd - LastByteRead &lt;= RcvBuffer</code>。<br>接收窗口<code>rwnd</code>是缓存的可用空间：<code>rcvd = RcvBuffer - [LastByteRcvd - LastByteRead]</code>。<code>rwnd</code>是动态变化的。<br>主机B通过吧当前的<code>rwnd</code>值放入发给A的报文段接收窗口字段中来通知A它在该连接的缓存中还有多少可用空间。<br>主机A跟踪两个变量<code>LastByteSent</code>和<code>LastByteAcked</code>。<code>LastByteSent - LastByteAcked</code>就是A发送到连接中但未被确认的数据量。通过将未确认的数据量控制在<code>rwnd</code>内，就可以保证A不会使B的接收缓存溢出，即A必须保证<code>LastByteSent - LastByteAcked &lt;= rwnd</code>。<br>此时还有一个问题，如果B的接收缓存已满，即<code>rwnd == 0</code>，在通知A<code>rwnd</code>为0后，假设B没有任何数据要发送给A，虽然B上的应用进程已将缓存清空，但TCP并不向主机A发送带有<code>rwnd</code>新值的新报文段；事实上，TCP仅当在它有数据或有确认要发时才会发送报文段给主机A。这样主机A可能不知道B已经有了新的空间，也就是可能会一直阻塞下去。因此TCP规范要求，当B的接收窗口为0时，A继续发送只有一个字节数据的报文段，这些报文段将被B确认。当缓存清空时，确认报文中将包含一个非0的<code>rwnd</code>值。  </p>
+<h3 id="3-4-三次握手"><a href="#3-4-三次握手" class="headerlink" title="3.4 三次握手"></a>3.4 三次握手</h3><p>TCP被称为面向连接的，这是因为一个应用进程可以开始向另一个应用进程发送数据之前，两个进程必须先相互握手。TCP连接提供的是全双工服务，如果一台主机上的进程A与另一台主机上的进程B存在一条TCP连接，那么应用层数据可以从进程B流向进程A，也能从进程A流向进程B。TCP连接也总是点对点的，即单个发送方与单个接收方的连接。<br>TCP用三次握手(或称三路握手，three-way handshake)来创建一个连接。在连接创建过程中，很多参数要初始化，如序号被初始化以保证按序传输和连接的强壮性。<br>通常是有一端打开一个套接字监听来自另一端的连接，也就是通常所指的被动打开。服务器端被动打开以后没用户端就能开始创建主动打开。   </p>
+<div align="center"><br>    <img src="/images/computernetwork/03_02tcp-three-way-handshake.png" width="800" height="800"><br></div>
+
+
+<ol>
+<li>客户端通过向服务器端发送一个特殊的TCP报文段来创建一个主动打开。该报文段不包含应用层数据，但是报文段的首部的<code>SYN</code>标志位被置1，因此这个报文段被称为<code>SYN</code>报文段。另外客户端这个报文段的序列号设定为随机数<code>client_isn</code>。发送完毕，客户端进入<code>SYN_SEND</code>状态。</li>
+<li>一旦包含TCP SYN报文段的IP数据报到达服务器主机，服务器会从该数据报中提取出TCP SYN报文段，为该TCP连接分配TCP缓存和变量，冰箱客户TCP发送允许连接的报文段。这个允许连接的报文段也不包含应用层数据，但是在TCP报文段的首部包含3个重要信息。首先SYN比特被置1；其次确认好字段被指为<code>client_isn + 1</code>；最后服务器会选择自己的随机初始序号<code>server_isn</code>，并将其放入序列号字段中。该字段有时被称为<code>SYNACK</code>报文段。发送完毕，服务端进入<code>SYN_RCVD</code>状态。  </li>
+<li>在收到<code>SYNACK</code>报文段后，客户端也要给该连接分配缓存和变量。客户TCP向服务器发送另一个报文段，通过将<code>server_isn + 1</code>放到首部的确认字段中来对服务器的<code>SYNACK</code>报文段进行确认。因为连接已经建立，所以<code>SYN</code>被置0。这个报文段是对服务器发来报文段的<code>ACK</code>。这个阶段可以在报文段负载中携带客户到服务器的数据。当服务端收到这个<code>ACK</code>的时候，就完成了三次握手，并进入到连接创建状态。发送完毕，客户端进入<code>ESTABLISHED</code>状态。当服务端收到<code>ACK</code>后，进入<code>ESTABLISHED</code>状态，TCP握手结束。  </li>
+</ol>
+<p>如果服务器端接收到客户端发的SYN后回了<code>SYNACK</code>后客户端掉线了，服务器端没有收到客户端回来的ACK，此时连接处于一个中间状态，既没成功也没失败，服务器如果在一定时间内没有收到<code>ACK</code>会重发<code>SYNACK</code>。在Linux下，默认重试次数为5次，重试间隔从1s开始每次翻倍，时间间隔分别是1、2、4、8、16秒，第5次发出后要等32s才知道第5次也超时，所以一共需要1 + 2 + 4 + 8 + 16 + 32 = 63s，TCP才会断开这个连接。可以使用三个TCP参数来调整行为：<code>tcp_synack_retries</code>减少重试次数，<code>tcp_max_syn_backlog</code>增大SYN连接数，<code>tcp_abort_on_overflow</code>决定超出能力时的行为。</p>
+<h3 id="3-5-四次挥手"><a href="#3-5-四次挥手" class="headerlink" title="3.5 四次挥手"></a>3.5 四次挥手</h3><p>TCP连接的拆除需要发送4个包，称为四次挥手(Four-way handshake)。客户端或服务器均可主动发起挥手动作，在socket编程中，任何一方执行<code>close()</code>即可产生挥手操作。  </p>
+<div align="center"><br>    <img src="/images/computernetwork/03_03tcp-four-way-handshake.png" width="800" height="800"><br></div>
+
+
+<ol>
+<li>第一次挥手(FIN = 1, seq = x)<br>假设客户端要关闭连接，则其发送一个<code>FIN</code>标志位置为1的包，表示自己已经没有数据可以发送了，但是仍然可以接收数据。发送完毕后客户端进入<code>FIN_WAIT_1</code>状态。</li>
+<li>第二次挥手(ACK = 1, ACKnum = x + 1)<br>服务器端确认客户端的<code>FIN</code>包，发送一个确认包，表明自己接收到客户端关闭连接的请求，但还没有准备好关闭连接。发送完毕后，服务器端进入<code>CLOSE_WAIT</code>状态，客户端进入<code>FIN_WAIT_2</code>状态，等待服务器端关闭连接。</li>
+<li>第三次挥手(FIN = 1, seq = y)<br>服务器端准备好关闭连接时，向客户端发送结束连接请求，FIN置为1。发送完毕后，服务器端进入<code>LAST_ACK</code>状态，等待来自客户端的最后一个<code>ACK</code>。</li>
+<li>第四次挥手(ACK = 1, ACKnum = y + 1)<br>客户端接收到来自服务器端的关闭请求，发送一个确认包，并进入<code>TIME_WAIT</code>状态，等待可能出现的要求重传的<code>ACK</code>包。服务器端接收到这个确认包后，关闭连接，进入<code>CLOSED</code>状态。客户端等待了某个固定时间(2MSL)后，没有收到服务器端的<code>ACK</code>，则认为服务器端已经正常关闭连接，于是自己也关闭连接，进入<code>CLOSED</code>状态。  </li>
+</ol>
+<h3 id="3-6-拥塞控制"><a href="#3-6-拥塞控制" class="headerlink" title="3.6 拥塞控制"></a>3.6 拥塞控制</h3><p>实践中拥塞控制主要有两种方法，一是端到端拥塞控制。二是网络辅助的拥塞控制。端到端拥塞控制方法中网络层没有为运输层拥塞控制提供显式支持。即使网络层中存在拥塞，端系统也必须通过对网络行为(如分组丢失与时延)来推断。TCP就是通过端到端的控制来解决拥塞问题，因为IP层不会向端系统反馈网络拥塞的信息。TCP报文段的丢失被认为是网络拥塞的一个迹象。网络辅助的拥塞控制中，网络层组件(路由器)向发送方提供关于网络拥塞状态的显式反馈。这种反馈有多种形式，其中之一可以是简单的用一个比特来指示链路中的拥塞情况。TCP的一个关键部分就是拥塞控制。由于IP层不提供显式的网络拥塞反馈，所以TCP必须使用端到端拥塞控制而不是网络辅助的拥塞控制。<br>TCP采用的方法是让每一个发送方根据所感知到的网络拥塞程序来限制其能向连接发送流量的速率。如果一个TCP发送方感知从它到目的地之间的路径上没有拥塞，则发送方就会增加发送速率；如果感知到有拥塞，发送方就会降低发送速率。这带来了3个问题：TCP发送方如何限制发送流量的速率？TCP发送方如何感知网络拥塞？当感知到网络拥塞时，应采用何种算法来改变速率？<br>首先来看TCP发送方如何限制向连接发送流量的。运行在发送方的TCP拥塞机制跟踪一个变量——拥塞窗口(congestion window)，以<code>cwnd</code>表示，它对一个TCP发送方能象网络中发送的速率进行了限制。一个发送方中未被确认的数据量不会超过<code>cwnd</code>和<code>rwnd</code>的最小值，即<code>LastByteSent - LastByteAcked &lt;= min {cwnd, rwnd}</code>。这个约束限制了发送方中未被确认的数据量，因此间接地限制了发送方的发送速率。假设<code>rwnd</code>无限大，即上式只受<code>cwnd</code>控制，则粗略地说，在每个往返时间(RTT)的起始点，限制条件允许发送方发送<code>cwnd</code>个字节，在该RTT结束时发送方接收对数据的确认报文。因此该发送方的发送速率大概是<code>cwnd/RTT 字节/秒</code>。通过调节<code>cwnd</code>的值，发送方能调整它向连接发送速率的数据。<br>再来看TCP发送方使如何感知它与目的地之间的路径上出现拥塞的。一个TCP发送方的丢包事件定义为：要么出现超时，要么收到来自接收方的3个冗余ACK(快速重传的条件)。当出现过度拥塞时，路径上的一台或多台路由器的缓存会溢出，引起一个数据报被丢弃。丢弃的数据报会引起发送方的丢包事件，发送方就认为路径上出现拥塞。<br>TCP发送方如何确定发送速率呢？如果众多TCP发送方总体上发送太快，则会拥塞网络导致拥塞崩溃；然而如果TCP发送方过于谨慎发送太慢，则不能充分利用网络的带宽。TCP有以下指导性原则：</p>
+<ul>
+<li>一个丢失的报文表意味着拥塞，应当降低TCP发送方的速率。</li>
+<li>一个确认报文段指示该网络正在向接收方交付发送方的报文段，因此当对先前未确认报文段的确认到达时，能够增加发送方的速率。</li>
+<li>带宽探测。TCP调节传输速率的策略是增加速率以相应到达的<code>ACK</code>，除非出现丢包事件才减小速率，如此循环往复。这种行为类似于带宽探测。</li>
+</ul>
+<p>TCP拥塞控制算法(TCP congestion control algorithm)在[RFC 5681]中标准化。该算法包括3个主要部分：慢启动、拥塞避免、快速恢复。慢启动和拥塞避免是TCP的强制部分，快速恢复是推荐部分而非必需。TCP拥塞控制常常被称为加性增、乘性减(Additive-Increase, Multiplicative-Decrease, AMID)拥塞控制方式。许多TCP实现采用了Reno算法，以及其变种Vegas算法。Linux支持若干拥塞控制算法，并允许管理员配置使用的版本。Linux 2.6.18中，TCP的默认版本是CUBIC。  </p>
+<h4 id="A-慢启动"><a href="#A-慢启动" class="headerlink" title="A. 慢启动"></a>A. 慢启动</h4><p>当一条TCP连接开始时，<code>cwnd</code>的值通常初始置为一个MSS，这使得发送速率大约为MSS/RTT。此后每当传输的报文段被确认<code>cwnd</code>就翻倍，也就是没过一个RTT发送速率就翻倍。因此TCP发送速率起始慢，但在慢启动阶段以指数增长。<br>何时结束指数增长呢？首先如果存在一个由超时指示的丢包事件，TCP发送方将<code>cwnd</code>置为1个MSS并重新开始慢启动过程。它还将另一个状态变量<code>ssthresh</code>(慢启动阈值)置为<code>cwnd/2</code>。另外由于检测到拥塞时将<code>ssthresh</code>设为<code>cwnd</code>的一半，当到达过超过<code>ssthresh</code>值是，会结束慢启动并将TCP转移到拥塞避免模式，此时TCP会更加谨慎地增加<code>cwnd</code>。最后一种结束慢启动的方式是如果检测到3个冗余<code>ACK</code>，TCP会执行快速重传并进入快速恢复状态。  </p>
+<h4 id="B-拥塞避免"><a href="#B-拥塞避免" class="headerlink" title="B. 拥塞避免"></a>B. 拥塞避免</h4><p>进入拥塞避免时，<code>cwnd</code>的值大约是上次遇到拥塞时值的一半，因此TCP无法每过一个RTT将<code>cwnd</code>的值翻番，而是采用较为保守的方法，每个RTT只将<code>cwnd</code>的值增加一个MSS。具体有很多种实现方式，一种通用方式是每个确认会使<code>cwnd</code>值增加一个MSS(MSS/cwnd)字节。如假设MSS是1460字节，cwnd是14600字节，则在一个RTT内发送10个报文段，每个到达ACK增加1/10个MSS的拥塞窗口长度，因此收到10个ACK后拥塞窗口的值增加一个MSS。<br>何时结束拥塞避免的线性增长呢？当出现超时时，和慢启动一样，<code>cwnd</code>的值被置为1个MSS，<code>ssthresh</code>被更新为<code>cwnd</code>的一半。而出现3个冗余<code>ACK</code>时，TCP将<code>ssthresh</code>的值设为<code>cwnd</code>的一半并进入快速恢复状态。  </p>
+<h4 id="C-快速恢复"><a href="#C-快速恢复" class="headerlink" title="C. 快速恢复"></a>C. 快速恢复</h4><p>快速恢复中，对于引起TCP进入快速恢复状态的缺失报文段，对收到的每个冗余<code>ACK</code>，<code>cwnd</code>的值增加一个MSS。最终当丢失报文段的一个<code>ACK</code>到达时，TCP在降低<code>cwnd</code>后进入拥塞避免状态。如果出现超时，快速恢复在执行和慢启动、拥塞避免相同动作后进入拥塞避免状态。  </p>
+<h3 id="3-7-TCP-KeepAlive"><a href="#3-7-TCP-KeepAlive" class="headerlink" title="3.7 TCP KeepAlive"></a>3.7 TCP KeepAlive</h3><p>TCP的连接实际上是一种纯软件层面的概念，在物理层面并没有连接的概念。TCP通信双方建立交互的连接，但并不是一直存在数据交互，有些连接会在数据交互完毕后主动释放连接，而有些不会。在长时间无数据交互的时间段内，交互双方都有可能出现掉电、死机、异常重启等各种意外，如果这些TCP连接未来得及释放，而连接的另一方并不知道对端情况，那么它会一直维护这个连接，长时间积累导致大量的半打开连接，造成端系统资源的消耗和浪费。TCP的KeepAlive机制可以解决这个问题，主流的操作系统基本都在内核支持了这个特性。<br>TCP KeepAlive的基本原理是隔一段时间给连接对方发送一个探测包，如果收到对方回应的ACK，则认为连接存活，超过一定重试次数还未收到对方的回应则丢弃该TCP连接。<br>具体可以<a href="http://www.tldp.org/HOWTO/html_single/TCP-Keepalive-HOWTO/" target="_blank" rel="noopener">参考这里</a>。但TCP KeepAlive也是有缺点的：首先检测的方式是发送一个probe包，会给网络带来额外的流量；另外其职能是在内核层级监测连接的存活与否，而连接存活并不一定代表服务可用。例如服务器CPU占用达到100%，已经卡死不能响应，此时TCP KeepAlive依然会认为连接可用，因此对应用层程序来说这种检测机制价值较小。需要做连接保活的应用层程序往往会在应用层实现自己的心跳功能。   </p>
+<h3 id="3-5-SYN攻击"><a href="#3-5-SYN攻击" class="headerlink" title="3.5 SYN攻击"></a>3.5 SYN攻击</h3><p>在三次握手过程中，服务器发送<code>SYNACK</code>后，收到客户端的<code>ACK</code>前的TCP连接称为半连接(half-open connect)。此时服务器处于<code>SYN_RCVD</code>状态。当收到<code>ACK</code>后，服务器才能转入<code>ESTABLISHED</code>状态。<code>SYN</code>攻击指的是，攻击客户端在短时间内伪造大量不存在的IP地址，向服务器不断地发送<code>SYN</code>包，服务器回复确认包，并等待客户的确认。由于源地址是不存在的，服务器需要不断的重发直至超时，这些伪造的<code>SYN</code>包将长时间占用未连接队列，正常的<code>SYN</code>请求被丢弃，导致目标系统运行缓慢，严重者会引起网络堵塞甚至系统瘫痪。<code>SYN</code>攻击是一种典型的DoS/DDoS攻击。<br>检测<code>SYN</code>攻击非常的方便，当服务器上看到大量的半连接状态时，特别是源IP地址是随机的，基本上可以断定这是一次<code>SYN</code>攻击。在 Linux/Unix上可以使用系统自带的<code>netstats</code>命令来检测<code>SYN</code>攻击。<code>SYN</code>攻击不能完全被阻止，除非将TCP协议重新设计。能做的是尽可能的减轻<code>SYN</code>攻击的危害，常见的防御<code>SYN</code>攻击的方法有：缩短超时(SYN Timeout)时间、增加最大半连接数、过滤网关防护、SYN cookies技术。  </p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/计算机网络/" rel="tag"># 计算机网络</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/11/计算机网络/计算机网络02 应用层/" rel="next" title="计算机网络02 应用层">
+                <i class="fa fa-chevron-left"></i> 计算机网络02 应用层
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/09/12/计算机网络/计算机网络04 网络层/" rel="prev" title="计算机网络04 网络层">
+                计算机网络04 网络层 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/uploads/avatar.gif" alt="Javior Wang">
+            
+              <p class="site-author-name" itemprop="name">Javior Wang</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">61</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/index.html">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/scorego" title="GitHub &rarr; https://github.com/scorego" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://www.zhihu.com/people/scorego-6" title="Zhihu &rarr; https://www.zhihu.com/people/scorego-6" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>Zhihu</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-多路复用与多路分解"><span class="nav-text">1. 多路复用与多路分解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-UDP"><span class="nav-text">2. UDP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-TCP"><span class="nav-text">3. TCP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-TCP报文段结构"><span class="nav-text">3.1 TCP报文段结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#A-序列号和确认号"><span class="nav-text">A. 序列号和确认号</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-可靠数据传输"><span class="nav-text">3.2 可靠数据传输</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-流量控制"><span class="nav-text">3.3 流量控制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-三次握手"><span class="nav-text">3.4 三次握手</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-四次挥手"><span class="nav-text">3.5 四次挥手</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6-拥塞控制"><span class="nav-text">3.6 拥塞控制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#A-慢启动"><span class="nav-text">A. 慢启动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#B-拥塞避免"><span class="nav-text">B. 拥塞避免</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C-快速恢复"><span class="nav-text">C. 快速恢复</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-7-TCP-KeepAlive"><span class="nav-text">3.7 TCP KeepAlive</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-SYN攻击"><span class="nav-text">3.5 SYN攻击</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Javior Wang</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

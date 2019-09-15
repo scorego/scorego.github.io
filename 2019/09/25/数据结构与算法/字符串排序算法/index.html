@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next mist" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/favicon-128x128-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon-32x32-01.ico?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon-16x16-01.ico?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/uploads/favicon-128x128-01.ico?v=7.1.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="字符串排序算法主要运用了字符串的特殊性来优化并达到通用型排序算法达不到的时间复杂度。基于比较的排序的最有时间复杂度是O(nlgn)，而radix sort能达到O(n)。   首先给出一个工具类，以打印数组。123456789101112131415public class PrtUtil &amp;#123;    public static void prtArr(String[] arr) &amp;#12">
+<meta name="keywords" content="串">
+<meta property="og:type" content="article">
+<meta property="og:title" content="字符串排序算法">
+<meta property="og:url" content="javior.wang/2019/09/25/数据结构与算法/字符串排序算法/index.html">
+<meta property="og:site_name" content="Javior&#39;s Blog">
+<meta property="og:description" content="字符串排序算法主要运用了字符串的特殊性来优化并达到通用型排序算法达不到的时间复杂度。基于比较的排序的最有时间复杂度是O(nlgn)，而radix sort能达到O(n)。   首先给出一个工具类，以打印数组。123456789101112131415public class PrtUtil &amp;#123;    public static void prtArr(String[] arr) &amp;#12">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-09-15T11:25:27.497Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="字符串排序算法">
+<meta name="twitter:description" content="字符串排序算法主要运用了字符串的特殊性来优化并达到通用型排序算法达不到的时间复杂度。基于比较的排序的最有时间复杂度是O(nlgn)，而radix sort能达到O(n)。   首先给出一个工具类，以打印数组。123456789101112131415public class PrtUtil &amp;#123;    public static void prtArr(String[] arr) &amp;#12">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="javior.wang/2019/09/25/数据结构与算法/字符串排序算法/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>字符串排序算法 | Javior's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Javior's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/index.html" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="javior.wang/2019/09/25/数据结构与算法/字符串排序算法/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Javior Wang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Javior's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">字符串排序算法
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-25 19:24:32" itemprop="dateCreated datePublished" datetime="2019-09-25T19:24:32+08:00">2019-09-25</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-09-15 19:25:27" itemprop="dateModified" datetime="2019-09-15T19:25:27+08:00">2019-09-15</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/数据结构与算法/" itemprop="url" rel="index"><span itemprop="name">数据结构与算法</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>字符串排序算法主要运用了字符串的特殊性来优化并达到通用型排序算法达不到的时间复杂度。基于比较的排序的最有时间复杂度是<code>O(nlgn)</code>，而radix sort能达到<code>O(n)</code>。  </p>
+<p>首先给出一个工具类，以打印数组。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PrtUtil</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">prtArr</span><span class="params">(String[] arr)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (String s : arr) &#123;</span><br><span class="line">            System.out.print(s + <span class="string">" "</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">prtArr</span><span class="params">(<span class="keyword">int</span>[] arr)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> s : arr) &#123;</span><br><span class="line">            System.out.print(s + <span class="string">" "</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="1-键索引计数法-key-index-counting"><a href="#1-键索引计数法-key-index-counting" class="headerlink" title="1. 键索引计数法 key-index counting"></a>1. 键索引计数法 key-index counting</h2><p>键索引计数法是一种适用于小整数键的简单排序方法，同时也是后续算法的基础。这个算法有四个步骤：</p>
+<ol>
+<li>频率统计。计算出各字符的个数</li>
+<li>将频率转换为索引。</li>
+<li>数据分类。</li>
+<li>回写。将排序好的数组替换原先数组</li>
+</ol>
+<p>假设字符串数组的字符表只有<code>a - f</code>，即基数（字符数量）<code>R = 6</code>。待排序的字符串是<code>fccbbbaeddddfe</code>，此时新建一个<code>count</code>数组，每个位置分别代表<code>a - f</code>，此时对排序的字符串进行计数：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span>[] count(String s) &#123;</span><br><span class="line">    <span class="keyword">int</span>[] count = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">7</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">char</span> c : s.toCharArray()) &#123;</span><br><span class="line">        count[getKey(c) + <span class="number">1</span>]++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> count;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getKey</span><span class="params">(<span class="keyword">char</span> c)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> c - <span class="string">'a'</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>得到的数组<code>count[]</code>为<code>[0, 1, 3, 2, 4, 2, 2]</code>，代表原字符串中<code>a</code>有1个，<code>b</code>有3个。<code>count[0]</code>永远是0。<br>接下来使用<code>count[]</code>计算每个键在排序结果中的起始索引位置。因为<code>a</code>有1个，<code>b</code>有3个，所以<code>c</code>在排序数组中的起始位置为4。一般来说，任意给定的键的其实索引均为所有较小的键所对应的的出现频率之和。从左向右将<code>count[]</code>转化为一张用于排序的索引表是很容易的：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span>[] getIndex(<span class="keyword">int</span>[] count) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count.length - <span class="number">1</span>; i++) &#123;</span><br><span class="line">        count[i + <span class="number">1</span>] += count[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> count;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>将<code>count[]</code>数组转换为一张索引表之后，将所有元素移动到一个辅助数组<code>aux[]</code>中排序。每个元素在<code>aux[]</code>中的位置是由它的键对应的<code>count[]</code>的值决定，移动之后将<code>count[]</code>对应的元素加1。这个过程只需要遍历一遍数据即可产生排序结果，而且这种方式也能保证排序的稳定性。</p>
+<p>全部代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">KeyIndexCounting</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> R = <span class="number">6</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        String s = <span class="string">"fccbbbaeddddfe"</span>;</span><br><span class="line">        <span class="keyword">char</span>[] arr = s.toCharArray();</span><br><span class="line">        sort(arr);</span><br><span class="line"></span><br><span class="line">        System.out.println(s);</span><br><span class="line">        System.out.println(<span class="keyword">new</span> String(arr));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(<span class="keyword">char</span>[] arr)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 计算频次</span></span><br><span class="line">        <span class="keyword">int</span>[] count = <span class="keyword">new</span> <span class="keyword">int</span>[R + <span class="number">1</span>];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">char</span> c : arr) &#123;</span><br><span class="line">            count[getKey(c) + <span class="number">1</span>]++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 将频率转换为索引</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; R; i++) &#123;</span><br><span class="line">            count[i + <span class="number">1</span>] += count[i];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 数据分类</span></span><br><span class="line">        <span class="keyword">char</span>[] aux = <span class="keyword">new</span> <span class="keyword">char</span>[arr.length];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">char</span> c : arr) &#123;</span><br><span class="line">            aux[count[getKey(c)]++] = c;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 回写</span></span><br><span class="line">        System.arraycopy(aux, <span class="number">0</span>, arr, <span class="number">0</span>, arr.length);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getKey</span><span class="params">(<span class="keyword">char</span> c)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> c - <span class="string">'a'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>key-index counting排序<code>N</code>个键为<code>0 ~ R - 1</code>之间的整数的元素需要访问数组<code>11N + 4R + 1</code>次，即时间复杂度为<code>O(n)</code>。</p>
+<h2 id="2-低位优先的字符串排序-LSD-radix-sort"><a href="#2-低位优先的字符串排序-LSD-radix-sort" class="headerlink" title="2. 低位优先的字符串排序 LSD radix sort"></a>2. 低位优先的字符串排序 LSD radix sort</h2><p>LSD radix sort是基于key-index counting的一种对等长字符串数组排序的高效算法。其原理就是利用key-index counting算法，对咬排序的字符串进行逐字符排序，直到字符串中每个字符都排序完成。顺序是从字符串最后一个开始，一直到最后一个字符。因为key-index counting是稳定的，所以可以从后至前排序后最后结果是有序的。算法代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LSD</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> R = <span class="number">256</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        String[] arr = &#123;<span class="string">"abcde"</span>, <span class="string">"abbbc"</span>, <span class="string">"defff"</span>, <span class="string">"dfaba"</span>, <span class="string">"dafbb"</span>, <span class="string">"acbde"</span>&#125;;</span><br><span class="line">        PrtUtil.prtArr(arr);</span><br><span class="line"></span><br><span class="line">        sort(arr, <span class="number">5</span>);</span><br><span class="line">        PrtUtil.prtArr(arr);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * LSD排序</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> arr 待排序的String数组</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> w   通过前w个字符将数组排序</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(String[] arr, <span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> N = arr.length;</span><br><span class="line">        String[] aux = <span class="keyword">new</span> String[N];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> d = w - <span class="number">1</span>; d &gt;= <span class="number">0</span>; d--) &#123;</span><br><span class="line">            <span class="comment">// 使用键索引计数法对第d个字符排序</span></span><br><span class="line"></span><br><span class="line">            <span class="comment">// 计算出现频率</span></span><br><span class="line">            <span class="keyword">int</span>[] count = <span class="keyword">new</span> <span class="keyword">int</span>[R + <span class="number">1</span>];</span><br><span class="line">            <span class="keyword">for</span> (String s : arr) &#123;</span><br><span class="line">                count[s.charAt(d) + <span class="number">1</span>]++;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 将频率转换为索引</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> r = <span class="number">0</span>; r &lt; R; r++) &#123;</span><br><span class="line">                count[r + <span class="number">1</span>] += count[r];</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//将元素分类</span></span><br><span class="line">            <span class="keyword">for</span> (String s : arr) &#123;</span><br><span class="line">                aux[count[s.charAt(d)]++] = s;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 回写</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; N; i++) &#123;</span><br><span class="line">                arr[i] = aux[i];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>从理论上来说，LSD算法意义重大，因为它是一种使用与一般应用的现行时间排序算法。无论<code>N</code>多大，它只遍历<code>W</code>次数据。对于基于<code>R</code>个字符的字母表的<code>N</code>个以长为<code>W</code>的字符串为键的元素，低位优先的字符串排序需要访问<code>~7WN + 3WR</code>次数组，使用的额外空间为<code>O(N + R)</code>成正比。  </p>
+<h2 id="3-高位优先的字符串排序-MSD-radix-sort"><a href="#3-高位优先的字符串排序-MSD-radix-sort" class="headerlink" title="3. 高位优先的字符串排序 MSD radix sort"></a>3. 高位优先的字符串排序 MSD radix sort</h2><p>LSD适用于排序等长字符的数组，但是显示应用中，变长数组间的排序也很常见。MSD radix sort(most-significant-digit-first)，是从每个字符传的第一个字符开始排序，一直到最后一个字符。该算法的步骤是：</p>
+<ol>
+<li>利用key-index counting对第一个字符进行排序</li>
+<li>将首字符相同的子数组拿出来，并去掉第一个已经排好序的字符。然后重复第一步，直至排序完成</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MSD</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> R = <span class="number">256</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 小数组的切换阈值</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> M = <span class="number">15</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> String[] aux;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        String[] arr = &#123;<span class="string">"abcde"</span>, <span class="string">"abbbc"</span>, <span class="string">"defff"</span>, <span class="string">"dfaba"</span>, <span class="string">"dafbb"</span>, <span class="string">"acbde"</span>&#125;;</span><br><span class="line">        PrtUtil.prtArr(arr);</span><br><span class="line"></span><br><span class="line">        sort(arr);</span><br><span class="line">        PrtUtil.prtArr(arr);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">charAt</span><span class="params">(String s, <span class="keyword">int</span> d)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> d &lt; s.length()</span><br><span class="line">               ? s.charAt(d)</span><br><span class="line">               : -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(String[] arr)</span> </span>&#123;</span><br><span class="line">        aux = <span class="keyword">new</span> String[arr.length];</span><br><span class="line">        sort(arr, <span class="number">0</span>, arr.length - <span class="number">1</span>, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 以第d个字符为键将arr[lo]至arr[hi]排序</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(String[] arr, <span class="keyword">int</span> lo, <span class="keyword">int</span> hi, <span class="keyword">int</span> d)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 与下面注释掉的二选一</span></span><br><span class="line">        <span class="keyword">if</span>(hi &lt;= lo)&#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"><span class="comment">//        if (hi &lt;= lo + M) &#123;</span></span><br><span class="line"><span class="comment">//            Insertion.sort(arr, lo, hi, d);</span></span><br><span class="line"><span class="comment">//            return;</span></span><br><span class="line"><span class="comment">//        &#125;</span></span><br><span class="line">        <span class="keyword">int</span>[] count = <span class="keyword">new</span> <span class="keyword">int</span>[R + <span class="number">2</span>];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = lo; i &lt;= hi; i++) &#123;</span><br><span class="line">            count[charAt(arr[i], d) + <span class="number">2</span>]++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> r = <span class="number">0</span>; r &lt; R + <span class="number">1</span>; r++) &#123;</span><br><span class="line">            count[r + <span class="number">1</span>] += count[r];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = lo; i &lt;= hi; i++) &#123;</span><br><span class="line">            aux[count[charAt(arr[i], d) + <span class="number">1</span>]++] = arr[i];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = lo; i &lt;= hi; i++) &#123;</span><br><span class="line">            arr[i] = aux[i - lo];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> r = <span class="number">0</span>; r &lt; R; r++) &#123;</span><br><span class="line">            sort(arr, lo + count[r], lo + count[r + <span class="number">1</span>] - <span class="number">1</span>, d + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>MSD算法的性能取决于数据。对于随机输入，MSD只会检查足以区别字符串所需的字符。相对于数据数据中的字符总数，算法的运行时间是亚线性的（它只会检查输入字符中的一小部分）。对于非随机输入，MSD可能是亚现行的，但需要检查的字符可能会更多；特别是对相等的键，需要检查所有字符。所以存在大量等值键时它需要的运行时间是接近线性的。在最坏情况下(所有键都相同)，MSD会检查所有字符，时间复杂度是线性的。<br>要将基于大小为R的字符表的N个字符串排序，MSD算法平均需要检查<code>N * logN / logR</code>个字符。<br>由于该算法循环调用sort函数，并且sort函数里面会创建<code>count[]</code>数组，所以该算法有以下问题：</p>
+<ul>
+<li>当小数组过多时，该算法会创建大量的<code>count[]</code>数组，此时会对运行时间和内存造成比较大的影响，使算法性能不高，所以在数组个数变小时，推荐使用插入排序</li>
+<li>当数组有过多的相同的字符串或者子字符串时，算法需要一直比对到最后一个字符或者比较较多的字符，此时算法的性能也会偏低</li>
+<li>该算法需要较多的内存，比如<code>aux[]</code>数组和<code>count[]</code>数组的创建，都是比较消耗内存的</li>
+</ul>
+<h2 id="4-三向字符串快速排序-3-way-string-quicksort"><a href="#4-三向字符串快速排序-3-way-string-quicksort" class="headerlink" title="4. 三向字符串快速排序 3-way string quicksort"></a>4. 三向字符串快速排序 3-way string quicksort</h2><p>3-way string quicksort 是利用了快排和MSD的想法并进行合并而出来的一个算法，主要是解决了MSD radix sort的三个性能可能受影响的问题，在不需要大量内存并且当字符串出现大量相同的情况下还能继续保持良好的时间复杂度。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Quick3String</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        String[] arr = &#123;<span class="string">"abcde"</span>, <span class="string">"abbbc"</span>, <span class="string">"defff"</span>, <span class="string">"dfaba"</span>, <span class="string">"dafbb"</span>, <span class="string">"acbde"</span>&#125;;</span><br><span class="line">        PrtUtil.prtArr(arr);</span><br><span class="line"></span><br><span class="line">        sort(arr);</span><br><span class="line">        PrtUtil.prtArr(arr);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">charAt</span><span class="params">(String s, <span class="keyword">int</span> d)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> d &lt; s.length()</span><br><span class="line">               ? s.charAt(d)</span><br><span class="line">               : -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(String[] arr)</span> </span>&#123;</span><br><span class="line">        sort(arr, <span class="number">0</span>, arr.length - <span class="number">1</span>, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">exch</span><span class="params">(String[] arr, <span class="keyword">int</span> i, <span class="keyword">int</span> j)</span> </span>&#123;</span><br><span class="line">        String tmp = arr[i];</span><br><span class="line">        arr[i] = arr[j];</span><br><span class="line">        arr[j] = tmp;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(String[] arr, <span class="keyword">int</span> lo, <span class="keyword">int</span> hi, <span class="keyword">int</span> d)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (hi &lt;= lo) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> lt = lo;</span><br><span class="line">        <span class="keyword">int</span> gt = hi;</span><br><span class="line">        <span class="keyword">int</span> v = charAt(arr[lo], d);</span><br><span class="line">        <span class="keyword">int</span> i = lo + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> (i &lt; hi) &#123;</span><br><span class="line">            <span class="keyword">int</span> t = charAt(arr[i], d);</span><br><span class="line">            <span class="keyword">if</span> (t &lt; v) &#123;</span><br><span class="line">                exch(arr, lt++, i++);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (t &gt; v) &#123;</span><br><span class="line">                exch(arr, i, gt--);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                i++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// arr[lo .. lt - 1] &lt; v = arr[lt .. gt] &lt; arr[gt + 1 .. hi]</span></span><br><span class="line">        sort(arr, lo, lt - <span class="number">1</span>, d);</span><br><span class="line">        <span class="keyword">if</span> (v &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">            sort(arr, lt, gt, d + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        sort(arr, gt + <span class="number">1</span>, hi, d);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>和快排一样，最好在排序之前将数组打乱或是将第一个元素与一个随机位置的元素交换以得到一个随机的切分元素。这么做是为了预防数组有序或接近有序的最坏情况。  </p>
+<h2 id="5-各种字符串排序算法"><a href="#5-各种字符串排序算法" class="headerlink" title="5. 各种字符串排序算法"></a>5. 各种字符串排序算法</h2><table>
+<thead>
+<tr>
+<th style="text-align:center">算法</th>
+<th style="text-align:center">稳定性</th>
+<th style="text-align:center">原址排序</th>
+<th style="text-align:center">时间复杂度</th>
+<th style="text-align:center">空间复杂度</th>
+<th style="text-align:center">优势</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">字符串的插入排序</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">N ~ N<sup>2</sup></td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">小数组，或已经有序数组</td>
+</tr>
+<tr>
+<td style="text-align:center">快速排序</td>
+<td style="text-align:center">否</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">Nlog<sup>2</sup>N</td>
+<td style="text-align:center">logN</td>
+<td style="text-align:center">通用排序算法，特别是适用于空间不足的情况</td>
+</tr>
+<tr>
+<td style="text-align:center">归并排序</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">否</td>
+<td style="text-align:center">Nlog<sup>2</sup>N</td>
+<td style="text-align:center">N</td>
+<td style="text-align:center">稳定的通用排序算法</td>
+</tr>
+<tr>
+<td style="text-align:center">三向快速排序</td>
+<td style="text-align:center">否</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">N ~ NlogN</td>
+<td style="text-align:center">logN</td>
+<td style="text-align:center">大量重复键</td>
+</tr>
+<tr>
+<td style="text-align:center">LSD</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">否</td>
+<td style="text-align:center">NW</td>
+<td style="text-align:center">N</td>
+<td style="text-align:center">较短的定长字符串</td>
+</tr>
+<tr>
+<td style="text-align:center">MSD</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">否</td>
+<td style="text-align:center">N ~ Nw</td>
+<td style="text-align:center">N + WR</td>
+<td style="text-align:center">随机字符串</td>
+</tr>
+<tr>
+<td style="text-align:center">三项字符串快速排序</td>
+<td style="text-align:center">否</td>
+<td style="text-align:center">是</td>
+<td style="text-align:center">N ~ Nw</td>
+<td style="text-align:center">W + logN</td>
+<td style="text-align:center">通用排序算法，特别适用于含有较长的公共前缀的字符串</td>
+</tr>
+</tbody>
+</table>
+<p>字符表基数为E，字符串数量为N，平均长度为w，最大长度为W。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/串/" rel="tag"># 串</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/12/计算机网络/计算机网络04 网络层/" rel="next" title="计算机网络04 网络层">
+                <i class="fa fa-chevron-left"></i> 计算机网络04 网络层
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/uploads/avatar.gif" alt="Javior Wang">
+            
+              <p class="site-author-name" itemprop="name">Javior Wang</p>
+              <div class="site-description motion-element" itemprop="description"></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">62</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/index.html">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/scorego" title="GitHub &rarr; https://github.com/scorego" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://www.zhihu.com/people/scorego-6" title="Zhihu &rarr; https://www.zhihu.com/people/scorego-6" rel="noopener" target="_blank"><i class="fa fa-fw fa-heartbeat"></i>Zhihu</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-键索引计数法-key-index-counting"><span class="nav-text">1. 键索引计数法 key-index counting</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-低位优先的字符串排序-LSD-radix-sort"><span class="nav-text">2. 低位优先的字符串排序 LSD radix sort</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-高位优先的字符串排序-MSD-radix-sort"><span class="nav-text">3. 高位优先的字符串排序 MSD radix sort</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-三向字符串快速排序-3-way-string-quicksort"><span class="nav-text">4. 三向字符串快速排序 3-way string quicksort</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-各种字符串排序算法"><span class="nav-text">5. 各种字符串排序算法</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Javior Wang</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

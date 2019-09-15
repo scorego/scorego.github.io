@@ -94,18 +94,18 @@
 
 
 
-  <meta name="description" content="字符串搜索算法(String searching algorithms)又称字符串比对算法(string matching algorithms)，是一种重要的字符串算法，用来在一长字符串或文章中，找出其是否包含某一个或多个字符串及其出现位置。部分算法性能比较(m为模式的长度，n为要搜索的字符串长度，k为字母表长度)：    算法 预处理时间 匹配时间 空间复杂度     朴素算法 0 (无需预处">
-<meta name="keywords" content="字符串搜索算法">
+  <meta name="description" content="字符串搜索算法(String searching algorithms)又称字符串比对算法(string matching algorithms)，是一种重要的字符串算法，用来在一长字符串或文章中，找出其是否包含某一个或多个字符串及其出现位置。字符串的一种基本操作就是子字符串查找：给定一个长度为N的文本和一个长度为M的模式(pattern)字符串，在文本中找到一个和该模式相符的子字符串。此类问题的">
+<meta name="keywords" content="串">
 <meta property="og:type" content="article">
 <meta property="og:title" content="字符串搜索算法">
 <meta property="og:url" content="javior.wang/2019/06/20/数据结构与算法/字符串搜索算法/index.html">
 <meta property="og:site_name" content="Javior&#39;s Blog">
-<meta property="og:description" content="字符串搜索算法(String searching algorithms)又称字符串比对算法(string matching algorithms)，是一种重要的字符串算法，用来在一长字符串或文章中，找出其是否包含某一个或多个字符串及其出现位置。部分算法性能比较(m为模式的长度，n为要搜索的字符串长度，k为字母表长度)：    算法 预处理时间 匹配时间 空间复杂度     朴素算法 0 (无需预处">
+<meta property="og:description" content="字符串搜索算法(String searching algorithms)又称字符串比对算法(string matching algorithms)，是一种重要的字符串算法，用来在一长字符串或文章中，找出其是否包含某一个或多个字符串及其出现位置。字符串的一种基本操作就是子字符串查找：给定一个长度为N的文本和一个长度为M的模式(pattern)字符串，在文本中找到一个和该模式相符的子字符串。此类问题的">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-06-29T18:52:05.728Z">
+<meta property="og:updated_time" content="2019-09-15T11:22:32.629Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="字符串搜索算法">
-<meta name="twitter:description" content="字符串搜索算法(String searching algorithms)又称字符串比对算法(string matching algorithms)，是一种重要的字符串算法，用来在一长字符串或文章中，找出其是否包含某一个或多个字符串及其出现位置。部分算法性能比较(m为模式的长度，n为要搜索的字符串长度，k为字母表长度)：    算法 预处理时间 匹配时间 空间复杂度     朴素算法 0 (无需预处">
+<meta name="twitter:description" content="字符串搜索算法(String searching algorithms)又称字符串比对算法(string matching algorithms)，是一种重要的字符串算法，用来在一长字符串或文章中，找出其是否包含某一个或多个字符串及其出现位置。字符串的一种基本操作就是子字符串查找：给定一个长度为N的文本和一个长度为M的模式(pattern)字符串，在文本中找到一个和该模式相符的子字符串。此类问题的">
 
 
 
@@ -399,7 +399,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-06-30 02:52:05" itemprop="dateModified" datetime="2019-06-30T02:52:05+08:00">2019-06-30</time>
+                <time title="修改时间：2019-09-15 19:22:32" itemprop="dateModified" datetime="2019-09-15T19:22:32+08:00">2019-09-15</time>
               
             
           </span>
@@ -451,7 +451,7 @@
       
 
       
-        <p>字符串搜索算法(String searching algorithms)又称字符串比对算法(string matching algorithms)，是一种重要的字符串算法，用来在一长字符串或文章中，找出其是否包含某一个或多个字符串及其出现位置。<br>部分算法性能比较(m为模式的长度，n为要搜索的字符串长度，k为字母表长度)：</p>
+        <p>字符串搜索算法(String searching algorithms)又称字符串比对算法(string matching algorithms)，是一种重要的字符串算法，用来在一长字符串或文章中，找出其是否包含某一个或多个字符串及其出现位置。字符串的一种基本操作就是子字符串查找：给定一个长度为N的文本和一个长度为M的模式(pattern)字符串，在文本中找到一个和该模式相符的子字符串。此类问题的解法很容易扩展为找出文本中所有和该模式相符的字符串、统计该模式在文本中的出现次数、找出上下文的算法。<br>一般来说模式对于文本是很短的(M可能是100或1000)，而文本对于模式是很长的(N可能等于100万或10亿)。在字符串查找中，一般会对模式进行预处理来支持在文本中的快速查找。<br>部分算法性能比较(m为模式的长度，n为要搜索的字符串长度，k为字母表长度)：</p>
 <table>
 <thead>
 <tr>
@@ -490,7 +490,7 @@
 <td style="text-align:center">Bitap算法  (shift-or, shift-and, Baeza–Yates–Gonnet)</td>
 <td style="text-align:center">Θ(m + k)</td>
 <td style="text-align:center">O(mn)</td>
-<td></td>
+<td>-</td>
 </tr>
 <tr>
 <td style="text-align:center">Two-way string-matching algorithm</td>
@@ -502,45 +502,26 @@
 <td style="text-align:center">BNDM (Backward Non-Deterministic DAWG Matching)</td>
 <td style="text-align:center">O(m)</td>
 <td style="text-align:center">O(n)</td>
-<td></td>
+<td>-</td>
 </tr>
 <tr>
 <td style="text-align:center">BOM (Backward Oracle Matching)</td>
 <td style="text-align:center">O(m)</td>
 <td style="text-align:center">O(mn)</td>
+<td>-</td>
 </tr>
 </tbody>
 </table>
-<h2 id="1-朴素算法"><a href="#1-朴素算法" class="headerlink" title="1. 朴素算法"></a>1. 朴素算法</h2><p>直观的朴素算法就是将模式与字符串逐位相比，遇到不相等就从当前开始搜索位置的下个位置从头开始重新比较。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">naiveStringSearch</span><span class="params">(<span class="keyword">char</span>[] input, <span class="keyword">char</span>[] target)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> ilen = input.length;</span><br><span class="line">    <span class="keyword">int</span> tlen = target.length;</span><br><span class="line">    <span class="keyword">boolean</span> res = <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; ilen; i++)&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; tlen; j++)&#123;</span><br><span class="line">            <span class="keyword">if</span> (i + j &gt;= ilen || input[i + j] != target[j])&#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (j == tlen - <span class="number">1</span>)&#123;</span><br><span class="line">                res = <span class="keyword">true</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="2-KMP算法"><a href="#2-KMP算法" class="headerlink" title="2. KMP算法"></a>2. KMP算法</h2><p>KMP算法(Knuth-Morris-Pratt字符串查找算法)，由Donald Ervin Knuth和Vaughan Pratt在1974年构思，同年James H. Morris也独立地设计出该算法，最终由三人于1977年联合发表。<br>KMP算法的关键是利用匹配失败后的信息，尽量减少模式串与主串的匹配次数以达到快速匹配的目的。通过运用对这个词在不匹配时本身就包含足够的信息来确定下一个匹配将在哪里开始，从而避免重新检查先前匹配的字符。    </p>
-<h3 id="A-一些概念"><a href="#A-一些概念" class="headerlink" title="A. 一些概念"></a>A. 一些概念</h3><ol>
-<li><p>前缀<br>前缀指除了最后一个字符以外，一个字符串的全部头部组合。</p>
-</li>
-<li><p>后缀<br>后缀：指除了第一个字符以外，一个字符串的全部尾部组合。</p>
-</li>
-<li><p>部分匹配值<br>部分匹配值就是”前缀”和”后缀”的最长的共有元素的长度。</p>
-</li>
-</ol>
-<p>以字符串<code>ABCDABD</code>为例：</p>
-<ul>
-<li><p>“A”的前缀和后缀都为空集，共有元素的长度为0；</p>
-</li>
-<li><p>“AB”的前缀为[A]，后缀为[B]，共有元素的长度为0；</p>
-</li>
-<li><p>“ABC”的前缀为[A, AB]，后缀为[BC, C]，共有元素的长度0；</p>
-</li>
-<li><p>“ABCD”的前缀为[A, AB, ABC]，后缀为[BCD, CD, D]，共有元素的长度为0；</p>
-</li>
-<li><p>“ABCDA”的前缀为[A, AB, ABC, ABCD]，后缀为[BCDA, CDA, DA, A]，共有元素为”A”，长度为1；</p>
-</li>
-<li><p>“ABCDAB”的前缀为[A, AB, ABC, ABCD, ABCDA]，后缀为[BCDAB, CDAB, DAB, AB, B]，共有元素为”AB”，长度为2；</p>
-</li>
-<li><p>“ABCDABD”的前缀为[A, AB, ABC, ABCD, ABCDA, ABCDAB]，后缀为[BCDABD, CDABD, DABD, ABD, BD, D]，共有元素的长度为0。</p>
-</li>
-</ul>
-<p>部分匹配的实质是，有时候字符串头部和尾部会有重复。比如<code>ABCDAB</code>的有两个<code>AB</code>，它长度为6、部分匹配值为2。将<code>ABCDAB</code>向后移动<code>6 - 2 = 4</code>位，就可以使第一个<code>AB</code>来到第二个<code>AB</code>的位置。  </p>
-<h3 id="B-算法实现"><a href="#B-算法实现" class="headerlink" title="B. 算法实现"></a>B. 算法实现</h3><h2 id="3-BM算法"><a href="#3-BM算法" class="headerlink" title="3. BM算法"></a>3. BM算法</h2><h2 id="4-Sunday算法"><a href="#4-Sunday算法" class="headerlink" title="4. Sunday算法"></a>4. Sunday算法</h2>
+<h2 id="1-朴素算法"><a href="#1-朴素算法" class="headerlink" title="1. 朴素算法"></a>1. 朴素算法</h2><p>子字符串查找有一个简单而广泛的暴力算法。最坏情况下时间复杂度为<code>O(MN)</code>，但是实际应用中一般为<code>O(M + N)</code>。<br>直观的朴素算法就是将模式与字符串逐位相比，遇到不相等就从当前开始搜索位置的下个位置从头开始重新比较。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">search</span> <span class="params">(String pat, String txt)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> M = pat.length();</span><br><span class="line">    <span class="keyword">int</span> N = txt.length();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= N - M; i++) &#123;</span><br><span class="line">        <span class="keyword">int</span> j;</span><br><span class="line">        <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; M; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (txt.charAt(i + j) != pat.charAt(j))&#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (j == M) &#123;</span><br><span class="line">            <span class="keyword">return</span> i;  <span class="comment">// 找到匹配</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> N;  <span class="comment">// 未找到匹配</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在典型的字符串处理中，索引<code>j</code>增长的机会很少。因此该算法的时间复杂度一般为<code>O(N)</code>。绝大多数比较在第一个字符时就会产生不匹配。但最坏情况下，暴力子字符串查找算法需要<code>~NM</code>次字符比较。最坏情况不太可能出现在英文文本中，但在其他应用场景中是完全可能的(比如二进制文本)。  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">search</span><span class="params">(String pat, String txt)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> j;</span><br><span class="line">    <span class="keyword">int</span> M = pat.length();</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">int</span> N = txt.length();</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>, j = <span class="number">0</span>; i &lt; N &amp;&amp; j &lt; M; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (txt.charAt(i) == pat.charAt(j))&#123;</span><br><span class="line">            j++;</span><br><span class="line">        &#125; <span class="keyword">else</span>&#123;</span><br><span class="line">            i -= j;</span><br><span class="line">            j = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (j == M) &#123;</span><br><span class="line">        <span class="keyword">return</span> i - M;  <span class="comment">// 找到匹配</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> N;  <span class="comment">// 未找到匹配</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上段代码是暴力匹配的另一种实现(显式回退)。这里的<code>i</code>相当于第一个实现中的<code>i + j</code>。  </p>
+<h2 id="2-KMP算法"><a href="#2-KMP算法" class="headerlink" title="2. KMP算法"></a>2. KMP算法</h2><p>KMP算法(Knuth-Morris-Pratt字符串查找算法)，由Donald Ervin Knuth和Vaughan Pratt在1974年构思，同年James H. Morris也独立地设计出该算法，最终由三人于1977年联合发表。<br>KMP算法的基本思想是当出现不匹配时，利用匹配失败的信息尽量减少模式串与主串的匹配次数，避免将指针回退到所有已知的字符之前。每当一趟匹配过程出现字符不等时，利用计算出的模式串在<code>j</code>位置前面的字串的部分匹配值<code>k</code>将模式右滑<code>j - k</code>个字符，然后继续进行比较。  </p>
+<h3 id="A-前缀、后缀、部分匹配值"><a href="#A-前缀、后缀、部分匹配值" class="headerlink" title="A. 前缀、后缀、部分匹配值"></a>A. 前缀、后缀、部分匹配值</h3><p>前缀是指除了最后一个字符外一个字符串的全部头部组合。如<code>ABC</code>的前缀有<code>[A, AB]</code>。<br>后缀是指除了第一个字符外一个字符串的全部尾部组合。如<code>ABC</code>的后缀有<code>[BC, C]</code>。<br>部分匹配值就是前缀和后缀最长的共有元素的长度。如<code>ABC</code>最长的共有元素是<code>BC</code>，部分匹配值为2。<br>有时候字符串的头部和尾部出现重复，部分匹配的实质是头部和尾部重叠的最大长度。比如<code>ABCDAB</code>长度为6，部分匹配值为2。将<code>ABCDAB</code>向后移动<code>6 - 2 = 4</code>个位置，就可以使第一个<code>AB</code>来到第二个<code>AB</code>的位置。  </p>
+<h3 id="B-算法思想"><a href="#B-算法思想" class="headerlink" title="B. 算法思想"></a>B. 算法思想</h3><p>假设主串为<code>EDABCDABCDAB...</code>，模式为<code>ABCDABD</code>。匹配为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"> 0  1  2  3  4  5  6  7  8  9  10 11</span><br><span class="line"> E  D  A  B  C  D  A  B  C  D  A  B  ...</span><br><span class="line">       A  B  C  D  A  B  D</span><br><span class="line">此时在位置8上出现了不匹配。如果是暴力算法，那么就会式模式右移1位重新开始匹配。</span><br><span class="line">`ABCDAB`的部分匹配值为2。利用计算出的部分匹配值，可以使模式右移`6 - 2 = 4`位：</span><br><span class="line"> 0  1  2  3  4  5  6  7  8  9  10 11</span><br><span class="line"> E  D  A  B  C  D  A  B  C  D  A  B  ...</span><br><span class="line">                   A  B  C  D  A  B  D</span><br><span class="line">使第一个`AB`来到第二个`AB`的位置。</span><br></pre></td></tr></table></figure></p>
+<h3 id="C-具体实现"><a href="#C-具体实现" class="headerlink" title="C. 具体实现"></a>C. 具体实现</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">KMP</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        String pattern = <span class="string">"ABCDABE"</span>;</span><br><span class="line">        String text = <span class="string">"EDAABCDABCDABEDFABD"</span>;</span><br><span class="line">        System.out.println(kmpSearch(pattern, text));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">kmpSearch</span><span class="params">(String pattern, String text)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (pattern == <span class="keyword">null</span> || text == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (pattern.length() == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (text.length() == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> kmp(pattern, text);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">kmp</span><span class="params">(String pattern, String text)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] next = getNext(pattern);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> N = text.length();</span><br><span class="line">        <span class="keyword">int</span> M = pattern.length();</span><br><span class="line">        <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> j = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (i &lt; N &amp;&amp; j &lt; M) &#123;</span><br><span class="line">            <span class="keyword">if</span> (text.charAt(i) == pattern.charAt(j)) &#123;</span><br><span class="line">                i++;</span><br><span class="line">                j++;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (next[j] == -<span class="number">1</span>) &#123;</span><br><span class="line">                    i++;</span><br><span class="line">                    j = <span class="number">0</span>;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    j = next[j];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (j == M) &#123;</span><br><span class="line">                <span class="keyword">return</span> i - j;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span>[] getNext(String pattern) &#123;</span><br><span class="line">        <span class="keyword">int</span> len = pattern.length();</span><br><span class="line">        <span class="keyword">int</span>[] next = <span class="keyword">new</span> <span class="keyword">int</span>[len];</span><br><span class="line">        next[<span class="number">0</span>] = -<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> k = -<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> j = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (j &lt; len - <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (k == -<span class="number">1</span> || pattern.charAt(k) == pattern.charAt(j)) &#123;</span><br><span class="line">                j++;</span><br><span class="line">                k++;</span><br><span class="line">                next[j] = k;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                k = next[k];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> next;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="3-BM算法"><a href="#3-BM算法" class="headerlink" title="3. BM算法"></a>3. BM算法</h2><h2 id="4-Sunday算法"><a href="#4-Sunday算法" class="headerlink" title="4. Sunday算法"></a>4. Sunday算法</h2>
       
     </div>
 
@@ -563,7 +544,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/字符串搜索算法/" rel="tag"># 字符串搜索算法</a>
+            <a href="/tags/串/" rel="tag"># 串</a>
           
         </div>
       
@@ -659,7 +640,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">61</span>
+                    <span class="site-state-item-count">62</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -716,6 +697,8 @@
                     
                   
                     
+                    
+                      
                     
                       
                     
@@ -831,7 +814,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-朴素算法"><span class="nav-text">1. 朴素算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-KMP算法"><span class="nav-text">2. KMP算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-一些概念"><span class="nav-text">A. 一些概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-算法实现"><span class="nav-text">B. 算法实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-BM算法"><span class="nav-text">3. BM算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Sunday算法"><span class="nav-text">4. Sunday算法</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-朴素算法"><span class="nav-text">1. 朴素算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-KMP算法"><span class="nav-text">2. KMP算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-前缀、后缀、部分匹配值"><span class="nav-text">A. 前缀、后缀、部分匹配值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-算法思想"><span class="nav-text">B. 算法思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C-具体实现"><span class="nav-text">C. 具体实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-BM算法"><span class="nav-text">3. BM算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Sunday算法"><span class="nav-text">4. Sunday算法</span></a></li></ol></div>
             
 
           </div>

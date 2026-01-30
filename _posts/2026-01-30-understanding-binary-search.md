@@ -1,6 +1,6 @@
 ---
 title: Understanding Binary Search - The Divide and Conquer King
-date: 2026-01-30 09:00:00 +0000
+date: 2026-01-30 17:00:00 +0800
 categories: [Algorithms]
 tags: [binary search, coding]
 math: true

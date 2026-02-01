@@ -1,42 +1,41 @@
 ---
-title: Understanding Binary Search: An Interviewee's Perspective
+title: Binary Search Pattern in Coding Interviews
 date: 2026-01-30 17:00:00 +0800
 categories: [Algorithms]
 tags: [binary search, coding interview]
 math: true
+layout: post
 ---
 
 > "Although the basic idea of binary search is comparatively straightforward, the details can be surprisingly tricky."
 > — **Donald E. Knuth**, *The Art of Computer Programming*
 
-If you've ever prepared for a coding interview, you’ve definitely encountered Binary Search (also known as half-interval search, logarithmic search, or binary chop). On paper, it’s one of the simplest problems on LeetCode. We all know the classic version: use two pointers at the start and end of a sorted array, repeatedly halve the range, and find the target in $O(\log n)$ time. However, many people (including me) struggle to implement it correctly  - especially under interview pressure. In my experience, the difficulty lies in two areas:
-1. **Identification:** How do we recognize a problem as a Binary Search problem and convert it into one?
-2. **Implementation:** How do we write bug-free code that handles edge cases like infinite loops?
-
-Let's break them down!
+If you've ever prepared for a coding interview, you’ve definitely encountered Binary Search (also known as half-interval search, logarithmic search, or binary chop). We all know the classic version: use two pointers at the start and end of a sorted array, repeatedly halve the range, and find the target in $O(\log n)$ time. However, many problems that use binary search don’t look like classic “search in array” questions at all. What interviewers actually want to test is whether you understand binary search as a way to find the **boundary** of **a monotonic condition**.
+Yes, **boundary** and **a monotonic condition**, they are the keys to understand binary search pattern and write bug-free code. Let's break them down!
 
 ## What is Binary Search?
 
 What would you say if the interviewer asked you to explain the binary search algorithm in one or two sentences? [Wikipedia](https://en.wikipedia.org/wiki/Binary_search) exlpains it as follows:
 > ... is a search algorithm that finds the position of a target value within a sorted array. Binary search compares the target value to the middle element of the array. If they are not equal, the half in which the target cannot lie is eliminated and the search continues on the remaining half, again taking the middle element to compare to the target value, and repeating this until the target value is found. If the search ends with the remaining half being empty, the target is not in the array.
 
-This is indeed how most people understand binary search. Most of us first learn binary search as "finding a target value in a sorted array". But in interviews, binary search is not just about arrays -- it is about **structure**. We can use binary search not only on arrays, but also on service capacity, distances, or any other structures that can be abstracted into a sorted sequence. When I say sequence, I even include cases where the search space is conceptually infinite.
+This is indeed how most people understand binary search. Most of us first learn binary search as "finding a target value in a sorted array". However binary search is not just about arrays, or not about **indices** -- it is about **structure**. The search space could be:
+- indices in an array
+- possible answers (speed, capacity, time, size)
+- a conceptual range that never explicitly appears in the input
 
-In fact, in many interview problems, there is no explicit array at all -- the sorted structure is hidden. You must abstract and extract a *virtual* array in your mind. So back to the question, if you need to explain binary search to an interviewer, here is a golden rule worth memorizing,
-```
-Binary Search finds the boundary of a monotonic predicate by repeatedly halving the search space.
-```
+Here is a golden rule:
+> Binary Search finds the boundary of a monotonic predicate by repeatedly halving the search space.
 
 This single sentence helps us to communicate clearly with interviewers and write bug-free code more reliably. Pay attention to the key words: **monotonic predicate** and **search space**. They will help us a lot.
 
-## Anchor Problem: Lower Bound
+## Binary Search Template (Lower Bound)
 
-Let's take the most well-known BS problem, lower bound (LeetCode 35), as an example.
+Most interview problems use the lower-bound variant of binary search.
 
 ### Problem
 
-> Lower bound: Given a sorted array of distinct integers and a target value, return the index if the target is found. If not, return the index where it would be if it were inserted in order.
-> You must write an algorithm with O(log n) runtime complexity.
+> Lower bound (LeetCode 35): Given a sorted array of distinct integers and a target value, return the index if the target is found. If not, return the index where it would be if it were inserted in order.
+> You must write an algorithm with `O(log n)` runtime complexity.
 >
 > Example 1:
 > Input: nums = [1,3,5,6], target = 5
@@ -92,52 +91,50 @@ def lower_bound(nums: List[int], target: int) -> int:
 
 All three patterns work correctly, and you can choose which you prefer. I personally prefer *Pattern C* because its invariant is explicit and easy to reason about.
 
-### Discussion
+### Answer Space
 
-#### Sorted
-
-We all know that lower bound can be resolved with BS. But let's set that aside for a moment and ask a more fundamental question:
-- Is this problem suitable for Binary Search?
-
-> There are many "interview tricks" for identifying algorithms. For example, people often say "If the required time complexity is $O(\log n)$ , then it must be Binary Search". This sometimes works -- but it is neither reliable nor complete.
-> Instead of relying on surface hints, we need a deeper understanding of binary search.
-
-The reason that we can use BS is that the array is sorted.
-- If `nums[mid] > target`, then all elements on the right side of `mid` are greater than the target.
-- If `nums[mid] < target`, then all elements on the left side of `mid` are less than the target.
-So we can safely halve the search space in each step. This is why we can shrink the space in every move.
-
-#### Search Space
-
-This is a very common source of confusion. When solving the lower bound problem, many people instinctively think that we are searching the index range of array, which is `[0, 1, 2, ..., n - 1]`. This intuition is acutally incorrect,
+The answer space is all the values that an answer could be, it is also the space we are searching on, Many people instinctively think that we are searching the index range of array, which is `[0, 1, 2, ..., n - 1]`. This intuition is acutally incorrect,
 1. if `target <= max(nums)`, the answer is an index in `[0, n - 1]`,
 2. if `target > max(nums)`, the correct insertion position may be `n`.
-So the answer space is all possible positions where the target could be placed. Remember this point, it will be crucial in the next section.
-The key takeaway is that binary search operates on the space of possible answers, not necessarily on the input array itself.
+So the answer space is all possible positions where the target could be placed, which is `[0, 1, 2, ..., n]`. The key takeaway is that binary search operates on the space of possible answers, not necessarily on the input array itself.
 
-#### Predicate
+### Monotonic Predicate
 
-In terms of indices, the problem becomes:
-- Find the first index `i` that `nums[i] >= target` (if no such i, return `len(nums)`).
+The most important question to ask yourself is:
+“If I increase (or decrease) my candidate answer, does the condition change in only one direction?”
 
-This immediately reveals the structure we need. We define a predicate that,
+Formally, we define a predicate `P(x) = whether x is a valid answer`, which in lower bound is:
 ```python
-def check(i):
-    return nums[i] >= target
+def P(x):
+    return nums[x] >= target
 ```
 
-Now observe what happens as `i` increases:
+For binary search to work, `P(x)` must be monotonic: when we move the candidate answer in one direction on the answer space, once it becomes true, it stays true (or vice versa). For lower bound, this means when we iter the array from start to the end, `P(x)` stays true once it becomes true.
+
+This is abvious cause the array is sorted,
+- If `nums[mid] >= target`, then all elements on the right side of `mid` are greater or equal to the target.
+- If `nums[mid] < target`, then all elements on the left side of `mid` are less than the target.
+
 ```
 # Input: nums = [-1,0,3,5,9,12], target = 9
 
 index:               (-1)                      [  0   1   2   3   4   5  ]                    (n)
-nums[i]:  (assumption of negative infinite)     -1   0   3   5   9   12             (assumption of infinite)
+nums[i]:  (assumption of negative infinite)      -1   0   3   5   9   12             (assumption of infinite)
 P(i):                 (F)                         F   F   F   F   T   T                      (T)
 ```
 
-The predicate changes exactly once — from `False` to `True`. This is a monotonic predicate.
+So we can safely halve the search space in each step. This is why we can shrink the space in every move.
 
-#### The invariant
+> This is why many interview problems say things like:
+> - minimum speed
+> - maximum capacity
+> - earliest day
+> - smallest value that satisfies a condition
+> These phrases are strong hints that binary search may apply.
+
+### The invariant
+
+What condition must always hold while we shrink the search space?
 
 ```python
 # Pattern C
@@ -152,12 +149,12 @@ def lower_bound(nums: List[int], target: int) -> int:
     return right
 ```
 
-What condition must always hold while we shrink the search space?
-
 In Pattern C, we maintain the following invariant throughout the search:
 > At any moment:
 >    - all indices at or left of `left` are guaranteed to be `False`
 >    - all indices at or right of `right` are guaranteed to be `True`
+
+This also reveals that our search space. Search space means the interval we maintains that the answer lies on. Since `P(left) == False` in pattern C, `left` is never a valid answer so it is not included in out search space. We are searching in the range of `(left, right]` (or `[left + 1, right]`).
 
 ```
 P(i) = nums[i] >= target
@@ -183,16 +180,13 @@ At the beginning, we know nothing about any index. But we make the following ass
 - the predicate holds `False` at index `-1`
 - the predicate holds `True` at index `len(nums)`
 
-When we test `mid`, 
+When we test `mid`,
 - if `P(mid) is True`, then `mid` belongs to the `True` region
 - if `P(mid) is Fasle`, then `mid` belongs to the `False` region.
 
-In both cases, the boundary moves inward and unknown region strictly shrinks.
+Because this invariant always holds, the search space strictly shrinks and the loop must terminate.
 
 Eventually, the unknown region disappears at `left + 1 == right`, and `right` is the final answer.
-
-We are looking for the smallest index for which the predicate is `True` (the leftmost element that is greater or equals to target), and we always keep the invariant, so `left` is never an answer candidate and `right` is always one. That means,
-- We are searching in the range of `(left, right]`.
 
 ### Common Failure Modes
 
@@ -230,13 +224,13 @@ Lower bound is the fundamental problem and template solution for binary search. 
 |The first index that < x | `lowerBound(nums, x) - 1` | return `-1` |
 |The first index that <= x | `lowerBound(nums, x + 1) - 1` | return `-1` |
 
-## More Anchor Problems
+## Example Problems
 
 ### Koko Eating Bananas (LeetCode 875）
 
 > https://LeetCode.com/problems/koko-eating-bananas
 
-#### Search Space
+#### Answer Space
 
 0 is surely not a valid answer, we can initial `left` to 0.
 Since the problem guarantees `piles.length <= h`, `max(piles)` is a valid answer. we can initial `right` to this.
@@ -290,7 +284,7 @@ So the array consists of two parts:
                minimum
 ```
 
-#### Search Space
+#### Asnwer Space
 
 We are searching for the index of the minimum element.
 - All valid indices `[0, n - 1]` are possible answers
@@ -304,7 +298,7 @@ left, right = -1, len(nums) - 1
 - `right` represents indices that could be the minimum
 
 
-#### predicate
+#### Predicate
 
 The key is to compare each element with the last element of the array. Why? Because:
 
@@ -393,7 +387,7 @@ T(n) = T(n/2) + O(1)
      = T(n/2) + O(n^0)
 ```
 
-Therefore T(n) is O(log n).
+Therefore `T(n)` is $O(\log n)$.
 
 ### Interview-Ready Binary Search Sentences
 

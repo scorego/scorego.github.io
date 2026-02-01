@@ -1,5 +1,5 @@
 ---
-title: Binary Search Pattern in Coding Interviews
+title: Binary Search in Coding Interviews: Finding Boundaries, Not Targets
 date: 2026-01-30 17:00:00 +0800
 categories: [Algorithms]
 tags: [binary search, coding interview]
@@ -11,20 +11,20 @@ layout: post
 > — **Donald E. Knuth**, *The Art of Computer Programming*
 
 If you've ever prepared for a coding interview, you’ve definitely encountered Binary Search (also known as half-interval search, logarithmic search, or binary chop). We all know the classic version: use two pointers at the start and end of a sorted array, repeatedly halve the range, and find the target in $O(\log n)$ time. However, many problems that use binary search don’t look like classic “search in array” questions at all. What interviewers actually want to test is whether you understand binary search as a way to find the **boundary** of **a monotonic condition**.
-Yes, **boundary** and **a monotonic condition**, they are the keys to understand binary search pattern and write bug-free code. Let's break them down!
+**Boundary** and **monotonic condition** are the two keys to understanding the binary search pattern and writing bug-free code. Let's break them down!
 
 ## What is Binary Search?
 
-What would you say if the interviewer asked you to explain the binary search algorithm in one or two sentences? [Wikipedia](https://en.wikipedia.org/wiki/Binary_search) exlpains it as follows:
+What would you say if the interviewer asked you to explain the binary search algorithm in one or two sentences? [Wikipedia](https://en.wikipedia.org/wiki/Binary_search) explains it as follows:
 > ... is a search algorithm that finds the position of a target value within a sorted array. Binary search compares the target value to the middle element of the array. If they are not equal, the half in which the target cannot lie is eliminated and the search continues on the remaining half, again taking the middle element to compare to the target value, and repeating this until the target value is found. If the search ends with the remaining half being empty, the target is not in the array.
 
-This is indeed how most people understand binary search. Most of us first learn binary search as "finding a target value in a sorted array". However binary search is not just about arrays, or not about **indices** -- it is about **structure**. The search space could be:
+This is indeed how most people understand binary search. Most of us first learn binary search as "finding a target value in a sorted array". However binary search is not just about arrays or **indices** -- it is about **structure**. The search space could be:
 - indices in an array
 - possible answers (speed, capacity, time, size)
 - a conceptual range that never explicitly appears in the input
 
 Here is a golden rule:
-> Binary Search finds the boundary of a monotonic predicate by repeatedly halving the search space.
+> Binary search finds the boundary of a monotonic predicate by repeatedly halving the search space.
 
 This single sentence helps us to communicate clearly with interviewers and write bug-free code more reliably. Pay attention to the key words: **monotonic predicate** and **search space**. They will help us a lot.
 
@@ -93,7 +93,10 @@ All three patterns work correctly, and you can choose which you prefer. I person
 
 ### Answer Space
 
-The answer space is all the values that an answer could be, it is also the space we are searching on, Many people instinctively think that we are searching the index range of array, which is `[0, 1, 2, ..., n - 1]`. This intuition is acutally incorrect,
+> Answer space is the conceptual domain of possible answers.
+> Search space is the current interval where the answer must lie.
+
+The answer space is all the values that an answer could be, it is also the space we are searching on. Many people instinctively think that we are searching the index range of array, which is `[0, 1, 2, ..., n - 1]`. This intuition is actually incomplete,
 1. if `target <= max(nums)`, the answer is an index in `[0, n - 1]`,
 2. if `target > max(nums)`, the correct insertion position may be `n`.
 So the answer space is all possible positions where the target could be placed, which is `[0, 1, 2, ..., n]`. The key takeaway is that binary search operates on the space of possible answers, not necessarily on the input array itself.
@@ -109,9 +112,9 @@ def P(x):
     return nums[x] >= target
 ```
 
-For binary search to work, `P(x)` must be monotonic: when we move the candidate answer in one direction on the answer space, once it becomes true, it stays true (or vice versa). For lower bound, this means when we iter the array from start to the end, `P(x)` stays true once it becomes true.
+For binary search to work, `P(x)` must be monotonic: when we move the candidate answer in one direction on the answer space, once it becomes true, it stays true (or vice versa). For lower bound, this means that once `P(x)` becomes true as we move right, it stays true thereafter.
 
-This is abvious cause the array is sorted,
+This is obvious because the array is sorted,
 - If `nums[mid] >= target`, then all elements on the right side of `mid` are greater or equal to the target.
 - If `nums[mid] < target`, then all elements on the left side of `mid` are less than the target.
 
@@ -119,7 +122,7 @@ This is abvious cause the array is sorted,
 # Input: nums = [-1,0,3,5,9,12], target = 9
 
 index:               (-1)                      [  0   1   2   3   4   5  ]                    (n)
-nums[i]:  (assumption of negative infinite)      -1   0   3   5   9   12             (assumption of infinite)
+nums[i]:  (assumption of negative infinity)      -1   0   3   5   9   12             (assumption of infinity)
 P(i):                 (F)                         F   F   F   F   T   T                      (T)
 ```
 
@@ -154,7 +157,9 @@ In Pattern C, we maintain the following invariant throughout the search:
 >    - all indices at or left of `left` are guaranteed to be `False`
 >    - all indices at or right of `right` are guaranteed to be `True`
 
-This also reveals that our search space. Search space means the interval we maintains that the answer lies on. Since `P(left) == False` in pattern C, `left` is never a valid answer so it is not included in out search space. We are searching in the range of `(left, right]` (or `[left + 1, right]`).
+This invariant is what prevents infinite loops and off-by-one errors—every update strictly shrinks the search space.
+
+This also reveals our effective search space. We are searching in the range of `(left, right]` (or `[left + 1, right]`).
 
 ```
 P(i) = nums[i] >= target
@@ -177,12 +182,12 @@ End of the loop:
 ```
 
 At the beginning, we know nothing about any index. But we make the following assumptions:
-- the predicate holds `False` at index `-1`
-- the predicate holds `True` at index `len(nums)`
+- we conceptually assume the predicate holds `False` at index `-1`
+- we conceptually assume the predicate holds `True` at index `len(nums)`
 
 When we test `mid`,
 - if `P(mid) is True`, then `mid` belongs to the `True` region
-- if `P(mid) is Fasle`, then `mid` belongs to the `False` region.
+- if `P(mid) is False`, then `mid` belongs to the `False` region.
 
 Because this invariant always holds, the search space strictly shrinks and the loop must terminate.
 
@@ -191,10 +196,10 @@ Eventually, the unknown region disappears at `left + 1 == right`, and `right` is
 ### Common Failure Modes
 
 - Infinite loop
-    - usually caused by failing to strictly shrink the search space (e.g. left = mid instead of mid - 1).
-    - or incorrectly initialization of `left` and `right`
+    - Search space does not strictly shrink
+    - Invariant is broken
 - Wrong boundary updates
-    - mixing invariants from different patterns leads to off-by-one errors.
+    - Mixing patterns without preserving invariants
 
 ### Summary
 
@@ -205,17 +210,17 @@ At this point, we have covered all the core concepts of binary search:
 - Invariant
 
 
-|Pattern| Search Space | Invariant| End of the loop |
+|Pattern| Search Space | Invariant | End of the loop |
 |:-|:-|:-|:-|
 |A| `[left, right + 1]`   |  `(not P(left - 1)) AND P(right + 1)` |`left - 1 == right` |
 |B|  `[left, right]`      |  `(not P(left - 1)) AND P(right)` | `left == right`|
 |C| `(left, right]` | `(not P(left)) AND P(right)` | `left + 1 == right`|
-* predicate: `P(i) = nums[i] >= target`
+* Predicate: `P(i) = nums[i] >= target`
 * We conceptually assume sentinel values beyond array bounds
 
 ### Extended use case
 
-Lower bound is the fundamental problem and template solution for binary search. Actually lower bound can be used to find more index other that insertion index.
+Lower bound is the fundamental problem and template solution for binary search. Actually lower bound can be used to find more index other than insertion index.
 
 |Goal | Usage | If target index not exists|
 |:-|:-|:-|
@@ -232,10 +237,11 @@ Lower bound is the fundamental problem and template solution for binary search. 
 
 #### Answer Space
 
-0 is surely not a valid answer, we can initial `left` to 0.
-Since the problem guarantees `piles.length <= h`, `max(piles)` is a valid answer. we can initial `right` to this.
+The answer space is `[1, max(piles)]`
+- 0 is surely not a valid answer
+- Since the problem guarantees `piles.length <= h`, `max(piles)` is a valid answer
 
-#### predicate
+#### Predicate
 
 Eating speed k is valid only if Koko can eat all bananas under it.
 
@@ -284,7 +290,7 @@ So the array consists of two parts:
                minimum
 ```
 
-#### Asnwer Space
+#### Answer Space
 
 We are searching for the index of the minimum element.
 - All valid indices `[0, n - 1]` are possible answers
@@ -354,42 +360,9 @@ If they ask why not compare with the first element:
 
 ## Appendix
 
-### Quick Note
-
-#### Pattern Contract
-
-##### What is monotonic?
-
-Monotonic means that once a condition on the value `x` becomes `true` (or `false`), it never flip back again. That is, for a sequence, if we use a condition to validate its elements one by one, it looks like,
-```
-[False, False, False, True, True, True, ...]
-[True, True, True, False, False, False, ...]
-```
-
-##### What is search space?
-
-The space that answer always lies in during our loop. For pattern C, it's `(left, right]` (or `[left + 1, right]`).
-
-
-#### The invariant
-
-At any moment, Pattern C:
-    - all indices at or left of `left` are guaranteed to be `False`
-    - all indices at or right of `right` are guaranteed to be `True`
-
-### Proof of Time complexity (Optional)
-
-The [Master Theorem](https://en.wikipedia.org/wiki/Master_theorem_(analysis_of_algorithms)) provides a direct way to determine the asymptotic runtime of divide-and-conquer algorithms.
-
-For binary search, the upper bound of running time `T(n)` for an input size `n` is
-```
-T(n) = T(n/2) + O(1)
-     = T(n/2) + O(n^0)
-```
-
-Therefore `T(n)` is $O(\log n)$.
-
 ### Interview-Ready Binary Search Sentences
+
+You can memorize these sentences verbatim for interviews.
 
 #### Identifying Binary Search
 
@@ -412,4 +385,24 @@ Therefore `T(n)` is $O(\log n)$.
 #### Ending the Loop
 
 “At termination, right points to the smallest value that satisfies the predicate.”
+
+#### More tips
+
+When you feel stuck writing: write the invariant first, not the algorithm. If you can state:
+- the predicate
+- the answer space
+- the invariant
+The code almost writes itself—and so does the explanation.
+
+### Proof of Time complexity (Optional)
+
+The [Master Theorem](https://en.wikipedia.org/wiki/Master_theorem_(analysis_of_algorithms)) provides a direct way to determine the asymptotic runtime of divide-and-conquer algorithms.
+
+For binary search, the upper bound of running time `T(n)` for an input size `n` is
+```
+T(n) = T(n/2) + O(1)
+     = T(n/2) + O(n^0)
+```
+
+Therefore `T(n)` is $O(\log n)$.
 

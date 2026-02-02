@@ -1,5 +1,5 @@
 ---
-title: Binary Search Patterns in Coding Interviews
+title: Binary Search Pattern in Coding Interviews
 date: 2026-01-30 17:00:00 +0800
 categories: [Algorithms]
 tags: [binary search, coding interview]

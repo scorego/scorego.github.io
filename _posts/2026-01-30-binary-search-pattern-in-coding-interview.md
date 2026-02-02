@@ -1,5 +1,5 @@
 ---
-title: Binary Search in Coding Interviews: Finding Boundaries, Not Targets
+title: Binary Search Patterns in Coding Interviews
 date: 2026-01-30 17:00:00 +0800
 categories: [Algorithms]
 tags: [binary search, coding interview]
@@ -26,7 +26,7 @@ This is indeed how most people understand binary search. Most of us first learn 
 Here is a golden rule:
 > Binary search finds the boundary of a monotonic predicate by repeatedly halving the search space.
 
-This single sentence helps us to communicate clearly with interviewers and write bug-free code more reliably. Pay attention to the key words: **monotonic predicate** and **search space**. They will help us a lot.
+This single sentence helps us to communicate clearly with interviewers and write bug-free code more reliably. Understand that binary serach is for boundaries, not for targets. Pay attention to the key words: **boundary**, **monotonic predicate** and **search space**.
 
 ## Binary Search Template (Lower Bound)
 

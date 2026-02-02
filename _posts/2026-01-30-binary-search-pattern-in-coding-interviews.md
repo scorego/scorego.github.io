@@ -325,6 +325,8 @@ P(i):                         F                                F   F   F   F   T
 ```
 The first `True` corresponds exactly to the minimum element.
 
+Since `right` is always in the second part, so it works if comparing with `nums[right]` too.
+
 
 #### Invariant
 

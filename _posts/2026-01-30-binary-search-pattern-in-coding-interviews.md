@@ -10,29 +10,36 @@ layout: post
 > "Although the basic idea of binary search is comparatively straightforward, the details can be surprisingly tricky."
 > — **Donald E. Knuth**, *The Art of Computer Programming*
 
-If you've ever prepared for a coding interview, you’ve definitely encountered Binary Search (also known as half-interval search, logarithmic search, or binary chop). We all know the classic version: use two pointers at the start and end of a sorted array, repeatedly halve the range, and find the target in $O(\log n)$ time. However, many problems that use binary search don’t look like classic “search in array” questions at all. What interviewers actually want to test is whether you understand binary search as a way to find the **boundary** of **a monotonic condition**.
-**Boundary** and **monotonic condition** are the two keys to understanding the binary search pattern and writing bug-free code. Let's break them down!
+If you've ever prepared for a coding interview, you’ve definitely encountered Binary Search (also known as half-interval search, logarithmic search, or binary chop). We all know the classic version:
+> Problem: return the index of target from a sorted array.
+> Solution: use two pointers at the start and end of a sorted array, repeatedly halve the range to find the target
+> Time: $O(\log n)$
+
+However, it is hard to memorize and write bug-free code. And many problems that use binary search don’t look like classic “search in array” questions at all. What interviewers actually want to test is whether you understand binary search as a way to find the **boundary** of **a monotonic condition**.
+**Boundary** and **monotonic condition** are the two keys to understand the binary search pattern and write bug-free code. Let's break them down!
 
 ## What is Binary Search?
 
-What would you say if the interviewer asked you to explain the binary search algorithm in one or two sentences? [Wikipedia](https://en.wikipedia.org/wiki/Binary_search) explains it as follows:
+What would you say if the interviewer asked you to explain the binary search algorithm? [Wikipedia](https://en.wikipedia.org/wiki/Binary_search) explains it as follows:
 > ... is a search algorithm that finds the position of a target value within a sorted array. Binary search compares the target value to the middle element of the array. If they are not equal, the half in which the target cannot lie is eliminated and the search continues on the remaining half, again taking the middle element to compare to the target value, and repeating this until the target value is found. If the search ends with the remaining half being empty, the target is not in the array.
 
-This is indeed how most people understand binary search. Most of us first learn binary search as "finding a target value in a sorted array". However binary search is not just about arrays or **indices** -- it is about **structure**. The search space could be:
+This is indeed how most people understand binary search. Most of us first learn binary search as "finding a target value in a sorted array". However binary search is not just about arrays or **indices** -- it is about **structure**. The answer space could be:
 - indices in an array
 - possible answers (speed, capacity, time, size)
 - a conceptual range that never explicitly appears in the input
 
-Here is a golden rule:
-> Binary search finds the boundary of a monotonic predicate by repeatedly halving the search space.
+Here is the core definition:
+> Binary search finds the boundary of a monotonic predicate by repeatedly halving the answer space.
 
-This single sentence helps us to communicate clearly with interviewers and write bug-free code more reliably. Understand that binary serach is for boundaries, not for targets. Pay attention to the key words: **boundary**, **monotonic predicate** and **search space**.
+Pay attention to the key words: **boundary**, **monotonic predicate** and **answer space**.
 
 ## Binary Search Template (Lower Bound)
 
 Most interview problems use the lower-bound variant of binary search.
 
 ### Problem
+
+Let's convert the original problems into lower bound problem. You find the smallest index that `nums[x] >= target`, rather than find the value in array itself.
 
 > Lower bound (LeetCode 35): Given a sorted array of distinct integers and a target value, return the index if the target is found. If not, return the index where it would be if it were inserted in order.
 > You must write an algorithm with `O(log n)` runtime complexity.
@@ -91,12 +98,13 @@ def lower_bound(nums: List[int], target: int) -> int:
 
 All three patterns work correctly, and you can choose which you prefer. I personally prefer *Pattern C* because its invariant is explicit and easy to reason about.
 
+## Core concepts
+
 ### Answer Space
 
-> Answer space is the conceptual domain of possible answers.
-> Search space is the current interval where the answer must lie.
+**Definition**: the complete set of possible answers.
 
-The answer space is all the values that an answer could be, it is also the space we are searching on. Many people instinctively think that we are searching the index range of array, which is `[0, 1, 2, ..., n - 1]`. This intuition is actually incomplete,
+The answer space is all the values that an answer could be, it is also the space we are searching on. For lower bound problem, many people instinctively think that we are searching the index range of array, which is `[0, 1, 2, ..., n - 1]`. This intuition is actually incomplete,
 1. if `target <= max(nums)`, the answer is an index in `[0, n - 1]`,
 2. if `target > max(nums)`, the correct insertion position may be `n`.
 So the answer space is all possible positions where the target could be placed, which is `[0, 1, 2, ..., n]`. The key takeaway is that binary search operates on the space of possible answers, not necessarily on the input array itself.
@@ -135,9 +143,12 @@ So we can safely halve the search space in each step. This is why we can shrink 
 > - smallest value that satisfies a condition
 > These phrases are strong hints that binary search may apply.
 
-### The invariant
 
-What condition must always hold while we shrink the search space?
+
+### Search Space and the Invariant
+
+Search space is the current interval where the answer must lie.
+
 
 ```python
 # Pattern C
@@ -210,11 +221,12 @@ At this point, we have covered all the core concepts of binary search:
 - Invariant
 
 
-|Pattern| Search Space | Invariant | End of the loop |
-|:-|:-|:-|:-|
-|A| `[left, right + 1]`   |  `(not P(left - 1)) AND P(right + 1)` |`left - 1 == right` |
-|B|  `[left, right]`      |  `(not P(left - 1)) AND P(right)` | `left == right`|
-|C| `(left, right]` | `(not P(left)) AND P(right)` | `left + 1 == right`|
+|Pattern| Search interval | Invariant | Final Status | Initial Status|
+|:-|:-|:-|:-|:-|
+|A| `[right + 1, left]`   |  `P(i) == False for i < left`, and `P(i) == True for i > right` |`left - 1 == right`, `P(left) == True and P(right) == False` | `left = answers[first], right = answer[last - 1]`|
+|B|  `[left, right]`      |  `P(i) == False for i < left`, and `P(i) == True for i >= right` | `left == right`|`left = answers[first], right = answer[last]` |
+|C| `[left + 1, right]` | `P(i) == False for i <= left`, and `P(i) == True for i >= right` | `left + 1 == right`|`left = answers[first], right = answer[last]` |
+
 * Predicate: `P(i) = nums[i] >= target`
 * We conceptually assume sentinel values beyond array bounds
 
